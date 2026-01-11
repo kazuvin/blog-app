@@ -7,6 +7,26 @@ description: Design system reference for kazuvin project. Provides CSS variables
 
 Design tokens and style patterns for this project. Referenced by component-creator for styling.
 
+## Tailwind Class Order
+
+This project uses `prettier-plugin-tailwindcss` to automatically sort Tailwind CSS classes. The order follows [Tailwind's recommended class order](https://tailwindcss.com/blog/automatic-class-sorting-with-prettier).
+
+**Commands:**
+- `pnpm format` - Format all source files (auto-sorts Tailwind classes)
+- `pnpm format:check` - Check formatting without modifying files
+
+When writing components, classes will be automatically sorted on format. The recommended order is:
+1. Layout (display, position, overflow)
+2. Flexbox/Grid
+3. Spacing (margin, padding)
+4. Sizing (width, height)
+5. Typography
+6. Backgrounds
+7. Borders
+8. Effects (shadow, opacity)
+9. Transitions
+10. States (hover:, focus:, dark:)
+
 ## Tailwind v4 Setup
 
 ```css
