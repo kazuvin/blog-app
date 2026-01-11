@@ -1,0 +1,259 @@
+"use client";
+
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import { type ComponentProps } from "react";
+import { cn } from "@/lib/utils";
+
+// Root DropdownMenu component
+export const DropdownMenu = DropdownMenuPrimitive.Root;
+
+// DropdownMenu Trigger
+export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+
+// DropdownMenu Group
+export const DropdownMenuGroup = DropdownMenuPrimitive.Group;
+
+// DropdownMenu Portal
+export const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
+
+// DropdownMenu Sub
+export const DropdownMenuSub = DropdownMenuPrimitive.Sub;
+
+// DropdownMenu RadioGroup
+export const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
+
+// DropdownMenu SubTrigger Props
+export type DropdownMenuSubTriggerProps = ComponentProps<
+  typeof DropdownMenuPrimitive.SubTrigger
+> & {
+  inset?: boolean;
+};
+
+// DropdownMenu SubTrigger
+export function DropdownMenuSubTrigger({
+  className,
+  inset,
+  children,
+  ...props
+}: DropdownMenuSubTriggerProps) {
+  return (
+    <DropdownMenuPrimitive.SubTrigger
+      className={cn(
+        "flex cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none",
+        "focus:bg-foreground/10 data-[state=open]:bg-foreground/10",
+        inset && "pl-8",
+        className
+      )}
+      {...props}
+    >
+      {children}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="ml-auto"
+        aria-hidden="true"
+      >
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    </DropdownMenuPrimitive.SubTrigger>
+  );
+}
+
+// DropdownMenu SubContent Props
+export type DropdownMenuSubContentProps = ComponentProps<typeof DropdownMenuPrimitive.SubContent>;
+
+// DropdownMenu SubContent
+export function DropdownMenuSubContent({ className, ...props }: DropdownMenuSubContentProps) {
+  return (
+    <DropdownMenuPrimitive.SubContent
+      className={cn(
+        "bg-background text-foreground border-foreground/10 z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-lg",
+        "data-[state=open]:animate-in data-[state=closed]:animate-out",
+        "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+        "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+        "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2",
+        "data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+// DropdownMenu Content Props
+export type DropdownMenuContentProps = ComponentProps<typeof DropdownMenuPrimitive.Content>;
+
+// DropdownMenu Content
+export function DropdownMenuContent({
+  className,
+  sideOffset = 4,
+  ...props
+}: DropdownMenuContentProps) {
+  return (
+    <DropdownMenuPrimitive.Portal>
+      <DropdownMenuPrimitive.Content
+        sideOffset={sideOffset}
+        className={cn(
+          "bg-background text-foreground border-foreground/10 z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-md",
+          "data-[state=open]:animate-in data-[state=closed]:animate-out",
+          "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+          "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+          "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2",
+          "data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          className
+        )}
+        {...props}
+      />
+    </DropdownMenuPrimitive.Portal>
+  );
+}
+
+// DropdownMenu Item Props
+export type DropdownMenuItemProps = ComponentProps<typeof DropdownMenuPrimitive.Item> & {
+  inset?: boolean;
+};
+
+// DropdownMenu Item
+export function DropdownMenuItem({ className, inset, ...props }: DropdownMenuItemProps) {
+  return (
+    <DropdownMenuPrimitive.Item
+      className={cn(
+        "relative flex cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm transition-colors outline-none select-none",
+        "focus:bg-foreground/10 focus:text-foreground",
+        "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        inset && "pl-8",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+// DropdownMenu CheckboxItem Props
+export type DropdownMenuCheckboxItemProps = ComponentProps<
+  typeof DropdownMenuPrimitive.CheckboxItem
+>;
+
+// DropdownMenu CheckboxItem
+export function DropdownMenuCheckboxItem({
+  className,
+  children,
+  checked,
+  ...props
+}: DropdownMenuCheckboxItemProps) {
+  return (
+    <DropdownMenuPrimitive.CheckboxItem
+      className={cn(
+        "relative flex cursor-pointer items-center rounded-sm py-1.5 pr-2 pl-8 text-sm transition-colors outline-none select-none",
+        "focus:bg-foreground/10 focus:text-foreground",
+        "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        className
+      )}
+      checked={checked}
+      {...props}
+    >
+      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+        <DropdownMenuPrimitive.ItemIndicator>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </DropdownMenuPrimitive.ItemIndicator>
+      </span>
+      {children}
+    </DropdownMenuPrimitive.CheckboxItem>
+  );
+}
+
+// DropdownMenu RadioItem Props
+export type DropdownMenuRadioItemProps = ComponentProps<typeof DropdownMenuPrimitive.RadioItem>;
+
+// DropdownMenu RadioItem
+export function DropdownMenuRadioItem({
+  className,
+  children,
+  ...props
+}: DropdownMenuRadioItemProps) {
+  return (
+    <DropdownMenuPrimitive.RadioItem
+      className={cn(
+        "relative flex cursor-pointer items-center rounded-sm py-1.5 pr-2 pl-8 text-sm transition-colors outline-none select-none",
+        "focus:bg-foreground/10 focus:text-foreground",
+        "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        className
+      )}
+      {...props}
+    >
+      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+        <DropdownMenuPrimitive.ItemIndicator>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="8"
+            height="8"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="10" />
+          </svg>
+        </DropdownMenuPrimitive.ItemIndicator>
+      </span>
+      {children}
+    </DropdownMenuPrimitive.RadioItem>
+  );
+}
+
+// DropdownMenu Label Props
+export type DropdownMenuLabelProps = ComponentProps<typeof DropdownMenuPrimitive.Label> & {
+  inset?: boolean;
+};
+
+// DropdownMenu Label
+export function DropdownMenuLabel({ className, inset, ...props }: DropdownMenuLabelProps) {
+  return (
+    <DropdownMenuPrimitive.Label
+      className={cn("px-2 py-1.5 text-sm font-semibold", inset && "pl-8", className)}
+      {...props}
+    />
+  );
+}
+
+// DropdownMenu Separator Props
+export type DropdownMenuSeparatorProps = ComponentProps<typeof DropdownMenuPrimitive.Separator>;
+
+// DropdownMenu Separator
+export function DropdownMenuSeparator({ className, ...props }: DropdownMenuSeparatorProps) {
+  return (
+    <DropdownMenuPrimitive.Separator
+      className={cn("bg-foreground/10 -mx-1 my-1 h-px", className)}
+      {...props}
+    />
+  );
+}
+
+// DropdownMenu Shortcut Props
+export type DropdownMenuShortcutProps = ComponentProps<"span">;
+
+// DropdownMenu Shortcut (for keyboard shortcuts display)
+export function DropdownMenuShortcut({ className, ...props }: DropdownMenuShortcutProps) {
+  return (
+    <span className={cn("ml-auto text-xs tracking-widest opacity-60", className)} {...props} />
+  );
+}
