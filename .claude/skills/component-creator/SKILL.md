@@ -27,6 +27,21 @@ Create React components following this project's architecture:
 
 **Rule of thumb**: If it needs Jotai atoms or API calls → Container. If it's pure UI → Presentation.
 
+## 既存UIコンポーネント
+
+新しいUIコンポーネントを作成する前に、既存コンポーネントのパターンを確認:
+
+| Component | Variants                               | Sizes      | 複合パターン                                                              |
+| --------- | -------------------------------------- | ---------- | ------------------------------------------------------------------------- |
+| Button    | primary, secondary, ghost              | sm, md, lg | -                                                                         |
+| Card      | default, outline                       | -          | CardHeader, CardContent, CardFooter                                       |
+| Input     | default, error                         | sm, md, lg | -                                                                         |
+| Badge     | default, success, warning, error, info | sm, md     | -                                                                         |
+| Label     | -                                      | -          | -                                                                         |
+| Dialog    | default, alert                         | sm, md, lg | DialogHeader, DialogContent, DialogFooter, DialogTitle, DialogDescription |
+
+詳細は [references/ui-components.md](references/ui-components.md) を参照。
+
 ## Quick Start
 
 ### Presentation Component
@@ -74,6 +89,7 @@ export function LoginForm() {
 ## Detailed Patterns
 
 - **Presentation components**: See [references/presentation.md](references/presentation.md)
+- **UI component catalog**: See [references/ui-components.md](references/ui-components.md) - 既存コンポーネント、スタイルパターン、Storybook/テストのテンプレート
 - **Container components + Jotai**: See [references/container.md](references/container.md)
 
 ## Checklist
