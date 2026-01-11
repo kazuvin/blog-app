@@ -2,6 +2,12 @@
 
 Execute tasks using a commander pattern where the main thread orchestrates and delegates work to specialized subagents.
 
+## Command Options
+
+| Option | Description                                                                                                                                |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--pr` | When specified, automatically create a PR after task completion. This triggers the `/create-pr` command workflow after all CI checks pass. |
+
 ## Execution Flow
 
 ### Phase 1: Task Analysis
@@ -71,6 +77,21 @@ pnpm lint && pnpm build
 - If CI fails, diagnose and fix issues before completing the task
 - All code changes must pass linting and build successfully
 - Report CI results to the user
+- **Important**: CI verification must pass before PR creation (if `--pr` flag is used)
+
+### Phase 6: PR Creation (Optional)
+
+This phase is only executed when the `--pr` flag is provided.
+
+**Prerequisites:**
+
+- All tasks must be completed successfully
+- CI verification (Phase 5) must pass
+
+**Execution:**
+
+- Execute the `/create-pr` command workflow
+- The PR will be created with all changes from the completed task
 
 ## Usage
 
@@ -83,6 +104,14 @@ When executing a task with this command:
 5. Synthesize outputs and verify consistency
 6. Run `pnpm lint && pnpm build` to validate changes
 7. Report completion status with summary of changes
+
+### Without `--pr` flag (default)
+
+Task completion ends after CI verification (Phase 5). Changes are committed but no PR is created.
+
+### With `--pr` flag
+
+Task completion includes PR creation (Phase 6). After CI passes, the `/create-pr` command is executed to create a pull request with all changes.
 
 ## Important Notes
 
