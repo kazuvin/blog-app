@@ -3,44 +3,42 @@ import { describe, it, expect } from "vitest";
 import Home from "./page";
 
 describe("Home", () => {
-  it("renders the Next.js logo", () => {
+  it("renders the welcome heading", () => {
     render(<Home />);
 
-    const logo = screen.getByAltText("Next.js logo");
-    expect(logo).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Welcome to My Blog");
   });
 
-  it("renders the getting started instruction", () => {
+  it("renders the hero section with description", () => {
     render(<Home />);
 
-    expect(screen.getByText(/Get started by editing/i)).toBeInTheDocument();
-    expect(screen.getByText("src/app/page.tsx")).toBeInTheDocument();
+    expect(screen.getByText(/Thoughts, stories, and ideas/i)).toBeInTheDocument();
   });
 
-  it("renders the docs link", () => {
+  it("renders the blog navigation links", () => {
     render(<Home />);
 
-    const docsLink = screen.getByRole("link", { name: /Read our docs/i });
-    expect(docsLink).toBeInTheDocument();
-    expect(docsLink).toHaveAttribute("href", expect.stringContaining("nextjs.org/docs"));
+    const exploreLink = screen.getByRole("link", { name: /Explore Articles/i });
+    expect(exploreLink).toBeInTheDocument();
+    expect(exploreLink).toHaveAttribute("href", "/blog");
+
+    const aboutLink = screen.getByRole("link", { name: /About Me/i });
+    expect(aboutLink).toBeInTheDocument();
+    expect(aboutLink).toHaveAttribute("href", "/about");
   });
 
-  it("renders footer navigation links", () => {
+  it("renders the recent posts section", () => {
     render(<Home />);
 
-    const learnLink = screen.getByRole("link", { name: /Learn/i });
-    expect(learnLink).toBeInTheDocument();
-    expect(learnLink).toHaveAttribute("href", expect.stringContaining("nextjs.org/learn"));
-
-    const nextjsLink = screen.getByRole("link", { name: /Go to nextjs.org/i });
-    expect(nextjsLink).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Recent Posts/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /View all/i })).toHaveAttribute("href", "/blog");
   });
 
-  it("renders all images with proper alt text", () => {
+  it("renders the stay updated section", () => {
     render(<Home />);
 
-    expect(screen.getByAltText("Next.js logo")).toBeInTheDocument();
-    expect(screen.getByAltText("File icon")).toBeInTheDocument();
-    expect(screen.getByAltText("Globe icon")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Stay Updated/i })).toBeInTheDocument();
+    expect(screen.getByText(/Subscribe to get notified/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Coming Soon/i })).toBeDisabled();
   });
 });
