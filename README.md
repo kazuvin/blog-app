@@ -1,47 +1,69 @@
-# OpenNext Starter
+# Kazuvin Blog
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Next.js 15 application with TypeScript, designed for Cloudflare Workers deployment using OpenNext adapter.
+
+## Tech Stack
+
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4
+- **Testing**: Vitest + Testing Library
+- **Deployment**: Cloudflare Workers via @opennextjs/cloudflare
+- **Package Manager**: pnpm
 
 ## Getting Started
 
-Read the documentation at https://opennext.js.org/cloudflare.
+### Prerequisites
 
-## Develop
+- Node.js 18+
+- pnpm
 
-Run the Next.js development server:
-
-```bash
-npm run dev
-# or similar package manager command
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-## Preview
-
-Preview the application locally on the Cloudflare runtime:
+### Installation
 
 ```bash
-npm run preview
-# or similar package manager command
+pnpm install
 ```
 
-## Deploy
+### Development
 
-Deploy the application to Cloudflare:
+Start the development server with Turbopack:
 
 ```bash
-npm run deploy
-# or similar package manager command
+pnpm dev
 ```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000) with your browser.
 
-To learn more about Next.js, take a look at the following resources:
+## Commands
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start dev server with Turbopack |
+| `pnpm build` | Production build |
+| `pnpm lint` | Run ESLint |
+| `pnpm format` | Format code with Prettier |
+| `pnpm format:check` | Check code formatting |
+| `pnpm test` | Run tests in watch mode |
+| `pnpm test:run` | Run tests once |
+| `pnpm test:coverage` | Run tests with coverage |
+| `pnpm preview` | Preview on local Cloudflare runtime |
+| `pnpm deploy` | Deploy to Cloudflare Workers |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
+
+```
+src/
+├── app/           # Next.js App Router pages
+├── lib/           # Utility functions
+└── test/          # Test configuration
+```
+
+## Cloudflare Configuration
+
+- `wrangler.jsonc` - Cloudflare Workers configuration
+- `open-next.config.ts` - OpenNext adapter settings
+- `.dev.vars` - Development environment variables
+
+## License
+
+Private
