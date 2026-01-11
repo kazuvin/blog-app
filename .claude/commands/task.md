@@ -4,11 +4,43 @@ Execute tasks using a commander pattern where the main thread orchestrates and d
 
 ## Command Options
 
-| Option | Description                                                                                                                                |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `--pr` | When specified, automatically create a PR after task completion. This triggers the `/create-pr` command workflow after all CI checks pass. |
+| Option | Description                                                                                                           |
+| ------ | --------------------------------------------------------------------------------------------------------------------- |
+| `--pr` | Create a PR after task completion. Uses git worktree for isolated execution to prevent conflicts with parallel tasks. |
 
 ## Execution Flow
+
+### Phase 0: Worktree Setup (--pr only)
+
+When `--pr` flag is provided, create an isolated working environment:
+
+1. **Get repository root**
+
+   ```bash
+   REPO_ROOT=$(git rev-parse --show-toplevel)
+   ```
+
+2. **Generate branch name** based on task description
+   - Format: `feature/<task-summary>` or `fix/<task-summary>`
+   - Example: `feature/add-user-auth`, `fix/login-bug`
+
+3. **Create worktree with new branch**
+
+   ```bash
+   mkdir -p "$REPO_ROOT/.worktrees"
+   git fetch origin
+   git worktree add -b <branch-name> "$REPO_ROOT/.worktrees/<branch-name>" origin/main
+   ```
+
+4. **Change to worktree directory**
+   - All subsequent work happens in the worktree
+   - This ensures isolation from other tasks
+
+**Why worktree?**
+
+- Multiple `/task --pr` commands can run in parallel without conflicts
+- Each task works in its own isolated directory
+- Main branch and other tasks remain unaffected
 
 ### Phase 1: Task Analysis
 
@@ -79,7 +111,7 @@ pnpm lint && pnpm build
 - Report CI results to the user
 - **Important**: CI verification must pass before PR creation (if `--pr` flag is used)
 
-### Phase 6: PR Creation (Optional)
+### Phase 6: PR Creation (--pr only)
 
 This phase is only executed when the `--pr` flag is provided.
 
@@ -87,31 +119,73 @@ This phase is only executed when the `--pr` flag is provided.
 
 - All tasks must be completed successfully
 - CI verification (Phase 5) must pass
+- Working in the worktree created in Phase 0
 
 **Execution:**
 
-- Execute the `/create-pr` command workflow
+- Execute the `/create-pr` command workflow within the worktree
 - The PR will be created with all changes from the completed task
+
+### Phase 7: Cleanup (--pr only)
+
+After PR creation:
+
+1. **Return to original directory**
+
+   ```bash
+   cd "$REPO_ROOT"
+   ```
+
+2. **Report completion** with:
+   - PR URL
+   - Worktree location used
+   - Files modified
+   - Summary of changes
+
+3. **Worktree cleanup** (optional)
+   - Worktrees can be kept for reference or removed after PR is merged
+   - To remove: `git worktree remove "$REPO_ROOT/.worktrees/<branch-name>"`
 
 ## Usage
 
-When executing a task with this command:
-
-1. Break down the request into discrete, actionable items
-2. Identify which items can run in parallel
-3. Spawn agents with the `Task` tool for each work item
-4. Monitor progress and collect results
-5. Synthesize outputs and verify consistency
-6. Run `pnpm lint && pnpm build` to validate changes
-7. Report completion status with summary of changes
-
 ### Without `--pr` flag (default)
 
-Task completion ends after CI verification (Phase 5). Changes are committed but no PR is created.
+Task completion ends after CI verification (Phase 5). Changes are made in the current directory.
+
+```
+/task Add input validation to the login form
+```
 
 ### With `--pr` flag
 
-Task completion includes PR creation (Phase 6). After CI passes, the `/create-pr` command is executed to create a pull request with all changes.
+Task runs in an isolated worktree and creates a PR upon completion.
+
+```
+/task --pr Add input validation to the login form
+```
+
+This will:
+
+1. Create worktree at `.worktrees/feature-add-input-validation`
+2. Execute the task in isolation
+3. Run CI checks
+4. Create PR via `/create-pr`
+5. Report PR URL
+
+### Parallel Execution Example
+
+Multiple tasks can run simultaneously without conflicts:
+
+```
+Terminal 1: /task --pr Add user authentication
+  → Creates .worktrees/feature-add-user-auth
+
+Terminal 2: /task --pr Add dark mode
+  → Creates .worktrees/feature-add-dark-mode
+
+Terminal 3: /task --pr Fix login bug
+  → Creates .worktrees/fix-login-bug
+```
 
 ## Important Notes
 
@@ -120,3 +194,4 @@ Task completion includes PR creation (Phase 6). After CI passes, the `/create-pr
 - Each subagent should have a focused, well-defined scope
 - The commander (main thread) is responsible for coordination, not implementation
 - CI verification is mandatory and must pass before task completion
+- With `--pr`, ensure `.worktrees/` is in `.gitignore`
