@@ -15,7 +15,7 @@
 ### Primary
 
 ```tsx
-<button className="inline-flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-md font-medium hover:opacity-90 active:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+<button className="bg-primary inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 font-medium text-white transition-opacity hover:opacity-90 active:opacity-80 disabled:cursor-not-allowed disabled:opacity-50">
   Button
 </button>
 ```
@@ -23,7 +23,7 @@
 ### Secondary
 
 ```tsx
-<button className="inline-flex items-center justify-center gap-2 bg-surface text-foreground px-4 py-2 rounded-md font-medium border border-border hover:bg-border/50 transition-colors disabled:opacity-50">
+<button className="bg-surface text-foreground border-border hover:bg-border/50 inline-flex items-center justify-center gap-2 rounded-md border px-4 py-2 font-medium transition-colors disabled:opacity-50">
   Button
 </button>
 ```
@@ -31,7 +31,7 @@
 ### Ghost
 
 ```tsx
-<button className="inline-flex items-center justify-center gap-2 text-foreground px-4 py-2 rounded-md hover:bg-surface transition-colors">
+<button className="text-foreground hover:bg-surface inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 transition-colors">
   Button
 </button>
 ```
@@ -39,9 +39,7 @@
 ### Destructive
 
 ```tsx
-<button className="bg-error text-white px-4 py-2 rounded-md hover:opacity-90">
-  Delete
-</button>
+<button className="bg-error rounded-md px-4 py-2 text-white hover:opacity-90">Delete</button>
 ```
 
 ### Sizes
@@ -63,7 +61,7 @@
 
 ```tsx
 <input
-  className="w-full bg-background border border-border rounded-md px-3 py-2 text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
+  className="bg-background border-border text-foreground placeholder:text-muted focus:ring-primary/50 focus:border-primary w-full rounded-md border px-3 py-2 transition-colors focus:ring-2 focus:outline-none"
   placeholder="Enter text..."
 />
 ```
@@ -71,13 +69,13 @@
 ### Textarea
 
 ```tsx
-<textarea className="w-full bg-background border border-border rounded-md px-3 py-2 text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/50 resize-y min-h-[100px]" />
+<textarea className="bg-background border-border text-foreground placeholder:text-muted focus:ring-primary/50 min-h-[100px] w-full resize-y rounded-md border px-3 py-2 focus:ring-2 focus:outline-none" />
 ```
 
 ### Select
 
 ```tsx
-<select className="w-full bg-background border border-border rounded-md px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none cursor-pointer">
+<select className="bg-background border-border text-foreground focus:ring-primary/50 w-full cursor-pointer appearance-none rounded-md border px-3 py-2 focus:ring-2 focus:outline-none">
   <option>Select...</option>
 </select>
 ```
@@ -85,9 +83,7 @@
 ### Label
 
 ```tsx
-<label className="block text-sm font-medium text-foreground mb-1.5">
-  Label
-</label>
+<label className="text-foreground mb-1.5 block text-sm font-medium">Label</label>
 ```
 
 ### Error State
@@ -106,8 +102,8 @@ className="... border-error focus:ring-error/50"
 ### Basic
 
 ```tsx
-<div className="bg-surface border border-border rounded-lg p-6">
-  <h3 className="text-lg font-semibold text-foreground mb-2">Title</h3>
+<div className="bg-surface border-border rounded-lg border p-6">
+  <h3 className="text-foreground mb-2 text-lg font-semibold">Title</h3>
   <p className="text-muted">Content</p>
 </div>
 ```
@@ -115,7 +111,7 @@ className="... border-error focus:ring-error/50"
 ### Interactive
 
 ```tsx
-<div className="bg-surface border border-border rounded-lg p-6 hover:border-primary/50 hover:shadow-md transition-all cursor-pointer">
+<div className="bg-surface border-border hover:border-primary/50 cursor-pointer rounded-lg border p-6 transition-all hover:shadow-md">
   {/* content */}
 </div>
 ```
@@ -155,13 +151,13 @@ className="... border-error focus:ring-error/50"
 ### Spinner
 
 ```tsx
-<div className="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full" />
+<div className="border-primary h-5 w-5 animate-spin rounded-full border-2 border-t-transparent" />
 ```
 
 ### Skeleton
 
 ```tsx
-<div className="animate-pulse bg-border rounded h-4 w-full" />
+<div className="bg-border h-4 w-full animate-pulse rounded" />
 ```
 
 ### Badge
@@ -180,8 +176,8 @@ className="... border-error focus:ring-error/50"
 ### Alert
 
 ```tsx
-<div className="flex gap-3 p-4 rounded-lg bg-primary/10 border border-primary/20 text-primary">
-  <InfoIcon className="w-5 h-5 flex-shrink-0" />
+<div className="bg-primary/10 border-primary/20 text-primary flex gap-3 rounded-lg border p-4">
+  <InfoIcon className="h-5 w-5 flex-shrink-0" />
   <p className="text-sm">Message</p>
 </div>
 ```

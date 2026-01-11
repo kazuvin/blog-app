@@ -8,6 +8,7 @@ description: Create React components following project conventions. Use when ask
 Create React components following this project's architecture:
 
 **Related skills** (invoke these skills when applicable):
+
 - **jotai-patterns**: Invoke for atom design in container components
 - **project-design**: Invoke for styling decisions (color tokens, component patterns)
 
@@ -16,13 +17,13 @@ Create React components following this project's architecture:
 
 ## Decision Guide
 
-| Request Type | Component Type | Location |
-|--------------|----------------|----------|
-| Button, Input, Card, Modal | Presentation | `src/components/ui/` |
-| Header, Footer, Sidebar | Presentation | `src/components/layout/` |
-| Login form with auth logic | Container | `src/features/auth/` |
-| Dashboard with data fetching | Container | `src/features/dashboard/` |
-| User profile with state | Container | `src/features/user/` |
+| Request Type                 | Component Type | Location                  |
+| ---------------------------- | -------------- | ------------------------- |
+| Button, Input, Card, Modal   | Presentation   | `src/components/ui/`      |
+| Header, Footer, Sidebar      | Presentation   | `src/components/layout/`  |
+| Login form with auth logic   | Container      | `src/features/auth/`      |
+| Dashboard with data fetching | Container      | `src/features/dashboard/` |
+| User profile with state      | Container      | `src/features/user/`      |
 
 **Rule of thumb**: If it needs Jotai atoms or API calls → Container. If it's pure UI → Presentation.
 
@@ -41,10 +42,7 @@ type ButtonProps = ComponentProps<"button"> & {
 
 export function Button({ variant = "primary", className, ...props }: ButtonProps) {
   return (
-    <button
-      className={cn("rounded-md px-4 py-2", variantStyles[variant], className)}
-      {...props}
-    />
+    <button className={cn("rounded-md px-4 py-2", variantStyles[variant], className)} {...props} />
   );
 }
 

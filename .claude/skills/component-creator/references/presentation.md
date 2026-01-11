@@ -132,15 +132,13 @@ type CardProps = {
 export function Card({ variant = "default", children }: CardProps) {
   return (
     <CardContext.Provider value={{ variant }}>
-      <div className={cn("rounded-lg", variantStyles[variant])}>
-        {children}
-      </div>
+      <div className={cn("rounded-lg", variantStyles[variant])}>{children}</div>
     </CardContext.Provider>
   );
 }
 
 Card.Header = function CardHeader({ children }: { children: ReactNode }) {
-  return <div className="p-4 border-b">{children}</div>;
+  return <div className="border-b p-4">{children}</div>;
 };
 
 Card.Body = function CardBody({ children }: { children: ReactNode }) {
@@ -148,6 +146,6 @@ Card.Body = function CardBody({ children }: { children: ReactNode }) {
 };
 
 Card.Footer = function CardFooter({ children }: { children: ReactNode }) {
-  return <div className="p-4 border-t">{children}</div>;
+  return <div className="border-t p-4">{children}</div>;
 };
 ```

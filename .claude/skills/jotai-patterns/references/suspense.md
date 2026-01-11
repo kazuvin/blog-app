@@ -15,7 +15,7 @@ const userAtom = atom(async (): Promise<User> => {
 
 // useAtomValueはPromiseをサスペンドして中身を返す
 const UserProfile: React.FC = () => {
-  const user: User = useAtomValue(userAtom);  // User型（Promise<User>ではない）
+  const user: User = useAtomValue(userAtom); // User型（Promise<User>ではない）
   return <h1>{user.name}</h1>;
 };
 
@@ -45,9 +45,8 @@ const userAtom = atom(async (get): Promise<User | null> => {
 });
 
 // パラメータ変更用のaction atom
-export const setUserIdAtom = atom(
-  null,
-  (get, set, userId: string | null) => set(userIdAtom, userId)
+export const setUserIdAtom = atom(null, (get, set, userId: string | null) =>
+  set(userIdAtom, userId)
 );
 
 // Read-only export
@@ -101,12 +100,12 @@ const getUserAtom = (userId: string) => {
 
 ## Pattern Comparison
 
-| 観点 | Pattern 1 (Atom) | Pattern 2 (Factory) |
-|------|------------------|---------------------|
-| キャッシュ | 1つのみ | パラメータごと |
-| user1→user2→user1 | 再fetch | キャッシュヒット |
-| メモリ使用量 | 少ない | パラメータ数に比例 |
-| ユースケース | 単一選択UI | 複数表示、頻繁な切り替え |
+| 観点              | Pattern 1 (Atom) | Pattern 2 (Factory)      |
+| ----------------- | ---------------- | ------------------------ |
+| キャッシュ        | 1つのみ          | パラメータごと           |
+| user1→user2→user1 | 再fetch          | キャッシュヒット         |
+| メモリ使用量      | 少ない           | パラメータ数に比例       |
+| ユースケース      | 単一選択UI       | 複数表示、頻繁な切り替え |
 
 ## Memory Management Warning
 
@@ -114,13 +113,10 @@ atomFamilyやMapパターンでは、不要になったatomがメモリに残り
 
 ```tsx
 // atomFamilyのタイムスタンプベース削除
-const userAtomFamily = atomFamily(
-  (userId: string) => atom(async () => fetchUser(userId)),
-  {
-    // 5分間アクセスがなければ削除
-    gcTime: 5 * 60 * 1000
-  }
-);
+const userAtomFamily = atomFamily((userId: string) => atom(async () => fetchUser(userId)), {
+  // 5分間アクセスがなければ削除
+  gcTime: 5 * 60 * 1000,
+});
 
 // 手動削除
 userAtoms.delete(userId);
@@ -156,10 +152,7 @@ export const searchResultsAtom = atom((get) => get(searchResultsInternalAtom));
 // ============================================
 // Action Exports
 // ============================================
-export const setKeywordAtom = atom(
-  null,
-  (get, set, keyword: string) => set(keywordAtom, keyword)
-);
+export const setKeywordAtom = atom(null, (get, set, keyword: string) => set(keywordAtom, keyword));
 ```
 
 Usage:
@@ -182,7 +175,9 @@ const SearchResults: React.FC = () => {
   return (
     <ul>
       {results.map((p) => (
-        <li key={p.id}>{p.name} - ¥{p.price}</li>
+        <li key={p.id}>
+          {p.name} - ¥{p.price}
+        </li>
       ))}
     </ul>
   );
