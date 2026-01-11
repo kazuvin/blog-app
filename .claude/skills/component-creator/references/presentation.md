@@ -93,6 +93,7 @@ export type { ButtonProps } from "./button";
 5. **Default values**: Provide sensible defaults for optional props
 6. **No business logic**: No API calls, no data transformations
 7. **No global state access**: No Jotai, no Context consumption
+8. **No forwardRef**: React 19 では `ref` は `ComponentProps` に含まれるため、`{...props}` で自動的に渡される
 
 ## Utility: cn() function
 
