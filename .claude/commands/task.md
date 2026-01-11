@@ -13,14 +13,19 @@ $ARGUMENTS
 
 ---
 
-## Phase 0: Flag Detection & Worktree Setup
+## Phase 0: Worktree Setup (MANDATORY)
 
-**CRITICAL: Check if `--pr` flag is present in the arguments above.**
+**CRITICAL: ALL task executions MUST use git worktree for isolation.**
 
-### If `--pr` IS present:
+This ensures parallel task executions never conflict with each other or the main working directory.
 
-1. **Extract task description** (everything after `--pr`)
-2. **Create worktree for isolation**:
+### Worktree Creation Steps:
+
+1. **Check for `--pr` flag** in arguments above
+   - If present: Extract task description (everything after `--pr`), remember to create PR at the end
+   - If not present: Use full arguments as task description, skip PR creation at the end
+
+2. **Create worktree for isolation** (ALWAYS):
 
 ```bash
 # Get repository root and save original directory
@@ -30,22 +35,29 @@ ORIGINAL_DIR=$(pwd)
 # Create worktree directory
 mkdir -p "$REPO_ROOT/.worktrees"
 
-# Generate branch name from task (e.g., "Add login form" → "feature/add-login-form")
-# Branch naming: feature/<task-summary> or fix/<task-summary>
-git fetch origin
-git worktree add -b <branch-name> "$REPO_ROOT/.worktrees/<branch-name>" origin/main
+# Generate unique branch name:
+# - Use task summary + timestamp for uniqueness
+# - Format: task/<summary>-<timestamp> or feature/<summary>-<timestamp>
+# - Example: "Add login form" at 14:30:45 → "task/add-login-form-143045"
+TIMESTAMP=$(date +%H%M%S)
+BRANCH_NAME="task/<task-summary>-$TIMESTAMP"
 
-# IMPORTANT: Change to worktree directory for all subsequent work
-cd "$REPO_ROOT/.worktrees/<branch-name>"
+# Create worktree from latest main
+git fetch origin
+git worktree add -b "$BRANCH_NAME" "$REPO_ROOT/.worktrees/$BRANCH_NAME" origin/main
+
+# CRITICAL: Change to worktree directory for ALL subsequent work
+cd "$REPO_ROOT/.worktrees/$BRANCH_NAME"
 ```
 
-3. **All subsequent phases execute within the worktree directory**
+3. **Verify worktree is active** before proceeding:
 
-### If `--pr` is NOT present:
+```bash
+pwd  # Should show .worktrees/<branch-name>
+git branch --show-current  # Should show the new branch
+```
 
-- Skip worktree setup
-- Work directly in current directory
-- Skip PR creation phases
+4. **All subsequent phases execute within the worktree directory**
 
 ---
 
@@ -117,48 +129,69 @@ Launch independent agents simultaneously via single message with multiple `Task`
 pnpm lint && pnpm build
 ```
 
-Must pass before completion (or PR creation if `--pr`).
+Must pass before completion.
 
 ---
 
-## Phase 6-7: PR Creation & Cleanup (--pr only)
+## Phase 6: PR Creation (--pr only)
 
-**Skip this phase entirely if `--pr` was NOT in the original arguments.**
+**Skip this phase if `--pr` was NOT in the original arguments.**
 
-### If `--pr` IS present:
+If `--pr` IS present:
 
 1. **Execute `/create-pr`** in the worktree directory (you should already be in the worktree)
-2. **Return to original directory**:
-   ```bash
-   cd "$ORIGINAL_DIR"
-   ```
-3. **Report completion**:
-   - PR URL (most important!)
-   - Worktree location used
-   - Summary of changes
-   - Files modified
 
-4. **(Optional) Cleanup worktree** after PR is merged:
-   ```bash
-   git worktree remove "$REPO_ROOT/.worktrees/<branch-name>"
-   ```
+---
+
+## Phase 7: Cleanup & Report
+
+### Return to original directory:
+
+```bash
+cd "$ORIGINAL_DIR"
+```
+
+### Report completion:
+
+- **If `--pr`**: PR URL (most important!)
+- Worktree location used: `$REPO_ROOT/.worktrees/<branch-name>`
+- Summary of changes
+- Files modified
+
+### Worktree cleanup options:
+
+```bash
+# Option 1: Remove immediately (if no PR or PR is merged)
+git worktree remove "$REPO_ROOT/.worktrees/$BRANCH_NAME"
+
+# Option 2: Keep for review (if PR is pending)
+# User can remove later with:
+# git worktree list
+# git worktree remove <path>
+```
+
+**Recommendation:**
+
+- If `--pr`: Keep worktree until PR is merged, then user removes manually
+- If no `--pr`: Remove worktree automatically after successful completion
 
 ---
 
 ## Quick Reference
 
 ```bash
-# Standard execution (no worktree, no PR)
+# Standard execution (uses worktree for isolation, no PR)
 /task Add input validation
 
-# With PR creation (uses git worktree for isolation)
+# With PR creation (uses worktree + creates PR)
 /task --pr Add input validation
 ```
 
 **Rules:**
 
+- **Worktree isolation is MANDATORY for ALL executions** (prevents conflicts)
 - Track with `TodoWrite`
 - Prefer parallel execution
 - Commander coordinates, agents implement
 - CI must pass
-- **`--pr` flag → worktree isolation is MANDATORY**
+- `--pr` flag → additionally create PR after completion
