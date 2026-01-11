@@ -1,22 +1,51 @@
+---
+description: Execute tasks as a commander, delegating work to specialized subagents
+argument-hint: [--pr] <task description>
+---
+
 # Task Command
 
 Execute tasks using a commander pattern: analyze, delegate to specialized subagents, synthesize results.
 
-**Options:** `--pr` - Create PR after completion (uses git worktree for isolation)
+## Task Input
+
+$ARGUMENTS
 
 ---
 
-## Phase 0: Worktree Setup (--pr only)
+## Phase 0: Flag Detection & Worktree Setup
+
+**CRITICAL: Check if `--pr` flag is present in the arguments above.**
+
+### If `--pr` IS present:
+
+1. **Extract task description** (everything after `--pr`)
+2. **Create worktree for isolation**:
 
 ```bash
+# Get repository root and save original directory
 REPO_ROOT=$(git rev-parse --show-toplevel)
+ORIGINAL_DIR=$(pwd)
+
+# Create worktree directory
 mkdir -p "$REPO_ROOT/.worktrees"
+
+# Generate branch name from task (e.g., "Add login form" → "feature/add-login-form")
+# Branch naming: feature/<task-summary> or fix/<task-summary>
 git fetch origin
 git worktree add -b <branch-name> "$REPO_ROOT/.worktrees/<branch-name>" origin/main
+
+# IMPORTANT: Change to worktree directory for all subsequent work
 cd "$REPO_ROOT/.worktrees/<branch-name>"
 ```
 
-Branch naming: `feature/<task-summary>` or `fix/<task-summary>`
+3. **All subsequent phases execute within the worktree directory**
+
+### If `--pr` is NOT present:
+
+- Skip worktree setup
+- Work directly in current directory
+- Skip PR creation phases
 
 ---
 
@@ -94,19 +123,35 @@ Must pass before completion (or PR creation if `--pr`).
 
 ## Phase 6-7: PR Creation & Cleanup (--pr only)
 
-1. Execute `/create-pr` in worktree
-2. Return to `$REPO_ROOT`
-3. Report: PR URL, worktree location, changes summary
+**Skip this phase entirely if `--pr` was NOT in the original arguments.**
+
+### If `--pr` IS present:
+
+1. **Execute `/create-pr`** in the worktree directory (you should already be in the worktree)
+2. **Return to original directory**:
+   ```bash
+   cd "$ORIGINAL_DIR"
+   ```
+3. **Report completion**:
+   - PR URL (most important!)
+   - Worktree location used
+   - Summary of changes
+   - Files modified
+
+4. **(Optional) Cleanup worktree** after PR is merged:
+   ```bash
+   git worktree remove "$REPO_ROOT/.worktrees/<branch-name>"
+   ```
 
 ---
 
 ## Quick Reference
 
 ```bash
-# Standard execution
+# Standard execution (no worktree, no PR)
 /task Add input validation
 
-# With PR creation (isolated worktree)
+# With PR creation (uses git worktree for isolation)
 /task --pr Add input validation
 ```
 
@@ -116,3 +161,4 @@ Must pass before completion (or PR creation if `--pr`).
 - Prefer parallel execution
 - Commander coordinates, agents implement
 - CI must pass
+- **`--pr` flag → worktree isolation is MANDATORY**
