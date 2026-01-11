@@ -46,7 +46,7 @@ export const WithHeader: Story = {
     <Card className="w-80">
       <CardHeader>
         <h3 className="text-lg font-semibold">Card Title</h3>
-        <p className="text-sm text-foreground/60">Card description</p>
+        <p className="text-foreground/60 text-sm">Card description</p>
       </CardHeader>
       <CardContent>
         <p>This card has a header section with a title and description.</p>
@@ -74,22 +74,20 @@ export const FullExample: Story = {
     <Card className="w-96">
       <CardHeader>
         <h3 className="text-lg font-semibold">Create Account</h3>
-        <p className="text-sm text-foreground/60">
-          Enter your information to create an account
-        </p>
+        <p className="text-foreground/60 text-sm">Enter your information to create an account</p>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div>
           <label className="text-sm font-medium">Name</label>
           <input
-            className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2"
+            className="border-foreground/20 mt-1 w-full rounded-md border bg-transparent px-3 py-2"
             placeholder="John Doe"
           />
         </div>
         <div>
           <label className="text-sm font-medium">Email</label>
           <input
-            className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2"
+            className="border-foreground/20 mt-1 w-full rounded-md border bg-transparent px-3 py-2"
             placeholder="john@example.com"
             type="email"
           />
@@ -111,7 +109,7 @@ export const AllVariants: Story = {
           <h3 className="font-semibold">Default</h3>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-foreground/60">Default card variant</p>
+          <p className="text-foreground/60 text-sm">Default card variant</p>
         </CardContent>
       </Card>
       <Card variant="outline" className="w-64">
@@ -119,7 +117,7 @@ export const AllVariants: Story = {
           <h3 className="font-semibold">Outline</h3>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-foreground/60">Outline card variant</p>
+          <p className="text-foreground/60 text-sm">Outline card variant</p>
         </CardContent>
       </Card>
     </div>

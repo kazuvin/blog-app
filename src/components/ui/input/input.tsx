@@ -6,12 +6,7 @@ export type InputProps = ComponentProps<"input"> & {
   inputSize?: "sm" | "md" | "lg";
 };
 
-export function Input({
-  variant = "default",
-  inputSize = "md",
-  className,
-  ...props
-}: InputProps) {
+export function Input({ variant = "default", inputSize = "md", className, ...props }: InputProps) {
   return (
     <input
       className={cn(

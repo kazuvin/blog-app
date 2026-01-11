@@ -9,21 +9,9 @@ export type CardHeaderProps = ComponentProps<"div">;
 export type CardContentProps = ComponentProps<"div">;
 export type CardFooterProps = ComponentProps<"div">;
 
-export function Card({
-  variant = "default",
-  className,
-  children,
-  ...props
-}: CardProps) {
+export function Card({ variant = "default", className, children, ...props }: CardProps) {
   return (
-    <div
-      className={cn(
-        "rounded-lg",
-        variantStyles[variant],
-        className
-      )}
-      {...props}
-    >
+    <div className={cn("rounded-lg", variantStyles[variant], className)} {...props}>
       {children}
     </div>
   );
@@ -31,25 +19,15 @@ export function Card({
 
 export function CardHeader({ className, children, ...props }: CardHeaderProps) {
   return (
-    <div
-      className={cn("px-6 py-4", className)}
-      {...props}
-    >
+    <div className={cn("px-6 py-4", className)} {...props}>
       {children}
     </div>
   );
 }
 
-export function CardContent({
-  className,
-  children,
-  ...props
-}: CardContentProps) {
+export function CardContent({ className, children, ...props }: CardContentProps) {
   return (
-    <div
-      className={cn("px-6 py-4", className)}
-      {...props}
-    >
+    <div className={cn("px-6 py-4", className)} {...props}>
       {children}
     </div>
   );
@@ -57,10 +35,7 @@ export function CardContent({
 
 export function CardFooter({ className, children, ...props }: CardFooterProps) {
   return (
-    <div
-      className={cn("px-6 py-4", className)}
-      {...props}
-    >
+    <div className={cn("px-6 py-4", className)} {...props}>
       {children}
     </div>
   );
