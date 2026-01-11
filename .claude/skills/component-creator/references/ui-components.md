@@ -69,29 +69,10 @@ const sizeStyles = {
 ## 複合コンポーネントパターン (Card, Dialog)
 
 ```tsx
-// 親コンポーネント
-export function Dialog({
-  open,
-  onOpenChange,
-  variant = "default",
-  size = "md",
-  children,
-}: DialogProps) {
-  // ...
-}
-
 // サブコンポーネント
 export function DialogHeader({ className, children, ...props }: DialogHeaderProps) {
   return (
     <div className={cn("border-foreground/10 border-b px-6 py-4", className)} {...props}>
-      {children}
-    </div>
-  );
-}
-
-export function DialogContent({ className, children, ...props }: DialogContentProps) {
-  return (
-    <div className={cn("px-6 py-4", className)} {...props}>
       {children}
     </div>
   );
@@ -102,6 +83,29 @@ export function DialogFooter({ className, children, ...props }: DialogFooterProp
     <div className={cn("flex justify-end gap-2 px-6 py-4", className)} {...props}>
       {children}
     </div>
+  );
+}
+```
+
+## Radix UI ラッパーパターン
+
+Radix UI プリミティブをラップする場合も通常の関数コンポーネントとして実装。
+React 19 では `ref` は `ComponentProps` に含まれるため、`{...props}` で自動的に渡される。
+
+```tsx
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { type ComponentProps } from "react";
+
+type DialogContentProps = ComponentProps<typeof DialogPrimitive.Content> & {
+  size?: "sm" | "md" | "lg";
+};
+
+// forwardRef は不要。{...props} で ref も渡される
+export function DialogContent({ className, size = "md", children, ...props }: DialogContentProps) {
+  return (
+    <DialogPrimitive.Content className={cn(sizeStyles[size], className)} {...props}>
+      {children}
+    </DialogPrimitive.Content>
   );
 }
 ```
