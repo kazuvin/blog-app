@@ -1,5 +1,7 @@
 # Presentation Component Patterns
 
+> **UIコンポーネント固有のパターン**: 既存コンポーネント (Button, Card, Dialog等) の詳細は [ui-components.md](ui-components.md) を参照
+
 ## Directory Structure
 
 ```
