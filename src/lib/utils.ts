@@ -5,62 +5,62 @@ import { twMerge } from "tailwind-merge";
  * Utility function to merge Tailwind classes with proper precedence
  */
 export function cn(...inputs: ClassValue[]) {
-	return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs));
 }
 
 /**
  * Capitalizes the first letter of a string
  */
 export function capitalize(str: string): string {
-	if (!str) return str;
-	return str.charAt(0).toUpperCase() + str.slice(1);
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 /**
  * Formats a number as currency (USD)
  */
 export function formatCurrency(amount: number): string {
-	return new Intl.NumberFormat("en-US", {
-		style: "currency",
-		currency: "USD",
-	}).format(amount);
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(amount);
 }
 
 /**
  * Truncates a string to a specified length with ellipsis
  */
 export function truncate(str: string, maxLength: number): string {
-	if (str.length <= maxLength) return str;
-	return str.slice(0, maxLength - 3) + "...";
+  if (str.length <= maxLength) return str;
+  return str.slice(0, maxLength - 3) + "...";
 }
 
 /**
  * Generates a random ID string
  */
 export function generateId(length: number = 8): string {
-	const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-	let result = "";
-	for (let i = 0; i < length; i++) {
-		result += chars.charAt(Math.floor(Math.random() * chars.length));
-	}
-	return result;
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }
 
 /**
  * Debounce function
  */
 export function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(
-	func: T,
-	wait: number
+  func: T,
+  wait: number
 ): (...args: Parameters<T>) => void {
-	let timeoutId: ReturnType<typeof setTimeout> | null = null;
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-	return (...args: Parameters<T>) => {
-		if (timeoutId) {
-			clearTimeout(timeoutId);
-		}
-		timeoutId = setTimeout(() => {
-			func(...args);
-		}, wait);
-	};
+  return (...args: Parameters<T>) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, wait);
+  };
 }

@@ -36,18 +36,18 @@ Open [http://localhost:3000](http://localhost:3000) with your browser.
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start dev server with Turbopack |
-| `pnpm build` | Production build |
-| `pnpm lint` | Run ESLint |
-| `pnpm format` | Format code with Prettier |
-| `pnpm format:check` | Check code formatting |
-| `pnpm test` | Run tests in watch mode |
-| `pnpm test:run` | Run tests once |
-| `pnpm test:coverage` | Run tests with coverage |
-| `pnpm preview` | Preview on local Cloudflare runtime |
-| `pnpm deploy` | Deploy to Cloudflare Workers |
+| Command              | Description                         |
+| -------------------- | ----------------------------------- |
+| `pnpm dev`           | Start dev server with Turbopack     |
+| `pnpm build`         | Production build                    |
+| `pnpm lint`          | Run ESLint                          |
+| `pnpm format`        | Format code with Prettier           |
+| `pnpm format:check`  | Check code formatting               |
+| `pnpm test`          | Run tests in watch mode             |
+| `pnpm test:run`      | Run tests once                      |
+| `pnpm test:coverage` | Run tests with coverage             |
+| `pnpm preview`       | Preview on local Cloudflare runtime |
+| `pnpm deploy`        | Deploy to Cloudflare Workers        |
 
 ## Project Structure
 

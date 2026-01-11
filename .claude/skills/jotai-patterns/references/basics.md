@@ -18,13 +18,10 @@ const countAtom = atom(0);
 export const countDisplayAtom = atom((get) => get(countAtom).toLocaleString());
 
 // 増やすことはできても減らすことはできない（操作を制限）
-export const incrementAtom = atom(
-  null,
-  (get, set, step = 1) => {
-    if (step < 0) throw new Error("負の数を足すことはできませんよ！！");
-    set(countAtom, get(countAtom) + step);
-  }
-);
+export const incrementAtom = atom(null, (get, set, step = 1) => {
+  if (step < 0) throw new Error("負の数を足すことはできませんよ！！");
+  set(countAtom, get(countAtom) + step);
+});
 ```
 
 ## Why Encapsulation?
@@ -64,27 +61,18 @@ export const sortedItemsAtom = atom((get) =>
 
 ```tsx
 // Simple setter
-export const setCountAtom = atom(
-  null,
-  (get, set, value: number) => set(countAtom, value)
-);
+export const setCountAtom = atom(null, (get, set, value: number) => set(countAtom, value));
 
 // Action with logic
-export const incrementAtom = atom(
-  null,
-  (get, set) => set(countAtom, get(countAtom) + 1)
-);
+export const incrementAtom = atom(null, (get, set) => set(countAtom, get(countAtom) + 1));
 
 // Action with validation
-export const incrementAtom = atom(
-  null,
-  (get, set, step = 1) => {
-    if (step < 0) {
-      throw new Error("負の数を足すことはできません");
-    }
-    set(countAtom, get(countAtom) + step);
+export const incrementAtom = atom(null, (get, set, step = 1) => {
+  if (step < 0) {
+    throw new Error("負の数を足すことはできません");
   }
-);
+  set(countAtom, get(countAtom) + step);
+});
 ```
 
 ### 4. Read-Write Derived Atoms (When needed)
@@ -102,13 +90,13 @@ export const userNameAtom = atom(
 
 ## Naming Conventions
 
-| Type | Suffix | Example |
-|------|--------|---------|
-| Private primitive | `Atom` | `userAtom` (not exported) |
-| Read-only value | `ValueAtom` | `userValueAtom` |
-| Computed boolean | `is...Atom` | `isAuthenticatedAtom` |
+| Type              | Suffix               | Example                                    |
+| ----------------- | -------------------- | ------------------------------------------ |
+| Private primitive | `Atom`               | `userAtom` (not exported)                  |
+| Read-only value   | `ValueAtom`          | `userValueAtom`                            |
+| Computed boolean  | `is...Atom`          | `isAuthenticatedAtom`                      |
 | Write-only action | Action name + `Atom` | `loginAtom`, `logoutAtom`, `incrementAtom` |
-| List getter | Plural + `ValueAtom` | `itemsValueAtom` |
+| List getter       | Plural + `ValueAtom` | `itemsValueAtom`                           |
 
 ## Complete Example: Counter Module
 
@@ -133,13 +121,10 @@ export const countDisplayAtom = atom((get) => get(countAtom).toLocaleString());
 // Action Exports
 // ============================================
 // 増やすことはできても減らすことはできない
-export const incrementAtom = atom(
-  null,
-  (get, set, step = 1) => {
-    if (step < 0) throw new Error("負の数を足すことはできませんよ！！");
-    set(countAtom, get(countAtom) + step);
-  }
-);
+export const incrementAtom = atom(null, (get, set, step = 1) => {
+  if (step < 0) throw new Error("負の数を足すことはできませんよ！！");
+  set(countAtom, get(countAtom) + step);
+});
 ```
 
 **設計上の選択**: 生の値へのアクセスが必要な場合は`countValueAtom`を追加できるが、それはカプセル化を緩めることを意味する。要件に応じて判断する。
@@ -208,11 +193,7 @@ export const logoutAtom = atom(null, (get, set) => {
 "use client";
 
 import { useAtomValue, useSetAtom } from "jotai";
-import {
-  userValueAtom,
-  isLoadingAtom,
-  loginAtom
-} from "@/features/auth/stores/auth-atoms";
+import { userValueAtom, isLoadingAtom, loginAtom } from "@/features/auth/stores/auth-atoms";
 
 export function LoginButton() {
   const user = useAtomValue(userValueAtom);
@@ -239,8 +220,8 @@ import { atomWithReset, RESET } from "jotai/utils";
 const countAtom = atomWithReset(0);
 
 // 使用
-setCount(5);      // 5になる
-setCount(RESET);  // 0に戻る
+setCount(5); // 5になる
+setCount(RESET); // 0に戻る
 ```
 
 自作も可能:

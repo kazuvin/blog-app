@@ -12,10 +12,12 @@ Design tokens and style patterns for this project. Referenced by component-creat
 This project uses `prettier-plugin-tailwindcss` to automatically sort Tailwind CSS classes. The order follows [Tailwind's recommended class order](https://tailwindcss.com/blog/automatic-class-sorting-with-prettier).
 
 **Commands:**
+
 - `pnpm format` - Format all source files (auto-sorts Tailwind classes)
 - `pnpm format:check` - Check formatting without modifying files
 
 When writing components, classes will be automatically sorted on format. The recommended order is:
+
 1. Layout (display, position, overflow)
 2. Flexbox/Grid
 3. Spacing (margin, padding)
@@ -36,11 +38,11 @@ When writing components, classes will be automatically sorted on format. The rec
 @theme {
   /* Colors - Primary */
   --color-primary: oklch(0.55 0.22 264);
-  --color-primary-hover: oklch(0.50 0.23 264);
+  --color-primary-hover: oklch(0.5 0.23 264);
 
   /* Colors - Neutral */
   --color-background: oklch(1 0 0);
-  --color-foreground: oklch(0.20 0 0);
+  --color-foreground: oklch(0.2 0 0);
   --color-surface: oklch(0.97 0 0);
   --color-border: oklch(0.92 0 0);
   --color-muted: oklch(0.55 0 0);
@@ -61,38 +63,39 @@ When writing components, classes will be automatically sorted on format. The rec
   --color-foreground: oklch(0.95 0 0);
   --color-surface: oklch(0.22 0 0);
   --color-border: oklch(0.27 0 0);
-  --color-muted: oklch(0.70 0 0);
-  --color-success: oklch(0.80 0.18 145);
+  --color-muted: oklch(0.7 0 0);
+  --color-success: oklch(0.8 0.18 145);
   --color-warning: oklch(0.82 0.17 80);
-  --color-error: oklch(0.70 0.19 25);
+  --color-error: oklch(0.7 0.19 25);
 }
 ```
 
 ## Color Tokens
 
-| Token | Light | Dark | Class |
-|-------|-------|------|-------|
-| `primary` | oklch(0.55 0.22 264) | oklch(0.62 0.21 264) | `bg-primary` |
-| `background` | oklch(1 0 0) | oklch(0.15 0 0) | `bg-background` |
-| `foreground` | oklch(0.20 0 0) | oklch(0.95 0 0) | `text-foreground` |
-| `surface` | oklch(0.97 0 0) | oklch(0.22 0 0) | `bg-surface` |
-| `border` | oklch(0.92 0 0) | oklch(0.27 0 0) | `border-border` |
-| `muted` | oklch(0.55 0 0) | oklch(0.70 0 0) | `text-muted` |
+| Token        | Light                | Dark                 | Class             |
+| ------------ | -------------------- | -------------------- | ----------------- |
+| `primary`    | oklch(0.55 0.22 264) | oklch(0.62 0.21 264) | `bg-primary`      |
+| `background` | oklch(1 0 0)         | oklch(0.15 0 0)      | `bg-background`   |
+| `foreground` | oklch(0.20 0 0)      | oklch(0.95 0 0)      | `text-foreground` |
+| `surface`    | oklch(0.97 0 0)      | oklch(0.22 0 0)      | `bg-surface`      |
+| `border`     | oklch(0.92 0 0)      | oklch(0.27 0 0)      | `border-border`   |
+| `muted`      | oklch(0.55 0 0)      | oklch(0.70 0 0)      | `text-muted`      |
 
 ## Component Patterns
 
 ```tsx
 // Button - Primary
-className="bg-primary text-white px-4 py-2 rounded-md hover:opacity-90"
+className = "bg-primary text-white px-4 py-2 rounded-md hover:opacity-90";
 
 // Button - Secondary
-className="bg-surface text-foreground px-4 py-2 rounded-md border border-border"
+className = "bg-surface text-foreground px-4 py-2 rounded-md border border-border";
 
 // Card
-className="bg-surface border border-border rounded-lg p-6"
+className = "bg-surface border border-border rounded-lg p-6";
 
 // Input
-className="w-full bg-background border border-border rounded-md px-3 py-2 focus:ring-2 focus:ring-primary/50"
+className =
+  "w-full bg-background border border-border rounded-md px-3 py-2 focus:ring-2 focus:ring-primary/50";
 ```
 
 ## References

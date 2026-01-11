@@ -23,23 +23,23 @@ export const loginAtom = atom(null, async (get, set, creds) => { ... });  // act
 
 ## Pattern Decision Guide
 
-| やりたいこと | パターン | 参照 |
-|-------------|----------|------|
-| 状態を読み取りたい | Read-only derived atom | [basics.md](references/basics.md) |
-| 状態を更新したい | Write-only action atom | [basics.md](references/basics.md) |
-| 非同期データ取得 | Async derived atom + Suspense | [suspense.md](references/suspense.md) |
-| パラメータ付きfetch（単一） | Parameter via atom | [suspense.md](references/suspense.md) |
-| パラメータ付きfetch（複数キャッシュ） | atomFamily | [suspense.md](references/suspense.md) |
+| やりたいこと                          | パターン                      | 参照                                  |
+| ------------------------------------- | ----------------------------- | ------------------------------------- |
+| 状態を読み取りたい                    | Read-only derived atom        | [basics.md](references/basics.md)     |
+| 状態を更新したい                      | Write-only action atom        | [basics.md](references/basics.md)     |
+| 非同期データ取得                      | Async derived atom + Suspense | [suspense.md](references/suspense.md) |
+| パラメータ付きfetch（単一）           | Parameter via atom            | [suspense.md](references/suspense.md) |
+| パラメータ付きfetch（複数キャッシュ） | atomFamily                    | [suspense.md](references/suspense.md) |
 
 ## Quick Reference
 
 ### Naming Conventions
 
-| Type | Pattern | Example |
-|------|---------|---------|
-| Private primitive | `xxxAtom` (not exported) | `userAtom` |
-| Read-only | `xxxValueAtom` or `isXxxAtom` | `userValueAtom`, `isAuthenticatedAtom` |
-| Action | `xxxAtom` (verb) | `loginAtom`, `incrementAtom` |
+| Type              | Pattern                       | Example                                |
+| ----------------- | ----------------------------- | -------------------------------------- |
+| Private primitive | `xxxAtom` (not exported)      | `userAtom`                             |
+| Read-only         | `xxxValueAtom` or `isXxxAtom` | `userValueAtom`, `isAuthenticatedAtom` |
+| Action            | `xxxAtom` (verb)              | `loginAtom`, `incrementAtom`           |
 
 ### File Structure
 
