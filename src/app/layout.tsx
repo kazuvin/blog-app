@@ -8,6 +8,7 @@ import {
   HeaderNavItem,
   HeaderGitHubLink,
 } from "@/components";
+import { Providers } from "./providers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -39,18 +40,21 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml"></link>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Header>
-          <HeaderLogo>My Blog</HeaderLogo>
-          <HeaderNav>
-            <HeaderNavList>
-              <HeaderNavItem href="/">Home</HeaderNavItem>
-              <HeaderNavItem href="/blog">Blog</HeaderNavItem>
-              <HeaderNavItem href="/about">About</HeaderNavItem>
-            </HeaderNavList>
-            <HeaderGitHubLink url="https://github.com" />
-          </HeaderNav>
-        </Header>
-        <main className="container mx-auto px-4">{children}</main>
+        <Providers>
+          <Header>
+            <HeaderLogo>My Blog</HeaderLogo>
+            <HeaderNav>
+              <HeaderNavList>
+                <HeaderNavItem href="/">Home</HeaderNavItem>
+                <HeaderNavItem href="/blog">Blog</HeaderNavItem>
+                <HeaderNavItem href="/showcases">Showcases</HeaderNavItem>
+                <HeaderNavItem href="/about">About</HeaderNavItem>
+              </HeaderNavList>
+              <HeaderGitHubLink url="https://github.com" />
+            </HeaderNav>
+          </Header>
+          <main className="container mx-auto px-4">{children}</main>
+        </Providers>
       </body>
     </html>
   );
