@@ -2,10 +2,6 @@ import Link from "next/link";
 import { type ComponentProps, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-/* -----------------------------------------------------------------------------
- * Header
- * -------------------------------------------------------------------------- */
-
 export type HeaderProps = ComponentProps<"header">;
 
 export function Header({ className, children, ...props }: HeaderProps) {
@@ -20,10 +16,6 @@ export function Header({ className, children, ...props }: HeaderProps) {
     </header>
   );
 }
-
-/* -----------------------------------------------------------------------------
- * HeaderLogo
- * -------------------------------------------------------------------------- */
 
 export type HeaderLogoProps = Omit<ComponentProps<typeof Link>, "href"> & {
   href?: string;
@@ -44,10 +36,6 @@ export function HeaderLogo({ href = "/", className, children, ...props }: Header
   );
 }
 
-/* -----------------------------------------------------------------------------
- * HeaderNav
- * -------------------------------------------------------------------------- */
-
 export type HeaderNavProps = ComponentProps<"nav">;
 
 export function HeaderNav({ className, children, ...props }: HeaderNavProps) {
@@ -58,10 +46,6 @@ export function HeaderNav({ className, children, ...props }: HeaderNavProps) {
   );
 }
 
-/* -----------------------------------------------------------------------------
- * HeaderNavList
- * -------------------------------------------------------------------------- */
-
 export type HeaderNavListProps = ComponentProps<"ul">;
 
 export function HeaderNavList({ className, children, ...props }: HeaderNavListProps) {
@@ -71,10 +55,6 @@ export function HeaderNavList({ className, children, ...props }: HeaderNavListPr
     </ul>
   );
 }
-
-/* -----------------------------------------------------------------------------
- * HeaderNavItem
- * -------------------------------------------------------------------------- */
 
 export type HeaderNavItemProps = ComponentProps<typeof Link>;
 
@@ -94,10 +74,6 @@ export function HeaderNavItem({ className, children, ...props }: HeaderNavItemPr
   );
 }
 
-/* -----------------------------------------------------------------------------
- * HeaderAction
- * -------------------------------------------------------------------------- */
-
 export type HeaderActionProps = ComponentProps<"a"> & {
   icon?: ReactNode;
 };
@@ -114,10 +90,6 @@ export function HeaderAction({ className, icon, children, ...props }: HeaderActi
     </a>
   );
 }
-
-/* -----------------------------------------------------------------------------
- * HeaderGitHubLink
- * -------------------------------------------------------------------------- */
 
 export type HeaderGitHubLinkProps = Omit<ComponentProps<"a">, "children"> & {
   /** GitHub repository URL */
@@ -138,10 +110,6 @@ export function HeaderGitHubLink({ url, className, ...props }: HeaderGitHubLinkP
     </a>
   );
 }
-
-/* -----------------------------------------------------------------------------
- * GitHubIcon (internal)
- * -------------------------------------------------------------------------- */
 
 function GitHubIcon({ className }: { className?: string }) {
   return (
