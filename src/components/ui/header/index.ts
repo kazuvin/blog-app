@@ -1,6 +1,15 @@
-export { Header } from "./header";
+export {
+  Header,
+  HeaderLogo,
+  HeaderNav,
+  HeaderNavList,
+  HeaderNavItem,
+  HeaderAction,
+  HeaderGitHubLink,
+} from "./header";
+
 export type {
-  HeaderRootProps,
+  HeaderProps,
   HeaderLogoProps,
   HeaderNavProps,
   HeaderNavListProps,

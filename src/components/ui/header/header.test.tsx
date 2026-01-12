@@ -1,14 +1,21 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { Header } from "./header";
+import {
+  Header,
+  HeaderLogo,
+  HeaderNav,
+  HeaderNavList,
+  HeaderNavItem,
+  HeaderGitHubLink,
+} from "./header";
 
 describe("Header", () => {
-  describe("Header.Root", () => {
+  describe("Header", () => {
     it("renders as header element", () => {
       render(
-        <Header.Root>
-          <Header.Logo>My Blog</Header.Logo>
-        </Header.Root>
+        <Header>
+          <HeaderLogo>My Blog</HeaderLogo>
+        </Header>
       );
 
       const header = screen.getByRole("banner");
@@ -17,9 +24,9 @@ describe("Header", () => {
 
     it("applies custom className", () => {
       render(
-        <Header.Root className="custom-class" data-testid="header">
-          <Header.Logo>My Blog</Header.Logo>
-        </Header.Root>
+        <Header className="custom-class" data-testid="header">
+          <HeaderLogo>My Blog</HeaderLogo>
+        </Header>
       );
 
       const header = screen.getByTestId("header");
@@ -30,9 +37,9 @@ describe("Header", () => {
 
     it("passes additional props to header element", () => {
       render(
-        <Header.Root data-testid="custom-header" aria-label="Site header">
-          <Header.Logo>My Blog</Header.Logo>
-        </Header.Root>
+        <Header data-testid="custom-header" aria-label="Site header">
+          <HeaderLogo>My Blog</HeaderLogo>
+        </Header>
       );
 
       const header = screen.getByTestId("custom-header");
@@ -40,12 +47,12 @@ describe("Header", () => {
     });
   });
 
-  describe("Header.Logo", () => {
+  describe("HeaderLogo", () => {
     it("renders as link to home by default", () => {
       render(
-        <Header.Root>
-          <Header.Logo>My Blog</Header.Logo>
-        </Header.Root>
+        <Header>
+          <HeaderLogo>My Blog</HeaderLogo>
+        </Header>
       );
 
       const logo = screen.getByRole("link", { name: "My Blog" });
@@ -55,9 +62,9 @@ describe("Header", () => {
 
     it("renders with custom href", () => {
       render(
-        <Header.Root>
-          <Header.Logo href="/custom">My Blog</Header.Logo>
-        </Header.Root>
+        <Header>
+          <HeaderLogo href="/custom">My Blog</HeaderLogo>
+        </Header>
       );
 
       const logo = screen.getByRole("link", { name: "My Blog" });
@@ -66,9 +73,9 @@ describe("Header", () => {
 
     it("applies custom className", () => {
       render(
-        <Header.Root>
-          <Header.Logo className="custom-logo">My Blog</Header.Logo>
-        </Header.Root>
+        <Header>
+          <HeaderLogo className="custom-logo">My Blog</HeaderLogo>
+        </Header>
       );
 
       const logo = screen.getByRole("link", { name: "My Blog" });
@@ -76,19 +83,19 @@ describe("Header", () => {
     });
   });
 
-  describe("Header.NavItem", () => {
+  describe("HeaderNavItem", () => {
     it("renders navigation items with correct links", () => {
       render(
-        <Header.Root>
-          <Header.Logo>My Blog</Header.Logo>
-          <Header.Nav>
-            <Header.NavList>
-              <Header.NavItem href="/">Home</Header.NavItem>
-              <Header.NavItem href="/blog">Blog</Header.NavItem>
-              <Header.NavItem href="/about">About</Header.NavItem>
-            </Header.NavList>
-          </Header.Nav>
-        </Header.Root>
+        <Header>
+          <HeaderLogo>My Blog</HeaderLogo>
+          <HeaderNav>
+            <HeaderNavList>
+              <HeaderNavItem href="/">Home</HeaderNavItem>
+              <HeaderNavItem href="/blog">Blog</HeaderNavItem>
+              <HeaderNavItem href="/about">About</HeaderNavItem>
+            </HeaderNavList>
+          </HeaderNav>
+        </Header>
       );
 
       const homeLink = screen.getByRole("link", { name: "Home" });
@@ -106,15 +113,15 @@ describe("Header", () => {
 
     it("applies custom className to nav item", () => {
       render(
-        <Header.Root>
-          <Header.Nav>
-            <Header.NavList>
-              <Header.NavItem href="/" className="custom-nav-item">
+        <Header>
+          <HeaderNav>
+            <HeaderNavList>
+              <HeaderNavItem href="/" className="custom-nav-item">
                 Home
-              </Header.NavItem>
-            </Header.NavList>
-          </Header.Nav>
-        </Header.Root>
+              </HeaderNavItem>
+            </HeaderNavList>
+          </HeaderNav>
+        </Header>
       );
 
       const link = screen.getByRole("link", { name: "Home" });
@@ -122,14 +129,14 @@ describe("Header", () => {
     });
   });
 
-  describe("Header.GitHubLink", () => {
+  describe("HeaderGitHubLink", () => {
     it("renders GitHub link with correct attributes", () => {
       render(
-        <Header.Root>
-          <Header.Nav>
-            <Header.GitHubLink url="https://github.com/example/repo" />
-          </Header.Nav>
-        </Header.Root>
+        <Header>
+          <HeaderNav>
+            <HeaderGitHubLink url="https://github.com/example/repo" />
+          </HeaderNav>
+        </Header>
       );
 
       const githubLink = screen.getByRole("link", { name: "GitHub repository" });
@@ -141,11 +148,11 @@ describe("Header", () => {
 
     it("applies custom className", () => {
       render(
-        <Header.Root>
-          <Header.Nav>
-            <Header.GitHubLink url="https://github.com" className="custom-github" />
-          </Header.Nav>
-        </Header.Root>
+        <Header>
+          <HeaderNav>
+            <HeaderGitHubLink url="https://github.com" className="custom-github" />
+          </HeaderNav>
+        </Header>
       );
 
       const githubLink = screen.getByRole("link", { name: "GitHub repository" });
@@ -156,16 +163,16 @@ describe("Header", () => {
   describe("Full Header composition", () => {
     it("renders complete header with all components", () => {
       render(
-        <Header.Root data-testid="header">
-          <Header.Logo>My Blog</Header.Logo>
-          <Header.Nav>
-            <Header.NavList>
-              <Header.NavItem href="/">Home</Header.NavItem>
-              <Header.NavItem href="/blog">Blog</Header.NavItem>
-            </Header.NavList>
-            <Header.GitHubLink url="https://github.com/example" />
-          </Header.Nav>
-        </Header.Root>
+        <Header data-testid="header">
+          <HeaderLogo>My Blog</HeaderLogo>
+          <HeaderNav>
+            <HeaderNavList>
+              <HeaderNavItem href="/">Home</HeaderNavItem>
+              <HeaderNavItem href="/blog">Blog</HeaderNavItem>
+            </HeaderNavList>
+            <HeaderGitHubLink url="https://github.com/example" />
+          </HeaderNav>
+        </Header>
       );
 
       expect(screen.getByRole("banner")).toBeInTheDocument();

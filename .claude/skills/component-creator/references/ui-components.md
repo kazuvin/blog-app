@@ -4,14 +4,16 @@
 
 ## 既存コンポーネント一覧
 
-| Component | Variants                               | Sizes      | 特徴                                               |
-| --------- | -------------------------------------- | ---------- | -------------------------------------------------- |
-| Button    | primary, secondary, ghost              | sm, md, lg | 基本ボタン                                         |
-| Card      | default, outline                       | -          | 複合パターン (CardHeader, CardContent, CardFooter) |
-| Input     | default, error                         | sm, md, lg | `inputSize` prop使用 (HTML size属性との衝突回避)   |
-| Badge     | default, success, warning, error, info | sm, md     | インラインバッジ                                   |
-| Label     | -                                      | -          | `required` propで赤いアスタリスク                  |
-| Dialog    | default, alert                         | sm, md, lg | 複合パターン、ESC/オーバーレイクリック対応         |
+| Component | Variants                               | Sizes      | 特徴                                                  |
+| --------- | -------------------------------------- | ---------- | ----------------------------------------------------- |
+| Button    | primary, secondary, ghost              | sm, md, lg | 基本ボタン                                            |
+| Card      | default, outline                       | -          | 複合パターン (CardHeader, CardContent, CardFooter)    |
+| Input     | default, error                         | sm, md, lg | `inputSize` prop使用 (HTML size属性との衝突回避)      |
+| Badge     | default, success, warning, error, info | sm, md     | インラインバッジ                                      |
+| Label     | -                                      | -          | `required` propで赤いアスタリスク                     |
+| Dialog    | default, alert                         | sm, md, lg | 複合パターン、ESC/オーバーレイクリック対応            |
+| Header    | -                                      | -          | 複合パターン (HeaderLogo, HeaderNav, HeaderNavItem等) |
+| Container | -                                      | sm~full    | Tailwind .container 相当のユーティリティ              |
 
 ## ファイル構造
 
@@ -66,25 +68,76 @@ const sizeStyles = {
 "bg-foreground/10"; // 10%透明度の背景
 ```
 
-## 複合コンポーネントパターン (Card, Dialog)
+## 複合コンポーネントパターン (shadcn形式)
+
+このプロジェクトでは **shadcn形式**（個別エクスポート）を採用。
+
+**なぜshadcn形式を採用するか:**
+
+- Tree-shaking が効きやすい
+- 必要なものだけ明示的にインポート
+- IDE 補完がより直接的
 
 ```tsx
-// サブコンポーネント
-export function DialogHeader({ className, children, ...props }: DialogHeaderProps) {
+// ✅ shadcn形式（採用）
+import { Dialog, DialogTrigger, DialogContent } from "@/components";
+
+// ❌ RadixUI形式（不採用）
+import { Dialog } from "@/components";
+<Dialog.Trigger />;
+```
+
+### 複合コンポーネントの実装例
+
+```tsx
+// header.tsx - 各コンポーネントを個別の関数として定義
+export function Header({ className, children, ...props }: HeaderProps) {
   return (
-    <div className={cn("border-foreground/10 border-b px-6 py-4", className)} {...props}>
+    <header className={cn("...", className)} {...props}>
       {children}
-    </div>
+    </header>
   );
 }
 
-export function DialogFooter({ className, children, ...props }: DialogFooterProps) {
+export function HeaderLogo({ href = "/", className, children, ...props }: HeaderLogoProps) {
   return (
-    <div className={cn("flex justify-end gap-2 px-6 py-4", className)} {...props}>
+    <Link href={href} className={cn("...", className)} {...props}>
       {children}
-    </div>
+    </Link>
   );
 }
+
+export function HeaderNav({ className, children, ...props }: HeaderNavProps) {
+  return (
+    <nav className={cn("...", className)} {...props}>
+      {children}
+    </nav>
+  );
+}
+```
+
+### 複合コンポーネントの使用例
+
+```tsx
+import {
+  Header,
+  HeaderLogo,
+  HeaderNav,
+  HeaderNavList,
+  HeaderNavItem,
+  HeaderGitHubLink,
+} from "@/components";
+
+<Header>
+  <HeaderLogo>My Blog</HeaderLogo>
+  <HeaderNav>
+    <HeaderNavList>
+      <HeaderNavItem href="/">Home</HeaderNavItem>
+      <HeaderNavItem href="/blog">Blog</HeaderNavItem>
+    </HeaderNavList>
+    <HeaderGitHubLink url="https://github.com" />
+  </HeaderNav>
+</Header>;
 ```
 
 ## Radix UI ラッパーパターン
@@ -112,9 +165,10 @@ export function DialogContent({ className, size = "md", children, ...props }: Di
 
 ## Storybookパターン
 
+### 単純なコンポーネント
+
 ```tsx
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { useState } from "react";
 import { ComponentName } from "./component-name";
 
 const meta = {
@@ -128,25 +182,55 @@ const meta = {
       options: ["option1", "option2"],
       description: "スタイルバリエーション",
     },
-    size: {
-      control: "select",
-      options: ["sm", "md", "lg"],
-      description: "サイズ",
-    },
   },
 } satisfies Meta<typeof ComponentName>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// 基本ストーリー
 export const Default: Story = {
   args: { variant: "default", children: "Content" },
 };
+```
 
-// 全バリアント表示
-export const AllVariants: Story = {
-  render: () => <div className="flex flex-col gap-4">{/* 各バリアントを表示 */}</div>,
+### 複合コンポーネント
+
+複合コンポーネントでは `render` 関数を使用：
+
+```tsx
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { Header, HeaderLogo, HeaderNav, HeaderNavList, HeaderNavItem } from "./header";
+
+const meta = {
+  title: "UI/Header",
+  component: Header,
+  parameters: { layout: "fullscreen" },
+  tags: ["autodocs"],
+} satisfies Meta<typeof Header>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  render: () => (
+    <Header>
+      <HeaderLogo>My Blog</HeaderLogo>
+    </Header>
+  ),
+};
+
+export const WithNavigation: Story = {
+  render: () => (
+    <Header>
+      <HeaderLogo>My Blog</HeaderLogo>
+      <HeaderNav>
+        <HeaderNavList>
+          <HeaderNavItem href="/">Home</HeaderNavItem>
+          <HeaderNavItem href="/blog">Blog</HeaderNavItem>
+        </HeaderNavList>
+      </HeaderNav>
+    </Header>
+  ),
 };
 ```
 
@@ -185,31 +269,36 @@ describe("ComponentName", () => {
 ## index.ts エクスポートパターン
 
 ```tsx
-// src/components/ui/dialog/index.ts
+// src/components/ui/header/index.ts
 export {
-  Dialog,
-  DialogHeader,
-  DialogContent,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
-} from "./dialog";
+  Header,
+  HeaderLogo,
+  HeaderNav,
+  HeaderNavList,
+  HeaderNavItem,
+  HeaderAction,
+  HeaderGitHubLink,
+} from "./header";
+
 export type {
-  DialogProps,
-  DialogHeaderProps,
-  DialogContentProps,
-  DialogFooterProps,
-  DialogTitleProps,
-  DialogDescriptionProps,
-} from "./dialog";
+  HeaderProps,
+  HeaderLogoProps,
+  HeaderNavProps,
+  HeaderNavListProps,
+  HeaderNavItemProps,
+  HeaderActionProps,
+  HeaderGitHubLinkProps,
+} from "./header";
 ```
 
 ```tsx
 // src/components/ui/index.ts (ルートバレル)
 export * from "./button";
 export * from "./card";
+export * from "./container";
+export * from "./dialog";
+export * from "./header";
 export * from "./input";
 export * from "./badge";
 export * from "./label";
-export * from "./dialog";
 ```

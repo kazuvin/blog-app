@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Header } from "@/components";
+import {
+  Header,
+  HeaderLogo,
+  HeaderNav,
+  HeaderNavList,
+  HeaderNavItem,
+  HeaderGitHubLink,
+} from "@/components";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,17 +39,17 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml"></link>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Header.Root>
-          <Header.Logo>My Blog</Header.Logo>
-          <Header.Nav>
-            <Header.NavList>
-              <Header.NavItem href="/">Home</Header.NavItem>
-              <Header.NavItem href="/blog">Blog</Header.NavItem>
-              <Header.NavItem href="/about">About</Header.NavItem>
-            </Header.NavList>
-            <Header.GitHubLink url="https://github.com" />
-          </Header.Nav>
-        </Header.Root>
+        <Header>
+          <HeaderLogo>My Blog</HeaderLogo>
+          <HeaderNav>
+            <HeaderNavList>
+              <HeaderNavItem href="/">Home</HeaderNavItem>
+              <HeaderNavItem href="/blog">Blog</HeaderNavItem>
+              <HeaderNavItem href="/about">About</HeaderNavItem>
+            </HeaderNavList>
+            <HeaderGitHubLink url="https://github.com" />
+          </HeaderNav>
+        </Header>
         <main>{children}</main>
       </body>
     </html>

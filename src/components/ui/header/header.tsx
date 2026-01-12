@@ -3,12 +3,12 @@ import { type ComponentProps, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /* -----------------------------------------------------------------------------
- * Header.Root
+ * Header
  * -------------------------------------------------------------------------- */
 
-export type HeaderRootProps = ComponentProps<"header">;
+export type HeaderProps = ComponentProps<"header">;
 
-function HeaderRoot({ className, children, ...props }: HeaderRootProps) {
+export function Header({ className, children, ...props }: HeaderProps) {
   return (
     <header
       className={cn("border-foreground/10 bg-background w-full border-b", className)}
@@ -22,14 +22,14 @@ function HeaderRoot({ className, children, ...props }: HeaderRootProps) {
 }
 
 /* -----------------------------------------------------------------------------
- * Header.Logo
+ * HeaderLogo
  * -------------------------------------------------------------------------- */
 
 export type HeaderLogoProps = Omit<ComponentProps<typeof Link>, "href"> & {
   href?: string;
 };
 
-function HeaderLogo({ href = "/", className, children, ...props }: HeaderLogoProps) {
+export function HeaderLogo({ href = "/", className, children, ...props }: HeaderLogoProps) {
   return (
     <Link
       href={href}
@@ -45,12 +45,12 @@ function HeaderLogo({ href = "/", className, children, ...props }: HeaderLogoPro
 }
 
 /* -----------------------------------------------------------------------------
- * Header.Nav
+ * HeaderNav
  * -------------------------------------------------------------------------- */
 
 export type HeaderNavProps = ComponentProps<"nav">;
 
-function HeaderNav({ className, children, ...props }: HeaderNavProps) {
+export function HeaderNav({ className, children, ...props }: HeaderNavProps) {
   return (
     <nav className={cn("flex items-center gap-6", className)} {...props}>
       {children}
@@ -59,12 +59,12 @@ function HeaderNav({ className, children, ...props }: HeaderNavProps) {
 }
 
 /* -----------------------------------------------------------------------------
- * Header.NavList
+ * HeaderNavList
  * -------------------------------------------------------------------------- */
 
 export type HeaderNavListProps = ComponentProps<"ul">;
 
-function HeaderNavList({ className, children, ...props }: HeaderNavListProps) {
+export function HeaderNavList({ className, children, ...props }: HeaderNavListProps) {
   return (
     <ul className={cn("flex items-center gap-6", className)} {...props}>
       {children}
@@ -73,12 +73,12 @@ function HeaderNavList({ className, children, ...props }: HeaderNavListProps) {
 }
 
 /* -----------------------------------------------------------------------------
- * Header.NavItem
+ * HeaderNavItem
  * -------------------------------------------------------------------------- */
 
 export type HeaderNavItemProps = ComponentProps<typeof Link>;
 
-function HeaderNavItem({ className, children, ...props }: HeaderNavItemProps) {
+export function HeaderNavItem({ className, children, ...props }: HeaderNavItemProps) {
   return (
     <li>
       <Link
@@ -95,14 +95,14 @@ function HeaderNavItem({ className, children, ...props }: HeaderNavItemProps) {
 }
 
 /* -----------------------------------------------------------------------------
- * Header.Action
+ * HeaderAction
  * -------------------------------------------------------------------------- */
 
 export type HeaderActionProps = ComponentProps<"a"> & {
   icon?: ReactNode;
 };
 
-function HeaderAction({ className, icon, children, ...props }: HeaderActionProps) {
+export function HeaderAction({ className, icon, children, ...props }: HeaderActionProps) {
   return (
     <a
       target="_blank"
@@ -116,7 +116,7 @@ function HeaderAction({ className, icon, children, ...props }: HeaderActionProps
 }
 
 /* -----------------------------------------------------------------------------
- * Header.GitHubLink
+ * HeaderGitHubLink
  * -------------------------------------------------------------------------- */
 
 export type HeaderGitHubLinkProps = Omit<ComponentProps<"a">, "children"> & {
@@ -124,7 +124,7 @@ export type HeaderGitHubLinkProps = Omit<ComponentProps<"a">, "children"> & {
   url: string;
 };
 
-function HeaderGitHubLink({ url, className, ...props }: HeaderGitHubLinkProps) {
+export function HeaderGitHubLink({ url, className, ...props }: HeaderGitHubLinkProps) {
   return (
     <a
       href={url}
@@ -154,17 +154,3 @@ function GitHubIcon({ className }: { className?: string }) {
     </svg>
   );
 }
-
-/* -----------------------------------------------------------------------------
- * Compound Export
- * -------------------------------------------------------------------------- */
-
-export const Header = {
-  Root: HeaderRoot,
-  Logo: HeaderLogo,
-  Nav: HeaderNav,
-  NavList: HeaderNavList,
-  NavItem: HeaderNavItem,
-  Action: HeaderAction,
-  GitHubLink: HeaderGitHubLink,
-};
