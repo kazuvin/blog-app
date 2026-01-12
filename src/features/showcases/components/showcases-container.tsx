@@ -1,7 +1,6 @@
 "use client";
 
 import { useAtomValue, useSetAtom } from "jotai";
-import { Container } from "@/components/ui/container";
 import {
   selectedItemValueAtom,
   isDialogOpenAtom,
@@ -23,25 +22,23 @@ export function ShowcasesContainer({ items }: ShowcasesContainerProps) {
   const clearSelection = useSetAtom(clearSelectionAtom);
 
   return (
-    <Container>
-      <div className="py-8">
-        <div className="mb-8">
-          <h1 className="text-foreground mb-2 text-3xl font-bold">Component Showcases</h1>
-          <p className="text-foreground/70">
-            A collection of presentation components for verification and testing purposes.
-          </p>
-        </div>
-
-        <ShowcaseGrid items={items} onItemClick={selectItem} />
-
-        <ShowcaseDialog
-          item={selectedItem}
-          open={isDialogOpen}
-          onOpenChange={(open) => {
-            if (!open) clearSelection();
-          }}
-        />
+    <>
+      <div className="mb-8">
+        <h1 className="text-foreground mb-2 text-3xl font-bold">Component Showcases</h1>
+        <p className="text-foreground/70">
+          A collection of presentation components for verification and testing purposes.
+        </p>
       </div>
-    </Container>
+
+      <ShowcaseGrid items={items} onItemClick={selectItem} />
+
+      <ShowcaseDialog
+        item={selectedItem}
+        open={isDialogOpen}
+        onOpenChange={(open) => {
+          if (!open) clearSelection();
+        }}
+      />
+    </>
   );
 }
