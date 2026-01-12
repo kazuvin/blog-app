@@ -10,6 +10,9 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Custom container max-width: narrower for better readability */
+  --container-max: 56rem; /* max-w-4xl (896px) */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -173,4 +176,10 @@ body {
   .prose blockquote {
     border-left-color: rgba(255, 255, 255, 0.2);
   }
+}
+
+/* Override default container max-width for narrower layout */
+@utility container {
+  width: 100%;
+  max-width: var(--container-max);
 }
