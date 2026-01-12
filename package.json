@@ -30,9 +30,15 @@
     "next": "15.5.9",
     "react": "19.1.4",
     "react-dom": "19.1.4",
+    "rehype-pretty-code": "^0.14.1",
+    "rehype-stringify": "^10.0.1",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
-    "tailwind-merge": "^3.4.0"
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "shiki": "^3.21.0",
+    "tailwind-merge": "^3.4.0",
+    "unified": "^11.0.5"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.1.3",
