@@ -6,9 +6,9 @@ export default function Home() {
   const recentPosts = getSortedPostsData().slice(0, 3);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12">
+    <>
       {/* Hero Section */}
-      <section className="mb-16 text-center">
+      <section className="mb-16 pt-4 text-center">
         <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
           Welcome to My Blog
         </h1>
@@ -76,6 +76,6 @@ export default function Home() {
           Coming Soon
         </Button>
       </section>
-    </div>
+    </>
   );
 }
