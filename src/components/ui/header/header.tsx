@@ -1,67 +1,113 @@
 import Link from "next/link";
-import { type ComponentProps } from "react";
+import { type ComponentProps, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-export type NavItem = {
-  label: string;
-  href: string;
-};
+export type HeaderProps = ComponentProps<"header">;
 
-export type HeaderProps = Omit<ComponentProps<"header">, "title"> & {
-  /** Site title displayed as logo/brand */
-  title: string;
-  /** Navigation items to display */
-  navItems?: NavItem[];
-  /** GitHub repository URL */
-  githubUrl?: string;
-};
-
-export function Header({ title, navItems = [], githubUrl, className, ...props }: HeaderProps) {
+export function Header({ className, children, ...props }: HeaderProps) {
   return (
     <header
       className={cn("border-foreground/10 bg-background w-full border-b", className)}
       {...props}
     >
       <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
-        {/* Logo/Title */}
-        <Link
-          href="/"
-          className="text-foreground hover:text-foreground/80 text-xl font-bold transition-colors"
-        >
-          {title}
-        </Link>
-
-        {/* Navigation */}
-        <nav className="flex items-center gap-6">
-          {/* Nav Items */}
-          <ul className="flex items-center gap-6">
-            {navItems.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="text-foreground/60 hover:text-foreground text-sm font-medium transition-colors"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          {/* GitHub Link */}
-          {githubUrl && (
-            <a
-              href={githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-foreground/60 hover:text-foreground transition-colors"
-              aria-label="GitHub repository"
-            >
-              <GitHubIcon className="h-5 w-5" />
-            </a>
-          )}
-        </nav>
+        {children}
       </div>
     </header>
+  );
+}
+
+export type HeaderLogoProps = Omit<ComponentProps<typeof Link>, "href"> & {
+  href?: string;
+};
+
+export function HeaderLogo({ href = "/", className, children, ...props }: HeaderLogoProps) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "text-foreground hover:text-foreground/80 text-xl font-bold transition-colors",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </Link>
+  );
+}
+
+export type HeaderNavProps = ComponentProps<"nav">;
+
+export function HeaderNav({ className, children, ...props }: HeaderNavProps) {
+  return (
+    <nav className={cn("flex items-center gap-6", className)} {...props}>
+      {children}
+    </nav>
+  );
+}
+
+export type HeaderNavListProps = ComponentProps<"ul">;
+
+export function HeaderNavList({ className, children, ...props }: HeaderNavListProps) {
+  return (
+    <ul className={cn("flex items-center gap-6", className)} {...props}>
+      {children}
+    </ul>
+  );
+}
+
+export type HeaderNavItemProps = ComponentProps<typeof Link>;
+
+export function HeaderNavItem({ className, children, ...props }: HeaderNavItemProps) {
+  return (
+    <li>
+      <Link
+        className={cn(
+          "text-foreground/60 hover:text-foreground text-sm font-medium transition-colors",
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </Link>
+    </li>
+  );
+}
+
+export type HeaderActionProps = ComponentProps<"a"> & {
+  icon?: ReactNode;
+};
+
+export function HeaderAction({ className, icon, children, ...props }: HeaderActionProps) {
+  return (
+    <a
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn("text-foreground/60 hover:text-foreground transition-colors", className)}
+      {...props}
+    >
+      {icon ?? children}
+    </a>
+  );
+}
+
+export type HeaderGitHubLinkProps = Omit<ComponentProps<"a">, "children"> & {
+  /** GitHub repository URL */
+  url: string;
+};
+
+export function HeaderGitHubLink({ url, className, ...props }: HeaderGitHubLinkProps) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn("text-foreground/60 hover:text-foreground transition-colors", className)}
+      aria-label="GitHub repository"
+      {...props}
+    >
+      <GitHubIcon className="h-5 w-5" />
+    </a>
   );
 }
 

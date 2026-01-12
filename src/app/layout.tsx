@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Layout } from "@/components";
+import {
+  Header,
+  HeaderLogo,
+  HeaderNav,
+  HeaderNavList,
+  HeaderNavItem,
+  HeaderGitHubLink,
+} from "@/components";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,12 +19,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Blog", href: "/blog" },
-  { label: "About", href: "/about" },
-];
 
 export const metadata: Metadata = {
   title: {
@@ -38,9 +39,18 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml"></link>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Layout title="My Blog" navItems={navItems} githubUrl="https://github.com">
-          {children}
-        </Layout>
+        <Header>
+          <HeaderLogo>My Blog</HeaderLogo>
+          <HeaderNav>
+            <HeaderNavList>
+              <HeaderNavItem href="/">Home</HeaderNavItem>
+              <HeaderNavItem href="/blog">Blog</HeaderNavItem>
+              <HeaderNavItem href="/about">About</HeaderNavItem>
+            </HeaderNavList>
+            <HeaderGitHubLink url="https://github.com" />
+          </HeaderNav>
+        </Header>
+        <main>{children}</main>
       </body>
     </html>
   );

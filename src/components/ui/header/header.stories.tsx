@@ -1,5 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { Header } from "./header";
+import {
+  Header,
+  HeaderLogo,
+  HeaderNav,
+  HeaderNavList,
+  HeaderNavItem,
+  HeaderGitHubLink,
+} from "./header";
 
 const meta = {
   title: "UI/Header",
@@ -8,78 +15,58 @@ const meta = {
     layout: "fullscreen",
   },
   tags: ["autodocs"],
-  argTypes: {
-    title: {
-      control: "text",
-      description: "Site title displayed as logo/brand",
-    },
-    navItems: {
-      description: "Navigation items to display",
-    },
-    githubUrl: {
-      control: "text",
-      description: "GitHub repository URL",
-    },
-  },
 } satisfies Meta<typeof Header>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    title: "My Blog",
-  },
+  render: () => (
+    <Header>
+      <HeaderLogo>My Blog</HeaderLogo>
+    </Header>
+  ),
 };
 
 export const WithNavigation: Story = {
-  args: {
-    title: "My Blog",
-    navItems: [
-      {
-        label: "Home",
-        href: "/",
-      },
-      {
-        label: "Blog",
-        href: "/blog",
-      },
-      {
-        label: "About",
-        href: "/about",
-      },
-    ],
-  },
+  render: () => (
+    <Header>
+      <HeaderLogo>My Blog</HeaderLogo>
+      <HeaderNav>
+        <HeaderNavList>
+          <HeaderNavItem href="/">Home</HeaderNavItem>
+          <HeaderNavItem href="/blog">Blog</HeaderNavItem>
+          <HeaderNavItem href="/about">About</HeaderNavItem>
+        </HeaderNavList>
+      </HeaderNav>
+    </Header>
+  ),
 };
 
 export const WithGitHub: Story = {
-  args: {
-    title: "My Blog",
-    githubUrl: "https://github.com/username/blog-app",
-  },
+  render: () => (
+    <Header>
+      <HeaderLogo>My Blog</HeaderLogo>
+      <HeaderNav>
+        <HeaderGitHubLink url="https://github.com/username/blog-app" />
+      </HeaderNav>
+    </Header>
+  ),
 };
 
 export const Full: Story = {
-  args: {
-    title: "My Blog",
-    navItems: [
-      {
-        label: "Home",
-        href: "/",
-      },
-      {
-        label: "Blog",
-        href: "/blog",
-      },
-      {
-        label: "About",
-        href: "/about",
-      },
-      {
-        label: "Contact",
-        href: "/contact",
-      },
-    ],
-    githubUrl: "https://github.com/username/blog-app",
-  },
+  render: () => (
+    <Header>
+      <HeaderLogo>My Blog</HeaderLogo>
+      <HeaderNav>
+        <HeaderNavList>
+          <HeaderNavItem href="/">Home</HeaderNavItem>
+          <HeaderNavItem href="/blog">Blog</HeaderNavItem>
+          <HeaderNavItem href="/about">About</HeaderNavItem>
+          <HeaderNavItem href="/contact">Contact</HeaderNavItem>
+        </HeaderNavList>
+        <HeaderGitHubLink url="https://github.com/username/blog-app" />
+      </HeaderNav>
+    </Header>
+  ),
 };
