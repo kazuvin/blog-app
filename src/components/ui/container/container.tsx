@@ -1,4 +1,4 @@
-import { forwardRef, type ComponentProps } from "react";
+import { type ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 export type ContainerProps = ComponentProps<"div"> & {
@@ -10,28 +10,23 @@ export type ContainerProps = ComponentProps<"div"> & {
  * Container component for consistent max-width and horizontal padding.
  * Similar to Tailwind's .container class but as a reusable component.
  */
-export const Container = forwardRef<HTMLDivElement, ContainerProps>(
-  ({ size = "lg", className, children, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={cn(
-          "mx-auto w-full px-4",
-          {
-            "max-w-2xl": size === "sm",
-            "max-w-3xl": size === "md",
-            "max-w-4xl": size === "lg",
-            "max-w-6xl": size === "xl",
-            "max-w-none": size === "full",
-          },
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </div>
-    );
-  }
-);
-
-Container.displayName = "Container";
+export function Container({ size = "lg", className, children, ...props }: ContainerProps) {
+  return (
+    <div
+      className={cn(
+        "mx-auto w-full px-4",
+        {
+          "max-w-2xl": size === "sm",
+          "max-w-3xl": size === "md",
+          "max-w-4xl": size === "lg",
+          "max-w-6xl": size === "xl",
+          "max-w-none": size === "full",
+        },
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}

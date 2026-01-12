@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { forwardRef, type ComponentProps } from "react";
+import { type ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 export type NavItem = {
@@ -16,59 +16,54 @@ export type HeaderProps = Omit<ComponentProps<"header">, "title"> & {
   githubUrl?: string;
 };
 
-export const Header = forwardRef<HTMLElement, HeaderProps>(
-  ({ title, navItems = [], githubUrl, className, ...props }, ref) => {
-    return (
-      <header
-        ref={ref}
-        className={cn("border-foreground/10 bg-background w-full border-b", className)}
-        {...props}
-      >
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
-          {/* Logo/Title */}
-          <Link
-            href="/"
-            className="text-foreground hover:text-foreground/80 text-xl font-bold transition-colors"
-          >
-            {title}
-          </Link>
+export function Header({ title, navItems = [], githubUrl, className, ...props }: HeaderProps) {
+  return (
+    <header
+      className={cn("border-foreground/10 bg-background w-full border-b", className)}
+      {...props}
+    >
+      <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
+        {/* Logo/Title */}
+        <Link
+          href="/"
+          className="text-foreground hover:text-foreground/80 text-xl font-bold transition-colors"
+        >
+          {title}
+        </Link>
 
-          {/* Navigation */}
-          <nav className="flex items-center gap-6">
-            {/* Nav Items */}
-            <ul className="flex items-center gap-6">
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-foreground/60 hover:text-foreground text-sm font-medium transition-colors"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+        {/* Navigation */}
+        <nav className="flex items-center gap-6">
+          {/* Nav Items */}
+          <ul className="flex items-center gap-6">
+            {navItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="text-foreground/60 hover:text-foreground text-sm font-medium transition-colors"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
 
-            {/* GitHub Link */}
-            {githubUrl && (
-              <a
-                href={githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-foreground/60 hover:text-foreground transition-colors"
-                aria-label="GitHub repository"
-              >
-                <GitHubIcon className="h-5 w-5" />
-              </a>
-            )}
-          </nav>
-        </div>
-      </header>
-    );
-  }
-);
-
-Header.displayName = "Header";
+          {/* GitHub Link */}
+          {githubUrl && (
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground/60 hover:text-foreground transition-colors"
+              aria-label="GitHub repository"
+            >
+              <GitHubIcon className="h-5 w-5" />
+            </a>
+          )}
+        </nav>
+      </div>
+    </header>
+  );
+}
 
 function GitHubIcon({ className }: { className?: string }) {
   return (
