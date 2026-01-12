@@ -10,7 +10,7 @@ export function Header({ className, children, ...props }: HeaderProps) {
       className={cn("border-foreground/10 bg-background w-full border-b", className)}
       {...props}
     >
-      <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
+      <div className="container mx-auto flex items-center justify-between px-4 py-4">
         {children}
       </div>
     </header>

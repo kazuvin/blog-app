@@ -50,7 +50,7 @@ export default function RootLayout({
             <HeaderGitHubLink url="https://github.com" />
           </HeaderNav>
         </Header>
-        <main>{children}</main>
+        <main className="container mx-auto px-4">{children}</main>
       </body>
     </html>
   );
