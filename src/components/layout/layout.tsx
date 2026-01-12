@@ -22,6 +22,17 @@ export type LayoutProps = Omit<ComponentProps<"div">, "title"> & {
 /**
  * Layout component that provides consistent page structure with Header,
  * main content area, and optional footer.
+ *
+ * @deprecated Use the Compound Component pattern instead:
+ * ```tsx
+ * import { Layout } from "@/components/layout";
+ *
+ * <Layout.Root>
+ *   <Layout.Header title="My Blog" />
+ *   <Layout.Main>{children}</Layout.Main>
+ *   <Layout.Footer />
+ * </Layout.Root>
+ * ```
  */
 export function Layout({
   children,

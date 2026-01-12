@@ -38,9 +38,11 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml"></link>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Layout title="My Blog" navItems={navItems} githubUrl="https://github.com">
-          {children}
-        </Layout>
+        <Layout.Root>
+          <Layout.Header title="My Blog" navItems={navItems} githubUrl="https://github.com" />
+          <Layout.Main>{children}</Layout.Main>
+          <Layout.Footer />
+        </Layout.Root>
       </body>
     </html>
   );
