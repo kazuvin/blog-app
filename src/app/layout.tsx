@@ -13,12 +13,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Blog", href: "/blog" },
-  { label: "About", href: "/about" },
-];
-
 export const metadata: Metadata = {
   title: {
     default: "My Blog",
@@ -38,7 +32,17 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml"></link>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Header title="My Blog" navItems={navItems} githubUrl="https://github.com" />
+        <Header.Root>
+          <Header.Logo>My Blog</Header.Logo>
+          <Header.Nav>
+            <Header.NavList>
+              <Header.NavItem href="/">Home</Header.NavItem>
+              <Header.NavItem href="/blog">Blog</Header.NavItem>
+              <Header.NavItem href="/about">About</Header.NavItem>
+            </Header.NavList>
+            <Header.GitHubLink url="https://github.com" />
+          </Header.Nav>
+        </Header.Root>
         <main>{children}</main>
       </body>
     </html>

@@ -3,25 +3,93 @@ import { describe, it, expect } from "vitest";
 import { Header } from "./header";
 
 describe("Header", () => {
-  describe("Title rendering", () => {
-    it("renders title correctly as a link to home", () => {
-      render(<Header title="My Blog" />);
+  describe("Header.Root", () => {
+    it("renders as header element", () => {
+      render(
+        <Header.Root>
+          <Header.Logo>My Blog</Header.Logo>
+        </Header.Root>
+      );
 
-      const titleLink = screen.getByRole("link", { name: "My Blog" });
-      expect(titleLink).toBeInTheDocument();
-      expect(titleLink).toHaveAttribute("href", "/");
+      const header = screen.getByRole("banner");
+      expect(header).toBeInTheDocument();
+    });
+
+    it("applies custom className", () => {
+      render(
+        <Header.Root className="custom-class" data-testid="header">
+          <Header.Logo>My Blog</Header.Logo>
+        </Header.Root>
+      );
+
+      const header = screen.getByTestId("header");
+      expect(header).toHaveClass("custom-class");
+      expect(header).toHaveClass("w-full");
+      expect(header).toHaveClass("border-b");
+    });
+
+    it("passes additional props to header element", () => {
+      render(
+        <Header.Root data-testid="custom-header" aria-label="Site header">
+          <Header.Logo>My Blog</Header.Logo>
+        </Header.Root>
+      );
+
+      const header = screen.getByTestId("custom-header");
+      expect(header).toHaveAttribute("aria-label", "Site header");
     });
   });
 
-  describe("Navigation items", () => {
-    it("renders navigation items with correct links", () => {
-      const navItems = [
-        { label: "Home", href: "/" },
-        { label: "Blog", href: "/blog" },
-        { label: "About", href: "/about" },
-      ];
+  describe("Header.Logo", () => {
+    it("renders as link to home by default", () => {
+      render(
+        <Header.Root>
+          <Header.Logo>My Blog</Header.Logo>
+        </Header.Root>
+      );
 
-      render(<Header title="My Blog" navItems={navItems} />);
+      const logo = screen.getByRole("link", { name: "My Blog" });
+      expect(logo).toBeInTheDocument();
+      expect(logo).toHaveAttribute("href", "/");
+    });
+
+    it("renders with custom href", () => {
+      render(
+        <Header.Root>
+          <Header.Logo href="/custom">My Blog</Header.Logo>
+        </Header.Root>
+      );
+
+      const logo = screen.getByRole("link", { name: "My Blog" });
+      expect(logo).toHaveAttribute("href", "/custom");
+    });
+
+    it("applies custom className", () => {
+      render(
+        <Header.Root>
+          <Header.Logo className="custom-logo">My Blog</Header.Logo>
+        </Header.Root>
+      );
+
+      const logo = screen.getByRole("link", { name: "My Blog" });
+      expect(logo).toHaveClass("custom-logo");
+    });
+  });
+
+  describe("Header.NavItem", () => {
+    it("renders navigation items with correct links", () => {
+      render(
+        <Header.Root>
+          <Header.Logo>My Blog</Header.Logo>
+          <Header.Nav>
+            <Header.NavList>
+              <Header.NavItem href="/">Home</Header.NavItem>
+              <Header.NavItem href="/blog">Blog</Header.NavItem>
+              <Header.NavItem href="/about">About</Header.NavItem>
+            </Header.NavList>
+          </Header.Nav>
+        </Header.Root>
+      );
 
       const homeLink = screen.getByRole("link", { name: "Home" });
       expect(homeLink).toBeInTheDocument();
@@ -36,27 +104,33 @@ describe("Header", () => {
       expect(aboutLink).toHaveAttribute("href", "/about");
     });
 
-    it("renders empty navigation when navItems is not provided", () => {
-      render(<Header title="My Blog" />);
+    it("applies custom className to nav item", () => {
+      render(
+        <Header.Root>
+          <Header.Nav>
+            <Header.NavList>
+              <Header.NavItem href="/" className="custom-nav-item">
+                Home
+              </Header.NavItem>
+            </Header.NavList>
+          </Header.Nav>
+        </Header.Root>
+      );
 
-      // Only the title link should be present (no nav item links)
-      const links = screen.getAllByRole("link");
-      expect(links).toHaveLength(1);
-      expect(links[0]).toHaveTextContent("My Blog");
-    });
-
-    it("renders empty navigation when navItems is empty array", () => {
-      render(<Header title="My Blog" navItems={[]} />);
-
-      const links = screen.getAllByRole("link");
-      expect(links).toHaveLength(1);
-      expect(links[0]).toHaveTextContent("My Blog");
+      const link = screen.getByRole("link", { name: "Home" });
+      expect(link).toHaveClass("custom-nav-item");
     });
   });
 
-  describe("GitHub link", () => {
-    it("renders GitHub link when githubUrl is provided", () => {
-      render(<Header title="My Blog" githubUrl="https://github.com/example/repo" />);
+  describe("Header.GitHubLink", () => {
+    it("renders GitHub link with correct attributes", () => {
+      render(
+        <Header.Root>
+          <Header.Nav>
+            <Header.GitHubLink url="https://github.com/example/repo" />
+          </Header.Nav>
+        </Header.Root>
+      );
 
       const githubLink = screen.getByRole("link", { name: "GitHub repository" });
       expect(githubLink).toBeInTheDocument();
@@ -65,45 +139,40 @@ describe("Header", () => {
       expect(githubLink).toHaveAttribute("rel", "noopener noreferrer");
     });
 
-    it("does not render GitHub link when githubUrl is not provided", () => {
-      render(<Header title="My Blog" />);
+    it("applies custom className", () => {
+      render(
+        <Header.Root>
+          <Header.Nav>
+            <Header.GitHubLink url="https://github.com" className="custom-github" />
+          </Header.Nav>
+        </Header.Root>
+      );
 
-      const githubLink = screen.queryByRole("link", { name: "GitHub repository" });
-      expect(githubLink).not.toBeInTheDocument();
+      const githubLink = screen.getByRole("link", { name: "GitHub repository" });
+      expect(githubLink).toHaveClass("custom-github");
     });
   });
 
-  describe("Custom className", () => {
-    it("applies custom className to header element", () => {
-      render(<Header title="My Blog" className="custom-header-class" data-testid="header" />);
+  describe("Full Header composition", () => {
+    it("renders complete header with all components", () => {
+      render(
+        <Header.Root data-testid="header">
+          <Header.Logo>My Blog</Header.Logo>
+          <Header.Nav>
+            <Header.NavList>
+              <Header.NavItem href="/">Home</Header.NavItem>
+              <Header.NavItem href="/blog">Blog</Header.NavItem>
+            </Header.NavList>
+            <Header.GitHubLink url="https://github.com/example" />
+          </Header.Nav>
+        </Header.Root>
+      );
 
-      const header = screen.getByTestId("header");
-      expect(header).toHaveClass("custom-header-class");
-    });
-
-    it("merges custom className with default classes", () => {
-      render(<Header title="My Blog" className="custom-class" data-testid="header" />);
-
-      const header = screen.getByTestId("header");
-      expect(header).toHaveClass("custom-class");
-      expect(header).toHaveClass("w-full");
-      expect(header).toHaveClass("border-b");
-    });
-  });
-
-  describe("HTML attributes", () => {
-    it("renders as header element", () => {
-      render(<Header title="My Blog" />);
-
-      const header = screen.getByRole("banner");
-      expect(header).toBeInTheDocument();
-    });
-
-    it("passes additional props to header element", () => {
-      render(<Header title="My Blog" data-testid="custom-header" aria-label="Site header" />);
-
-      const header = screen.getByTestId("custom-header");
-      expect(header).toHaveAttribute("aria-label", "Site header");
+      expect(screen.getByRole("banner")).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: "My Blog" })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: "Home" })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: "Blog" })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: "GitHub repository" })).toBeInTheDocument();
     });
   });
 });
