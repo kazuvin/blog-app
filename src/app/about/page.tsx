@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
+    <>
       <h1 className="mb-8 text-3xl font-bold">About Me</h1>
 
       <div className="space-y-6">
@@ -70,6 +70,6 @@ export default function AboutPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </>
   );
 }
