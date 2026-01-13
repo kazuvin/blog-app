@@ -1,12 +1,12 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   Header,
+  HeaderGitHubLink,
   HeaderLogo,
   HeaderNav,
-  HeaderNavList,
   HeaderNavItem,
-  HeaderGitHubLink,
+  HeaderNavList,
 } from "./header";
 
 describe("Header", () => {

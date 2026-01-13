@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Button } from "../button";
-import { Card, CardHeader, CardContent, CardFooter } from "./card";
+import { Card, CardContent, CardFooter, CardHeader } from "./card";
 
 const meta = {
   title: "UI/Card",
@@ -45,7 +45,7 @@ export const WithHeader: Story = {
   render: () => (
     <Card className="w-80">
       <CardHeader>
-        <h3 className="text-lg font-semibold">Card Title</h3>
+        <h3 className="font-semibold text-lg">Card Title</h3>
         <p className="text-foreground/60 text-sm">Card description</p>
       </CardHeader>
       <CardContent>
@@ -73,21 +73,21 @@ export const FullExample: Story = {
   render: () => (
     <Card className="w-96">
       <CardHeader>
-        <h3 className="text-lg font-semibold">Create Account</h3>
+        <h3 className="font-semibold text-lg">Create Account</h3>
         <p className="text-foreground/60 text-sm">Enter your information to create an account</p>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div>
-          <label className="text-sm font-medium">Name</label>
+          <label className="font-medium text-sm">Name</label>
           <input
-            className="border-foreground/20 mt-1 w-full rounded-md border bg-transparent px-3 py-2"
+            className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2"
             placeholder="John Doe"
           />
         </div>
         <div>
-          <label className="text-sm font-medium">Email</label>
+          <label className="font-medium text-sm">Email</label>
           <input
-            className="border-foreground/20 mt-1 w-full rounded-md border bg-transparent px-3 py-2"
+            className="mt-1 w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2"
             placeholder="john@example.com"
             type="email"
           />

@@ -1,7 +1,7 @@
 "use client";
 
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 // Root DropdownMenu component
@@ -39,7 +39,7 @@ export function DropdownMenuSubTrigger({
   return (
     <DropdownMenuPrimitive.SubTrigger
       className={cn(
-        "flex cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none",
+        "flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none",
         "focus:bg-foreground/10 data-[state=open]:bg-foreground/10",
         inset && "pl-8",
         className
@@ -74,8 +74,8 @@ export function DropdownMenuSubContent({ className, ...props }: DropdownMenuSubC
   return (
     <DropdownMenuPrimitive.SubContent
       className={cn(
-        "bg-background text-foreground border-foreground/10 z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-lg",
-        "data-[state=open]:animate-in data-[state=closed]:animate-out",
+        "z-50 min-w-[8rem] overflow-hidden rounded-md border border-foreground/10 bg-background p-1 text-foreground shadow-lg",
+        "data-[state=closed]:animate-out data-[state=open]:animate-in",
         "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
         "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
         "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2",
@@ -101,8 +101,8 @@ export function DropdownMenuContent({
       <DropdownMenuPrimitive.Content
         sideOffset={sideOffset}
         className={cn(
-          "bg-background text-foreground border-foreground/10 z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-md",
-          "data-[state=open]:animate-in data-[state=closed]:animate-out",
+          "z-50 min-w-[8rem] overflow-hidden rounded-md border border-foreground/10 bg-background p-1 text-foreground shadow-md",
+          "data-[state=closed]:animate-out data-[state=open]:animate-in",
           "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
           "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
           "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2",
@@ -125,7 +125,7 @@ export function DropdownMenuItem({ className, inset, ...props }: DropdownMenuIte
   return (
     <DropdownMenuPrimitive.Item
       className={cn(
-        "relative flex cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm transition-colors outline-none select-none",
+        "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors",
         "focus:bg-foreground/10 focus:text-foreground",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         inset && "pl-8",
@@ -151,7 +151,7 @@ export function DropdownMenuCheckboxItem({
   return (
     <DropdownMenuPrimitive.CheckboxItem
       className={cn(
-        "relative flex cursor-pointer items-center rounded-sm py-1.5 pr-2 pl-8 text-sm transition-colors outline-none select-none",
+        "relative flex cursor-pointer select-none items-center rounded-sm py-1.5 pr-2 pl-8 text-sm outline-none transition-colors",
         "focus:bg-foreground/10 focus:text-foreground",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className
@@ -194,7 +194,7 @@ export function DropdownMenuRadioItem({
   return (
     <DropdownMenuPrimitive.RadioItem
       className={cn(
-        "relative flex cursor-pointer items-center rounded-sm py-1.5 pr-2 pl-8 text-sm transition-colors outline-none select-none",
+        "relative flex cursor-pointer select-none items-center rounded-sm py-1.5 pr-2 pl-8 text-sm outline-none transition-colors",
         "focus:bg-foreground/10 focus:text-foreground",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className
@@ -229,7 +229,7 @@ export type DropdownMenuLabelProps = ComponentProps<typeof DropdownMenuPrimitive
 export function DropdownMenuLabel({ className, inset, ...props }: DropdownMenuLabelProps) {
   return (
     <DropdownMenuPrimitive.Label
-      className={cn("px-2 py-1.5 text-sm font-semibold", inset && "pl-8", className)}
+      className={cn("px-2 py-1.5 font-semibold text-sm", inset && "pl-8", className)}
       {...props}
     />
   );
@@ -242,7 +242,7 @@ export type DropdownMenuSeparatorProps = ComponentProps<typeof DropdownMenuPrimi
 export function DropdownMenuSeparator({ className, ...props }: DropdownMenuSeparatorProps) {
   return (
     <DropdownMenuPrimitive.Separator
-      className={cn("bg-foreground/10 -mx-1 my-1 h-px", className)}
+      className={cn("-mx-1 my-1 h-px bg-foreground/10", className)}
       {...props}
     />
   );

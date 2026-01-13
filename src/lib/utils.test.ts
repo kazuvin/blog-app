@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
-import { capitalize, formatCurrency, truncate, generateId, debounce } from "./utils";
+import { describe, expect, it, vi } from "vitest";
+import { capitalize, debounce, formatCurrency, generateId, truncate } from "./utils";
 
 describe("capitalize", () => {
   it("capitalizes the first letter of a string", () => {

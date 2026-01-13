@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { type ComponentProps, type ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export type HeaderProps = ComponentProps<"header">;
@@ -7,7 +7,7 @@ export type HeaderProps = ComponentProps<"header">;
 export function Header({ className, children, ...props }: HeaderProps) {
   return (
     <header
-      className={cn("border-foreground/10 bg-background w-full border-b", className)}
+      className={cn("w-full border-foreground/10 border-b bg-background", className)}
       {...props}
     >
       <div className="container mx-auto flex items-center justify-between px-4 py-4">
@@ -26,7 +26,7 @@ export function HeaderLogo({ href = "/", className, children, ...props }: Header
     <Link
       href={href}
       className={cn(
-        "text-foreground hover:text-foreground/80 text-xl font-bold transition-colors",
+        "font-bold text-foreground text-xl transition-colors hover:text-foreground/80",
         className
       )}
       {...props}
@@ -63,7 +63,7 @@ export function HeaderNavItem({ className, children, ...props }: HeaderNavItemPr
     <li>
       <Link
         className={cn(
-          "text-foreground/60 hover:text-foreground text-sm font-medium transition-colors",
+          "font-medium text-foreground/60 text-sm transition-colors hover:text-foreground",
           className
         )}
         {...props}
@@ -83,7 +83,7 @@ export function HeaderAction({ className, icon, children, ...props }: HeaderActi
     <a
       target="_blank"
       rel="noopener noreferrer"
-      className={cn("text-foreground/60 hover:text-foreground transition-colors", className)}
+      className={cn("text-foreground/60 transition-colors hover:text-foreground", className)}
       {...props}
     >
       {icon ?? children}
@@ -102,7 +102,7 @@ export function HeaderGitHubLink({ url, className, ...props }: HeaderGitHubLinkP
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className={cn("text-foreground/60 hover:text-foreground transition-colors", className)}
+      className={cn("text-foreground/60 transition-colors hover:text-foreground", className)}
       aria-label="GitHub repository"
       {...props}
     >

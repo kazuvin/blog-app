@@ -11,8 +11,9 @@ Next.js 15 blog application with TypeScript, designed for Cloudflare Workers dep
 ```bash
 # Development
 pnpm dev              # Start dev server with Turbopack (http://localhost:3000)
-pnpm lint             # Run ESLint
-pnpm format           # Format code with Prettier
+pnpm lint             # Run Biome linting and formatting check
+pnpm lint:fix         # Run Biome with auto-fix
+pnpm format           # Format code with Biome
 pnpm format:check     # Check formatting without writing
 
 # Testing
@@ -40,6 +41,7 @@ pnpm cf-typegen       # Generate Cloudflare bindings types
 
 - **Framework**: Next.js 15 with App Router
 - **Styling**: Tailwind CSS v4 with CSS variables for theming
+- **Linting/Formatting**: Biome (with Tailwind CSS class sorting)
 - **Testing**: Vitest + Testing Library (90% coverage threshold)
 - **Component Dev**: Storybook
 - **Deployment**: Cloudflare Workers via @opennextjs/cloudflare
@@ -77,6 +79,7 @@ contents/                   # Markdown blog posts with frontmatter
 
 ### Key Configuration Files
 
+- `biome.json` - Biome linter/formatter configuration (includes Tailwind class sorting)
 - `wrangler.jsonc` - Cloudflare Workers configuration
 - `open-next.config.ts` - OpenNext adapter settings
 - `.dev.vars` - Development environment variables for Wrangler

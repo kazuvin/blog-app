@@ -1,5 +1,5 @@
-import { Button, Badge, Input, Label, Card, CardHeader, CardContent } from "@/components/ui";
-import { type ShowcaseItem } from "../types";
+import { Badge, Button, Card, CardContent, CardHeader, Input, Label } from "@/components/ui";
+import type { ShowcaseItem } from "../types";
 
 export const showcaseItems: ShowcaseItem[] = [
   {
@@ -20,7 +20,7 @@ export const showcaseItems: ShowcaseItem[] = [
     fullDemo: (
       <div className="space-y-6">
         <div>
-          <h4 className="mb-3 text-sm font-medium">Variants</h4>
+          <h4 className="mb-3 font-medium text-sm">Variants</h4>
           <div className="flex flex-wrap gap-3">
             <Button variant="primary">Primary</Button>
             <Button variant="secondary">Secondary</Button>
@@ -28,7 +28,7 @@ export const showcaseItems: ShowcaseItem[] = [
           </div>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-medium">Sizes</h4>
+          <h4 className="mb-3 font-medium text-sm">Sizes</h4>
           <div className="flex flex-wrap items-center gap-3">
             <Button size="sm">Small</Button>
             <Button size="md">Medium</Button>
@@ -36,7 +36,7 @@ export const showcaseItems: ShowcaseItem[] = [
           </div>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-medium">Disabled</h4>
+          <h4 className="mb-3 font-medium text-sm">Disabled</h4>
           <div className="flex flex-wrap gap-3">
             <Button disabled>Disabled Primary</Button>
             <Button variant="secondary" disabled>
@@ -61,7 +61,7 @@ export const showcaseItems: ShowcaseItem[] = [
     fullDemo: (
       <div className="space-y-6">
         <div>
-          <h4 className="mb-3 text-sm font-medium">Variants</h4>
+          <h4 className="mb-3 font-medium text-sm">Variants</h4>
           <div className="flex flex-wrap gap-3">
             <Badge variant="default">Default</Badge>
             <Badge variant="success">Success</Badge>
@@ -71,7 +71,7 @@ export const showcaseItems: ShowcaseItem[] = [
           </div>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-medium">Sizes</h4>
+          <h4 className="mb-3 font-medium text-sm">Sizes</h4>
           <div className="flex flex-wrap items-center gap-3">
             <Badge size="sm">Small</Badge>
             <Badge size="md">Medium</Badge>
@@ -92,14 +92,14 @@ export const showcaseItems: ShowcaseItem[] = [
     fullDemo: (
       <div className="space-y-6">
         <div>
-          <h4 className="mb-3 text-sm font-medium">Variants</h4>
+          <h4 className="mb-3 font-medium text-sm">Variants</h4>
           <div className="space-y-3">
             <Input placeholder="Default input" variant="default" />
             <Input placeholder="Error input" variant="error" />
           </div>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-medium">Sizes</h4>
+          <h4 className="mb-3 font-medium text-sm">Sizes</h4>
           <div className="space-y-3">
             <Input placeholder="Small" inputSize="sm" />
             <Input placeholder="Medium" inputSize="md" />
@@ -107,7 +107,7 @@ export const showcaseItems: ShowcaseItem[] = [
           </div>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-medium">With Label</h4>
+          <h4 className="mb-3 font-medium text-sm">With Label</h4>
           <div className="space-y-2">
             <Label htmlFor="demo-input">Email Address</Label>
             <Input id="demo-input" type="email" placeholder="you@example.com" />
@@ -130,7 +130,7 @@ export const showcaseItems: ShowcaseItem[] = [
     fullDemo: (
       <div className="space-y-6">
         <div>
-          <h4 className="mb-3 text-sm font-medium">Default Variant</h4>
+          <h4 className="mb-3 font-medium text-sm">Default Variant</h4>
           <Card variant="default">
             <CardHeader>
               <h3 className="font-semibold">Card Title</h3>
@@ -144,7 +144,7 @@ export const showcaseItems: ShowcaseItem[] = [
           </Card>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-medium">Outline Variant</h4>
+          <h4 className="mb-3 font-medium text-sm">Outline Variant</h4>
           <Card variant="outline">
             <CardHeader>
               <h3 className="font-semibold">Outline Card</h3>
@@ -169,18 +169,18 @@ export const showcaseItems: ShowcaseItem[] = [
     fullDemo: (
       <div className="space-y-6">
         <div>
-          <h4 className="mb-3 text-sm font-medium">Basic Label</h4>
+          <h4 className="mb-3 font-medium text-sm">Basic Label</h4>
           <Label>Username</Label>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-medium">With Input</h4>
+          <h4 className="mb-3 font-medium text-sm">With Input</h4>
           <div className="space-y-2">
             <Label htmlFor="username">Username</Label>
             <Input id="username" placeholder="Enter username" />
           </div>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-medium">Required Field</h4>
+          <h4 className="mb-3 font-medium text-sm">Required Field</h4>
           <div className="space-y-2">
             <Label htmlFor="email">
               Email <span className="text-red-500">*</span>
