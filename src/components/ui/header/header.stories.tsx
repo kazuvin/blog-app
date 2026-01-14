@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import {
   Header,
+  HeaderGitHubLink,
   HeaderLogo,
   HeaderNav,
-  HeaderNavList,
   HeaderNavItem,
-  HeaderGitHubLink,
+  HeaderNavList,
 } from "./header";
 
 const meta = {

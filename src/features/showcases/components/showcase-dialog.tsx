@@ -1,11 +1,11 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui";
-import { type ShowcaseItem } from "../types";
+import type { ShowcaseItem } from "../types";
 
 export type ShowcaseDialogProps = {
   item: ShowcaseItem | null;

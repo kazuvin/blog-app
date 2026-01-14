@@ -1,4 +1,4 @@
-import { type ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
 export type InputProps = ComponentProps<"input"> & {
@@ -10,7 +10,7 @@ export function Input({ variant = "default", inputSize = "md", className, ...pro
   return (
     <input
       className={cn(
-        "w-full rounded-md border bg-transparent transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        "w-full rounded-md border bg-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         variantStyles[variant],
         sizeStyles[inputSize],
         className

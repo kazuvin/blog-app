@@ -39,16 +39,17 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <article>
       <nav className="mb-8">
-        <Link href="/blog" className="text-foreground/60 hover:text-foreground transition-colors">
+        <Link href="/blog" className="text-foreground/60 transition-colors hover:text-foreground">
           ← Back to Blog
         </Link>
       </nav>
       <header className="mb-8">
-        <h1 className="mb-4 text-4xl font-bold">{post.title}</h1>
+        <h1 className="mb-4 font-bold text-4xl">{post.title}</h1>
         <time className="text-foreground/60">{post.date}</time>
       </header>
       <div
         className="prose prose-neutral dark:prose-invert max-w-none"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: Blog content is server-rendered from markdown
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
     </article>

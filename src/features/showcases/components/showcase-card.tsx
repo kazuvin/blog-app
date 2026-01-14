@@ -1,5 +1,5 @@
-import { type ReactNode } from "react";
-import { Card, CardHeader, CardContent } from "@/components/ui";
+import type { ReactNode } from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui";
 
 export type ShowcaseCardProps = {
   name: string;
@@ -11,13 +11,13 @@ export type ShowcaseCardProps = {
 export function ShowcaseCard({ name, description, preview, onClick }: ShowcaseCardProps) {
   return (
     <button onClick={onClick} className="text-left" type="button">
-      <Card className="hover:border-foreground/30 h-full transition-colors">
+      <Card className="h-full transition-colors hover:border-foreground/30">
         <CardHeader>
-          <h2 className="text-lg font-semibold">{name}</h2>
+          <h2 className="font-semibold text-lg">{name}</h2>
           <p className="text-foreground/60 text-sm">{description}</p>
         </CardHeader>
         <CardContent>
-          <div className="bg-surface flex min-h-[80px] items-center justify-center rounded-md p-4">
+          <div className="flex min-h-[80px] items-center justify-center rounded-md bg-surface p-4">
             {preview}
           </div>
         </CardContent>

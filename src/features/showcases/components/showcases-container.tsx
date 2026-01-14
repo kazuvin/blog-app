@@ -2,12 +2,12 @@
 
 import { useAtomValue, useSetAtom } from "jotai";
 import {
-  selectedItemValueAtom,
-  isDialogOpenAtom,
-  selectItemAtom,
   clearSelectionAtom,
+  isDialogOpenAtom,
+  selectedItemValueAtom,
+  selectItemAtom,
 } from "../stores";
-import { type ShowcaseItem } from "../types";
+import type { ShowcaseItem } from "../types";
 import { ShowcaseDialog } from "./showcase-dialog";
 import { ShowcaseGrid } from "./showcase-grid";
 
@@ -24,7 +24,7 @@ export function ShowcasesContainer({ items }: ShowcasesContainerProps) {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-foreground mb-2 text-3xl font-bold">Component Showcases</h1>
+        <h1 className="mb-2 font-bold text-3xl text-foreground">Component Showcases</h1>
         <p className="text-foreground/70">
           A collection of presentation components for verification and testing purposes.
         </p>

@@ -2,13 +2,13 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Button, Input, Label } from "@/components/ui";
 import {
   Dialog,
-  DialogTrigger,
+  DialogClose,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
-  DialogClose,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "./dialog";
 
 const meta = {
@@ -246,7 +246,7 @@ export const WithForm: Story = {
             <Label htmlFor="bio">Bio</Label>
             <textarea
               id="bio"
-              className="border-foreground/20 bg-background min-h-[100px] w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+              className="min-h-[100px] w-full rounded-md border border-foreground/20 bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
               placeholder="Tell us about yourself"
             />
           </div>

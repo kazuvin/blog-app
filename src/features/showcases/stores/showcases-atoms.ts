@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { type ShowcaseItem } from "../types";
+import type { ShowcaseItem } from "../types";
 
 // ============================================
 // Private Atoms (NEVER export)

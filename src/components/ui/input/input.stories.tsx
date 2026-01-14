@@ -45,7 +45,7 @@ export const Default: Story = {
   },
 };
 
-export const Error: Story = {
+export const ErrorVariant: Story = {
   args: {
     variant: "error",
     placeholder: "Invalid input",
