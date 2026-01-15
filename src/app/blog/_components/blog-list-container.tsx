@@ -3,7 +3,15 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Badge, Card, CardContent, CardHeader } from "@/components/ui";
-import { getAllTags, getPostsByTag, type PostMeta, type SortOption, sortPosts } from "@/lib/blog";
+import {
+  getAllTags,
+  getPostsByTag,
+  type PostMeta,
+  type SortOption,
+  searchPosts,
+  sortPosts,
+} from "@/lib/blog";
+import { BlogSearchInput } from "./blog-search-input";
 import { BlogSortSelector } from "./blog-sort-selector";
 import { BlogTagFilter } from "./blog-tag-filter";
 
@@ -14,16 +22,19 @@ export interface BlogListContainerProps {
 export function BlogListContainer({ posts }: BlogListContainerProps) {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [sortOption, setSortOption] = useState<SortOption>("date-desc");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const allTags = useMemo(() => getAllTags(posts), [posts]);
 
   const filteredAndSortedPosts = useMemo(() => {
-    const filtered = getPostsByTag(posts, selectedTag);
+    const searched = searchPosts(posts, searchQuery);
+    const filtered = getPostsByTag(searched, selectedTag);
     return sortPosts(filtered, sortOption);
-  }, [posts, selectedTag, sortOption]);
+  }, [posts, selectedTag, sortOption, searchQuery]);
 
   return (
     <div className="space-y-6">
+      <BlogSearchInput searchQuery={searchQuery} onSearchChange={setSearchQuery} />
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <BlogTagFilter tags={allTags} selectedTag={selectedTag} onTagSelect={setSelectedTag} />
         <BlogSortSelector currentSort={sortOption} onSortChange={setSortOption} />

@@ -114,3 +114,19 @@ export function sortPosts(posts: PostMeta[], sortOption: SortOption): PostMeta[]
       return sorted.sort((a, b) => (a.date < b.date ? 1 : -1));
   }
 }
+
+export function searchPosts(posts: PostMeta[], query: string): PostMeta[] {
+  const trimmedQuery = query.trim().toLowerCase();
+
+  if (trimmedQuery === "") {
+    return posts;
+  }
+
+  return posts.filter((post) => {
+    const titleMatch = post.title.toLowerCase().includes(trimmedQuery);
+    const descriptionMatch = post.description.toLowerCase().includes(trimmedQuery);
+    const tagsMatch = post.tags.some((tag) => tag.toLowerCase().includes(trimmedQuery));
+
+    return titleMatch || descriptionMatch || tagsMatch;
+  });
+}
