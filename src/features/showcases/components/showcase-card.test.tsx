@@ -11,34 +11,34 @@ describe("ShowcaseCard", () => {
     onClick: vi.fn(),
   };
 
-  describe("初期表示 (Initial Rendering)", () => {
-    it("should render the card name", () => {
+  describe("初期表示", () => {
+    it("カード名が表示されること", () => {
       render(<ShowcaseCard {...defaultProps} />);
 
       expect(screen.getByText("Test Card")).toBeInTheDocument();
     });
 
-    it("should render the card description", () => {
+    it("カードの説明が表示されること", () => {
       render(<ShowcaseCard {...defaultProps} />);
 
       expect(screen.getByText("Test description for the card")).toBeInTheDocument();
     });
 
-    it("should render the preview content", () => {
+    it("プレビューコンテンツが表示されること", () => {
       render(<ShowcaseCard {...defaultProps} />);
 
       expect(screen.getByTestId("preview-content")).toBeInTheDocument();
       expect(screen.getByText("Preview Content")).toBeInTheDocument();
     });
 
-    it("should render as a button element for accessibility", () => {
+    it("アクセシビリティのためにbutton要素としてレンダリングされること", () => {
       render(<ShowcaseCard {...defaultProps} />);
 
       const button = screen.getByRole("button");
       expect(button).toBeInTheDocument();
     });
 
-    it("should have type='button' attribute", () => {
+    it("type='button'属性を持つこと", () => {
       render(<ShowcaseCard {...defaultProps} />);
 
       const button = screen.getByRole("button");
@@ -46,8 +46,8 @@ describe("ShowcaseCard", () => {
     });
   });
 
-  describe("ユーザー操作 (User Interactions)", () => {
-    it("should call onClick when the card is clicked", async () => {
+  describe("ユーザー操作", () => {
+    it("カードをクリックするとonClickが呼ばれること", async () => {
       const user = userEvent.setup();
       const handleClick = vi.fn();
 
@@ -58,7 +58,7 @@ describe("ShowcaseCard", () => {
       expect(handleClick).toHaveBeenCalledTimes(1);
     });
 
-    it("should call onClick when Enter key is pressed", async () => {
+    it("Enterキーを押すとonClickが呼ばれること", async () => {
       const user = userEvent.setup();
       const handleClick = vi.fn();
 
@@ -71,7 +71,7 @@ describe("ShowcaseCard", () => {
       expect(handleClick).toHaveBeenCalledTimes(1);
     });
 
-    it("should call onClick when Space key is pressed", async () => {
+    it("Spaceキーを押すとonClickが呼ばれること", async () => {
       const user = userEvent.setup();
       const handleClick = vi.fn();
 
@@ -85,14 +85,14 @@ describe("ShowcaseCard", () => {
     });
   });
 
-  describe("さまざまなプレビューコンテンツ (Various Preview Content)", () => {
-    it("should render text preview content", () => {
+  describe("さまざまなプレビューコンテンツ", () => {
+    it("テキストのプレビューコンテンツが表示されること", () => {
       render(<ShowcaseCard {...defaultProps} preview="Text preview" />);
 
       expect(screen.getByText("Text preview")).toBeInTheDocument();
     });
 
-    it("should render complex React element as preview", () => {
+    it("複雑なReact要素がプレビューとして表示されること", () => {
       const complexPreview = (
         <div>
           <span data-testid="nested-element">Nested</span>
@@ -105,7 +105,7 @@ describe("ShowcaseCard", () => {
       expect(screen.getByTestId("nested-element")).toBeInTheDocument();
     });
 
-    it("should render null preview without error", () => {
+    it("nullのプレビューでもエラーなくレンダリングされること", () => {
       render(<ShowcaseCard {...defaultProps} preview={null} />);
 
       // カードは正常にレンダリングされる
@@ -113,8 +113,8 @@ describe("ShowcaseCard", () => {
     });
   });
 
-  describe("スタイリング (Styling)", () => {
-    it("should have text-left class for left alignment", () => {
+  describe("スタイリング", () => {
+    it("左揃えのためのtext-leftクラスを持つこと", () => {
       render(<ShowcaseCard {...defaultProps} />);
 
       const button = screen.getByRole("button");

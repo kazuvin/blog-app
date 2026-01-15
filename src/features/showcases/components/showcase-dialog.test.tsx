@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { ShowcaseItem } from "../types";
 import { ShowcaseDialog } from "./showcase-dialog";
 
-// テスト用のモックデータ (Mock data for testing)
+// テスト用のモックデータ
 const mockItem: ShowcaseItem = {
   id: "test-1",
   name: "Test Dialog Title",
@@ -14,8 +14,8 @@ const mockItem: ShowcaseItem = {
 };
 
 describe("ShowcaseDialog", () => {
-  describe("初期表示 (Initial Rendering)", () => {
-    it("should not render dialog when open is false", () => {
+  describe("初期表示", () => {
+    it("openがfalseの場合はダイアログが表示されないこと", () => {
       const handleOpenChange = vi.fn();
 
       render(<ShowcaseDialog item={mockItem} open={false} onOpenChange={handleOpenChange} />);
@@ -23,7 +23,7 @@ describe("ShowcaseDialog", () => {
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
 
-    it("should render dialog when open is true", () => {
+    it("openがtrueの場合はダイアログが表示されること", () => {
       const handleOpenChange = vi.fn();
 
       render(<ShowcaseDialog item={mockItem} open={true} onOpenChange={handleOpenChange} />);
@@ -31,7 +31,7 @@ describe("ShowcaseDialog", () => {
       expect(screen.getByRole("dialog")).toBeInTheDocument();
     });
 
-    it("should render item name as dialog title", () => {
+    it("アイテム名がダイアログタイトルとして表示されること", () => {
       const handleOpenChange = vi.fn();
 
       render(<ShowcaseDialog item={mockItem} open={true} onOpenChange={handleOpenChange} />);
@@ -39,7 +39,7 @@ describe("ShowcaseDialog", () => {
       expect(screen.getByText("Test Dialog Title")).toBeInTheDocument();
     });
 
-    it("should render item description", () => {
+    it("アイテムの説明が表示されること", () => {
       const handleOpenChange = vi.fn();
 
       render(<ShowcaseDialog item={mockItem} open={true} onOpenChange={handleOpenChange} />);
@@ -47,7 +47,7 @@ describe("ShowcaseDialog", () => {
       expect(screen.getByText("Test dialog description")).toBeInTheDocument();
     });
 
-    it("should render fullDemo content", () => {
+    it("fullDemoコンテンツが表示されること", () => {
       const handleOpenChange = vi.fn();
 
       render(<ShowcaseDialog item={mockItem} open={true} onOpenChange={handleOpenChange} />);
@@ -57,18 +57,17 @@ describe("ShowcaseDialog", () => {
     });
   });
 
-  describe("nullアイテム (Null Item)", () => {
-    it("should render dialog with empty content when item is null", () => {
+  describe("nullアイテム", () => {
+    it("アイテムがnullの場合は空のコンテンツでダイアログが表示されること", () => {
       const handleOpenChange = vi.fn();
 
       render(<ShowcaseDialog item={null} open={true} onOpenChange={handleOpenChange} />);
 
       // ダイアログは開いているが、コンテンツは空
-      // (Dialog is open but content is empty)
       expect(screen.getByRole("dialog")).toBeInTheDocument();
     });
 
-    it("should not throw error when item is null and dialog is open", () => {
+    it("アイテムがnullでダイアログが開いていてもエラーにならないこと", () => {
       const handleOpenChange = vi.fn();
 
       expect(() => {
@@ -77,21 +76,21 @@ describe("ShowcaseDialog", () => {
     });
   });
 
-  describe("ユーザー操作 (User Interactions)", () => {
-    it("should call onOpenChange with false when close button is clicked", async () => {
+  describe("ユーザー操作", () => {
+    it("閉じるボタンをクリックするとonOpenChangeがfalseで呼ばれること", async () => {
       const user = userEvent.setup();
       const handleOpenChange = vi.fn();
 
       render(<ShowcaseDialog item={mockItem} open={true} onOpenChange={handleOpenChange} />);
 
-      // クローズボタンをクリック (Click the close button)
+      // クローズボタンをクリック
       const closeButton = screen.getByRole("button", { name: /close/i });
       await user.click(closeButton);
 
       expect(handleOpenChange).toHaveBeenCalledWith(false);
     });
 
-    it("should call onOpenChange with false when Escape key is pressed", async () => {
+    it("Escapeキーを押すとonOpenChangeがfalseで呼ばれること", async () => {
       const user = userEvent.setup();
       const handleOpenChange = vi.fn();
 
@@ -102,13 +101,13 @@ describe("ShowcaseDialog", () => {
       expect(handleOpenChange).toHaveBeenCalledWith(false);
     });
 
-    it("should call onOpenChange with false when overlay is clicked", async () => {
+    it("オーバーレイをクリックするとonOpenChangeがfalseで呼ばれること", async () => {
       const user = userEvent.setup();
       const handleOpenChange = vi.fn();
 
       render(<ShowcaseDialog item={mockItem} open={true} onOpenChange={handleOpenChange} />);
 
-      // オーバーレイをクリック (Click the overlay)
+      // オーバーレイをクリック
       const overlay = document.querySelector('[data-state="open"].fixed.inset-0');
       expect(overlay).toBeInTheDocument();
 
@@ -118,8 +117,8 @@ describe("ShowcaseDialog", () => {
     });
   });
 
-  describe("アイテムの切り替え (Item Switching)", () => {
-    it("should update content when item changes", () => {
+  describe("アイテムの切り替え", () => {
+    it("アイテムが変更されるとコンテンツが更新されること", () => {
       const handleOpenChange = vi.fn();
 
       const { rerender } = render(
@@ -144,20 +143,19 @@ describe("ShowcaseDialog", () => {
     });
   });
 
-  describe("ダイアログサイズ (Dialog Size)", () => {
-    it("should render with lg size variant", () => {
+  describe("ダイアログサイズ", () => {
+    it("lgサイズバリアントでレンダリングされること", () => {
       const handleOpenChange = vi.fn();
 
       render(<ShowcaseDialog item={mockItem} open={true} onOpenChange={handleOpenChange} />);
 
-      // DialogContent は data-testid がないので、role で取得
       const dialog = screen.getByRole("dialog");
       expect(dialog).toHaveClass("max-w-lg");
     });
   });
 
-  describe("複雑なfullDemoコンテンツ (Complex fullDemo Content)", () => {
-    it("should render complex fullDemo with interactive elements", () => {
+  describe("複雑なfullDemoコンテンツ", () => {
+    it("インタラクティブな要素を含む複雑なfullDemoが表示されること", () => {
       const handleOpenChange = vi.fn();
       const complexItem: ShowcaseItem = {
         id: "complex",

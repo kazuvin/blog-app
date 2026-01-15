@@ -6,7 +6,7 @@ import { isDialogOpenAtom, selectedItemValueAtom } from "../stores";
 import type { ShowcaseItem } from "../types";
 import { ShowcasesContainer } from "./showcases-container";
 
-// テスト用のモックデータ (Mock data for testing)
+// テスト用のモックデータ
 const mockItems: ShowcaseItem[] = [
   {
     id: "button",
@@ -31,7 +31,7 @@ const mockItems: ShowcaseItem[] = [
   },
 ];
 
-// テスト用のラッパーコンポーネント (Wrapper component for testing)
+// テスト用のラッパーコンポーネント
 function TestWrapper({
   children,
   store,
@@ -46,12 +46,12 @@ describe("ShowcasesContainer", () => {
   let store: ReturnType<typeof createStore>;
 
   beforeEach(() => {
-    // 各テスト前に新しいストアを作成 (Create a new store before each test)
+    // 各テスト前に新しいストアを作成
     store = createStore();
   });
 
-  describe("初期表示 (Initial Rendering)", () => {
-    it("should render the page title", () => {
+  describe("初期表示", () => {
+    it("ページタイトルが表示されること", () => {
       render(
         <TestWrapper store={store}>
           <ShowcasesContainer items={mockItems} />
@@ -61,7 +61,7 @@ describe("ShowcasesContainer", () => {
       expect(screen.getByText("Component Showcases")).toBeInTheDocument();
     });
 
-    it("should render the page description", () => {
+    it("ページの説明が表示されること", () => {
       render(
         <TestWrapper store={store}>
           <ShowcasesContainer items={mockItems} />
@@ -75,7 +75,7 @@ describe("ShowcasesContainer", () => {
       ).toBeInTheDocument();
     });
 
-    it("should render all showcase items", () => {
+    it("すべてのショーケースアイテムが表示されること", () => {
       render(
         <TestWrapper store={store}>
           <ShowcasesContainer items={mockItems} />
@@ -87,7 +87,7 @@ describe("ShowcasesContainer", () => {
       expect(screen.getByText("Card")).toBeInTheDocument();
     });
 
-    it("should render item descriptions", () => {
+    it("アイテムの説明が表示されること", () => {
       render(
         <TestWrapper store={store}>
           <ShowcasesContainer items={mockItems} />
@@ -99,7 +99,7 @@ describe("ShowcasesContainer", () => {
       expect(screen.getByText("Container card component")).toBeInTheDocument();
     });
 
-    it("should render preview content for each item", () => {
+    it("各アイテムのプレビューコンテンツが表示されること", () => {
       render(
         <TestWrapper store={store}>
           <ShowcasesContainer items={mockItems} />
@@ -111,7 +111,7 @@ describe("ShowcasesContainer", () => {
       expect(screen.getByTestId("card-preview")).toBeInTheDocument();
     });
 
-    it("should not show dialog initially", () => {
+    it("初期状態ではダイアログが表示されないこと", () => {
       render(
         <TestWrapper store={store}>
           <ShowcasesContainer items={mockItems} />
@@ -122,8 +122,8 @@ describe("ShowcasesContainer", () => {
     });
   });
 
-  describe("Jotai状態との統合 (Jotai State Integration)", () => {
-    it("should have null selected item initially", () => {
+  describe("Jotai状態との統合", () => {
+    it("初期状態で選択アイテムがnullであること", () => {
       render(
         <TestWrapper store={store}>
           <ShowcasesContainer items={mockItems} />
@@ -134,7 +134,7 @@ describe("ShowcasesContainer", () => {
       expect(store.get(isDialogOpenAtom)).toBe(false);
     });
 
-    it("should update selected item in store when card is clicked", async () => {
+    it("カードをクリックするとストアの選択アイテムが更新されること", async () => {
       const user = userEvent.setup();
 
       render(
@@ -144,15 +144,15 @@ describe("ShowcasesContainer", () => {
       );
 
       const buttons = screen.getAllByRole("button");
-      await user.click(buttons[0]); // Click the first card (Button)
+      await user.click(buttons[0]); // 最初のカード（Button）をクリック
 
       expect(store.get(selectedItemValueAtom)).toEqual(mockItems[0]);
       expect(store.get(isDialogOpenAtom)).toBe(true);
     });
   });
 
-  describe("ダイアログの開閉 (Dialog Open/Close)", () => {
-    it("should open dialog when a card is clicked", async () => {
+  describe("ダイアログの開閉", () => {
+    it("カードをクリックするとダイアログが開くこと", async () => {
       const user = userEvent.setup();
 
       render(
@@ -161,15 +161,15 @@ describe("ShowcasesContainer", () => {
         </TestWrapper>
       );
 
-      // カードをクリック (Click the card)
+      // カードをクリック
       const buttons = screen.getAllByRole("button");
       await user.click(buttons[0]);
 
-      // ダイアログが開く (Dialog opens)
+      // ダイアログが開く
       expect(screen.getByRole("dialog")).toBeInTheDocument();
     });
 
-    it("should display selected item content in dialog", async () => {
+    it("選択したアイテムのコンテンツがダイアログに表示されること", async () => {
       const user = userEvent.setup();
 
       render(
@@ -178,18 +178,18 @@ describe("ShowcasesContainer", () => {
         </TestWrapper>
       );
 
-      // 最初のカード（Button）をクリック (Click the first card - Button)
+      // 最初のカード（Button）をクリック
       const buttons = screen.getAllByRole("button");
       await user.click(buttons[0]);
 
-      // ダイアログ内のコンテンツを確認 (Verify content in dialog)
+      // ダイアログ内のコンテンツを確認
       const dialog = screen.getByRole("dialog");
       expect(within(dialog).getByText("Button")).toBeInTheDocument();
       expect(within(dialog).getByText("Interactive button component")).toBeInTheDocument();
       expect(screen.getByTestId("button-demo")).toBeInTheDocument();
     });
 
-    it("should close dialog when close button is clicked", async () => {
+    it("閉じるボタンをクリックするとダイアログが閉じること", async () => {
       const user = userEvent.setup();
 
       render(
@@ -198,21 +198,21 @@ describe("ShowcasesContainer", () => {
         </TestWrapper>
       );
 
-      // カードをクリックしてダイアログを開く (Click card to open dialog)
+      // カードをクリックしてダイアログを開く
       const cardButtons = screen.getAllByRole("button");
       await user.click(cardButtons[0]);
 
       expect(screen.getByRole("dialog")).toBeInTheDocument();
 
-      // クローズボタンをクリック (Click close button)
+      // クローズボタンをクリック
       const closeButton = screen.getByRole("button", { name: /close/i });
       await user.click(closeButton);
 
-      // ダイアログが閉じる (Dialog closes)
+      // ダイアログが閉じる
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
 
-    it("should close dialog when Escape key is pressed", async () => {
+    it("Escapeキーを押すとダイアログが閉じること", async () => {
       const user = userEvent.setup();
 
       render(
@@ -221,20 +221,20 @@ describe("ShowcasesContainer", () => {
         </TestWrapper>
       );
 
-      // カードをクリックしてダイアログを開く (Click card to open dialog)
+      // カードをクリックしてダイアログを開く
       const buttons = screen.getAllByRole("button");
       await user.click(buttons[0]);
 
       expect(screen.getByRole("dialog")).toBeInTheDocument();
 
-      // Escapeキーを押す (Press Escape key)
+      // Escapeキーを押す
       await user.keyboard("{Escape}");
 
-      // ダイアログが閉じる (Dialog closes)
+      // ダイアログが閉じる
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
 
-    it("should clear selection in store when dialog is closed", async () => {
+    it("ダイアログを閉じるとストアの選択がクリアされること", async () => {
       const user = userEvent.setup();
 
       render(
@@ -243,24 +243,24 @@ describe("ShowcasesContainer", () => {
         </TestWrapper>
       );
 
-      // カードをクリック (Click card)
+      // カードをクリック
       const cardButtons = screen.getAllByRole("button");
       await user.click(cardButtons[0]);
 
       expect(store.get(selectedItemValueAtom)).toEqual(mockItems[0]);
 
-      // クローズボタンをクリック (Click close button)
+      // クローズボタンをクリック
       const closeButton = screen.getByRole("button", { name: /close/i });
       await user.click(closeButton);
 
-      // ストアがクリアされる (Store is cleared)
+      // ストアがクリアされる
       expect(store.get(selectedItemValueAtom)).toBeNull();
       expect(store.get(isDialogOpenAtom)).toBe(false);
     });
   });
 
-  describe("異なるアイテムの選択 (Selecting Different Items)", () => {
-    it("should show correct content when second item is clicked", async () => {
+  describe("異なるアイテムの選択", () => {
+    it("2番目のアイテムをクリックすると正しいコンテンツが表示されること", async () => {
       const user = userEvent.setup();
 
       render(
@@ -269,16 +269,16 @@ describe("ShowcasesContainer", () => {
         </TestWrapper>
       );
 
-      // 2番目のカード（Input）をクリック (Click second card - Input)
+      // 2番目のカード（Input）をクリック
       const buttons = screen.getAllByRole("button");
       await user.click(buttons[1]);
 
-      // ダイアログ内のコンテンツを確認 (Verify content in dialog)
+      // ダイアログ内のコンテンツを確認
       expect(screen.getByTestId("input-demo")).toBeInTheDocument();
       expect(store.get(selectedItemValueAtom)).toEqual(mockItems[1]);
     });
 
-    it("should show correct content when third item is clicked", async () => {
+    it("3番目のアイテムをクリックすると正しいコンテンツが表示されること", async () => {
       const user = userEvent.setup();
 
       render(
@@ -287,18 +287,18 @@ describe("ShowcasesContainer", () => {
         </TestWrapper>
       );
 
-      // 3番目のカード（Card）をクリック (Click third card - Card)
+      // 3番目のカード（Card）をクリック
       const buttons = screen.getAllByRole("button");
       await user.click(buttons[2]);
 
-      // ダイアログ内のコンテンツを確認 (Verify content in dialog)
+      // ダイアログ内のコンテンツを確認
       expect(screen.getByTestId("card-demo")).toBeInTheDocument();
       expect(store.get(selectedItemValueAtom)).toEqual(mockItems[2]);
     });
   });
 
-  describe("連続した操作 (Sequential Operations)", () => {
-    it("should allow opening and closing dialog multiple times", async () => {
+  describe("連続した操作", () => {
+    it("ダイアログの開閉を複数回行えること", async () => {
       const user = userEvent.setup();
 
       render(
@@ -309,14 +309,14 @@ describe("ShowcasesContainer", () => {
 
       const cardButtons = screen.getAllByRole("button");
 
-      // 1回目: 開く→閉じる (First: open -> close)
+      // 1回目: 開く→閉じる
       await user.click(cardButtons[0]);
       expect(screen.getByRole("dialog")).toBeInTheDocument();
 
       await user.click(screen.getByRole("button", { name: /close/i }));
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
-      // 2回目: 別のカードで開く→閉じる (Second: open different card -> close)
+      // 2回目: 別のカードで開く→閉じる
       await user.click(cardButtons[1]);
       expect(screen.getByRole("dialog")).toBeInTheDocument();
       expect(screen.getByTestId("input-demo")).toBeInTheDocument();
@@ -324,15 +324,15 @@ describe("ShowcasesContainer", () => {
       await user.keyboard("{Escape}");
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
-      // 3回目: また別のカードで開く (Third: open another card)
+      // 3回目: また別のカードで開く
       await user.click(cardButtons[2]);
       expect(screen.getByRole("dialog")).toBeInTheDocument();
       expect(screen.getByTestId("card-demo")).toBeInTheDocument();
     });
   });
 
-  describe("空の配列 (Empty Array)", () => {
-    it("should render page header with empty items", () => {
+  describe("空の配列", () => {
+    it("アイテムが空でもページヘッダーが表示されること", () => {
       render(
         <TestWrapper store={store}>
           <ShowcasesContainer items={[]} />
@@ -347,7 +347,7 @@ describe("ShowcasesContainer", () => {
       ).toBeInTheDocument();
     });
 
-    it("should not render any cards when items is empty", () => {
+    it("アイテムが空の場合はカードが表示されないこと", () => {
       render(
         <TestWrapper store={store}>
           <ShowcasesContainer items={[]} />

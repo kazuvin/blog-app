@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { ShowcaseItem } from "../types";
 import { ShowcaseGrid } from "./showcase-grid";
 
-// テスト用のモックデータ (Mock data for testing)
+// テスト用のモックデータ
 const mockItems: ShowcaseItem[] = [
   {
     id: "item-1",
@@ -30,8 +30,8 @@ const mockItems: ShowcaseItem[] = [
 ];
 
 describe("ShowcaseGrid", () => {
-  describe("初期表示 (Initial Rendering)", () => {
-    it("should render all items in the grid", () => {
+  describe("初期表示", () => {
+    it("グリッド内のすべてのアイテムが表示されること", () => {
       const handleItemClick = vi.fn();
 
       render(<ShowcaseGrid items={mockItems} onItemClick={handleItemClick} />);
@@ -41,7 +41,7 @@ describe("ShowcaseGrid", () => {
       expect(screen.getByText("Item Three")).toBeInTheDocument();
     });
 
-    it("should render item descriptions", () => {
+    it("アイテムの説明が表示されること", () => {
       const handleItemClick = vi.fn();
 
       render(<ShowcaseGrid items={mockItems} onItemClick={handleItemClick} />);
@@ -51,7 +51,7 @@ describe("ShowcaseGrid", () => {
       expect(screen.getByText("Description for item three")).toBeInTheDocument();
     });
 
-    it("should render item previews", () => {
+    it("アイテムのプレビューが表示されること", () => {
       const handleItemClick = vi.fn();
 
       render(<ShowcaseGrid items={mockItems} onItemClick={handleItemClick} />);
@@ -61,7 +61,7 @@ describe("ShowcaseGrid", () => {
       expect(screen.getByTestId("preview-3")).toBeInTheDocument();
     });
 
-    it("should render correct number of buttons", () => {
+    it("正しい数のボタンが表示されること", () => {
       const handleItemClick = vi.fn();
 
       render(<ShowcaseGrid items={mockItems} onItemClick={handleItemClick} />);
@@ -71,8 +71,8 @@ describe("ShowcaseGrid", () => {
     });
   });
 
-  describe("空の配列 (Empty Array)", () => {
-    it("should render nothing when items array is empty", () => {
+  describe("空の配列", () => {
+    it("配列が空の場合は何も表示されないこと", () => {
       const handleItemClick = vi.fn();
 
       const { container } = render(<ShowcaseGrid items={[]} onItemClick={handleItemClick} />);
@@ -81,14 +81,13 @@ describe("ShowcaseGrid", () => {
       expect(buttons).toHaveLength(0);
 
       // グリッドコンテナは存在するが、子要素はない
-      // (Grid container exists but has no children)
       const grid = container.firstChild;
       expect(grid?.childNodes.length).toBe(0);
     });
   });
 
-  describe("ユーザー操作 (User Interactions)", () => {
-    it("should call onItemClick with the correct item when first item is clicked", async () => {
+  describe("ユーザー操作", () => {
+    it("最初のアイテムをクリックすると正しいアイテムでonItemClickが呼ばれること", async () => {
       const user = userEvent.setup();
       const handleItemClick = vi.fn();
 
@@ -101,7 +100,7 @@ describe("ShowcaseGrid", () => {
       expect(handleItemClick).toHaveBeenCalledWith(mockItems[0]);
     });
 
-    it("should call onItemClick with the correct item when second item is clicked", async () => {
+    it("2番目のアイテムをクリックすると正しいアイテムでonItemClickが呼ばれること", async () => {
       const user = userEvent.setup();
       const handleItemClick = vi.fn();
 
@@ -114,7 +113,7 @@ describe("ShowcaseGrid", () => {
       expect(handleItemClick).toHaveBeenCalledWith(mockItems[1]);
     });
 
-    it("should call onItemClick with the correct item when third item is clicked", async () => {
+    it("3番目のアイテムをクリックすると正しいアイテムでonItemClickが呼ばれること", async () => {
       const user = userEvent.setup();
       const handleItemClick = vi.fn();
 
@@ -127,7 +126,7 @@ describe("ShowcaseGrid", () => {
       expect(handleItemClick).toHaveBeenCalledWith(mockItems[2]);
     });
 
-    it("should allow clicking multiple items", async () => {
+    it("複数のアイテムをクリックできること", async () => {
       const user = userEvent.setup();
       const handleItemClick = vi.fn();
 
@@ -145,8 +144,8 @@ describe("ShowcaseGrid", () => {
     });
   });
 
-  describe("単一アイテム (Single Item)", () => {
-    it("should render correctly with a single item", () => {
+  describe("単一アイテム", () => {
+    it("単一アイテムでも正しくレンダリングされること", () => {
       const handleItemClick = vi.fn();
       const singleItem = [mockItems[0]];
 
@@ -157,8 +156,8 @@ describe("ShowcaseGrid", () => {
     });
   });
 
-  describe("グリッドレイアウト (Grid Layout)", () => {
-    it("should have grid class for responsive layout", () => {
+  describe("グリッドレイアウト", () => {
+    it("レスポンシブレイアウトのためのgridクラスを持つこと", () => {
       const handleItemClick = vi.fn();
 
       const { container } = render(
