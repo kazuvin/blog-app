@@ -1,16 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Badge, Card, CardContent, CardHeader } from "@/components/ui";
-import {
-  getAllTags,
-  getPostsByTag,
-  type PostMeta,
-  type SortOption,
-  searchPosts,
-  sortPosts,
-} from "@/lib/blog-utils";
+import { getAllTags, getPostsByTag, type PostMeta, searchPosts, sortPosts } from "@/lib/blog-utils";
+import { useBlogSearchParams } from "../_hooks/use-blog-search-params";
 import { BlogSearchInput } from "./blog-search-input";
 import { BlogSortSelector } from "./blog-sort-selector";
 import { BlogTagFilter } from "./blog-tag-filter";
@@ -20,9 +14,8 @@ export interface BlogListContainerProps {
 }
 
 export function BlogListContainer({ posts }: BlogListContainerProps) {
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
-  const [sortOption, setSortOption] = useState<SortOption>("date-desc");
-  const [searchQuery, setSearchQuery] = useState("");
+  const { searchQuery, selectedTag, sortOption, setSearchQuery, setSelectedTag, setSortOption } =
+    useBlogSearchParams();
 
   const allTags = useMemo(() => getAllTags(posts), [posts]);
 
