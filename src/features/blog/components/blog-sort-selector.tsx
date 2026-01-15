@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui";
-import type { SortOption } from "@/lib/blog";
+import type { SortOption } from "../lib/blog-utils";
 
 export interface BlogSortSelectorProps {
   currentSort: SortOption;

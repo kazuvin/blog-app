@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Badge, Button, Card, CardContent, CardHeader } from "@/components";
-import { getSortedPostsData } from "@/lib/blog";
+import { getSortedPostsData } from "@/features/blog";
 
 export default function Home() {
   const recentPosts = getSortedPostsData().slice(0, 3);

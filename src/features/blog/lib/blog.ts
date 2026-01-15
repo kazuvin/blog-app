@@ -7,17 +7,19 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 
+// Re-export client-safe utilities for server components
+export {
+  getAllTags,
+  getPostsByTag,
+  type PostMeta,
+  type SortOption,
+  searchPosts,
+  sortPosts,
+} from "./blog-utils";
+
+import type { PostMeta } from "./blog-utils";
+
 const contentsDirectory = path.join(process.cwd(), "contents");
-
-export type SortOption = "date-desc" | "date-asc" | "title-asc" | "title-desc";
-
-export interface PostMeta {
-  slug: string;
-  title: string;
-  date: string;
-  description: string;
-  tags: string[];
-}
 
 export interface Post extends PostMeta {
   content: string;
@@ -81,36 +83,4 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     tags: Array.isArray(data.tags) ? (data.tags as string[]) : [],
     content: contentHtml,
   };
-}
-
-export function getAllTags(posts: PostMeta[]): string[] {
-  const tagSet = new Set<string>();
-  for (const post of posts) {
-    for (const tag of post.tags) {
-      tagSet.add(tag);
-    }
-  }
-  return Array.from(tagSet).sort();
-}
-
-export function getPostsByTag(posts: PostMeta[], tag: string | null | undefined): PostMeta[] {
-  if (tag === null || tag === undefined) {
-    return posts;
-  }
-  return posts.filter((post) => post.tags.includes(tag));
-}
-
-export function sortPosts(posts: PostMeta[], sortOption: SortOption): PostMeta[] {
-  const sorted = [...posts];
-
-  switch (sortOption) {
-    case "date-asc":
-      return sorted.sort((a, b) => (a.date > b.date ? 1 : -1));
-    case "title-asc":
-      return sorted.sort((a, b) => a.title.localeCompare(b.title));
-    case "title-desc":
-      return sorted.sort((a, b) => b.title.localeCompare(a.title));
-    default:
-      return sorted.sort((a, b) => (a.date < b.date ? 1 : -1));
-  }
 }

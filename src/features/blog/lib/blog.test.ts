@@ -22,6 +22,7 @@ import {
   getSortedPostsData,
   type PostMeta,
   type SortOption,
+  searchPosts,
   sortPosts,
 } from "./blog";
 
@@ -333,6 +334,102 @@ describe("Blog Utilities", () => {
         const sorted = sortPosts(samplePosts, "invalid" as SortOption);
 
         expect(sorted[0].slug).toBe("post-a"); // newest first
+      });
+    });
+  });
+
+  describe("searchPosts", () => {
+    describe("検索機能 (Search Functionality)", () => {
+      const samplePosts: PostMeta[] = [
+        {
+          slug: "typescript-guide",
+          title: "TypeScript Complete Guide",
+          date: "2024-01-10",
+          description: "Learn TypeScript from scratch with practical examples",
+          tags: ["typescript", "programming"],
+        },
+        {
+          slug: "nextjs-tutorial",
+          title: "Next.js App Router Tutorial",
+          date: "2024-01-15",
+          description: "Build modern web apps with Next.js and React",
+          tags: ["nextjs", "react"],
+        },
+        {
+          slug: "react-tips",
+          title: "React Performance Tips",
+          date: "2024-01-20",
+          description: "Optimize your React applications for better performance",
+          tags: ["react", "performance"],
+        },
+      ];
+
+      it("should return all posts when query is empty", () => {
+        const results = searchPosts(samplePosts, "");
+
+        expect(results).toHaveLength(3);
+      });
+
+      it("should return all posts when query is only whitespace", () => {
+        const results = searchPosts(samplePosts, "   ");
+
+        expect(results).toHaveLength(3);
+      });
+
+      it("should search by title (case-insensitive)", () => {
+        const results = searchPosts(samplePosts, "typescript");
+
+        expect(results).toHaveLength(1);
+        expect(results[0].slug).toBe("typescript-guide");
+      });
+
+      it("should search by title with different case", () => {
+        const results = searchPosts(samplePosts, "TYPESCRIPT");
+
+        expect(results).toHaveLength(1);
+        expect(results[0].slug).toBe("typescript-guide");
+      });
+
+      it("should search by description", () => {
+        const results = searchPosts(samplePosts, "practical examples");
+
+        expect(results).toHaveLength(1);
+        expect(results[0].slug).toBe("typescript-guide");
+      });
+
+      it("should search by tags", () => {
+        const results = searchPosts(samplePosts, "react");
+
+        expect(results).toHaveLength(2);
+        expect(results.map((p) => p.slug)).toContain("nextjs-tutorial");
+        expect(results.map((p) => p.slug)).toContain("react-tips");
+      });
+
+      it("should return posts matching any of title, description, or tags", () => {
+        const results = searchPosts(samplePosts, "performance");
+
+        expect(results).toHaveLength(1);
+        expect(results[0].slug).toBe("react-tips");
+      });
+
+      it("should return empty array when no posts match", () => {
+        const results = searchPosts(samplePosts, "nonexistent keyword");
+
+        expect(results).toHaveLength(0);
+      });
+
+      it("should handle partial matches", () => {
+        const results = searchPosts(samplePosts, "Type");
+
+        expect(results).toHaveLength(1);
+        expect(results[0].slug).toBe("typescript-guide");
+      });
+
+      it("should not mutate the original array", () => {
+        const original = [...samplePosts];
+        searchPosts(samplePosts, "react");
+
+        expect(samplePosts).toEqual(original);
       });
     });
   });
