@@ -10,7 +10,7 @@ import {
   type SortOption,
   searchPosts,
   sortPosts,
-} from "@/lib/blog";
+} from "@/lib/blog-utils";
 import { BlogSearchInput } from "./blog-search-input";
 import { BlogSortSelector } from "./blog-sort-selector";
 import { BlogTagFilter } from "./blog-tag-filter";
