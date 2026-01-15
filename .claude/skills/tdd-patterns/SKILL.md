@@ -1,66 +1,66 @@
 ---
 name: tdd-patterns
-description: Test-Driven Development patterns where tests serve as specification documents. Use when writing tests first, creating new components/features, or reviewing test quality. Enforces Red-Green-Refactor cycle and bilingual test documentation.
+description: テスト駆動開発パターン。テストを仕様書として扱う。新しいコンポーネント/機能の作成時、テスト品質のレビュー時に使用。Red-Green-Refactorサイクルを徹底。
 ---
 
-# TDD Patterns
+# TDDパターン
 
-Test-Driven Development: **Tests = Specification**
+テスト駆動開発: **テスト = 仕様書**
 
-## Core Workflow
+## 基本ワークフロー
 
 ```
 Red → Green → Refactor
  ↓       ↓        ↓
-Write   Make    Clean
-failing  it      up
-tests   pass    code
+失敗   テストを  コードを
+テスト  通す    整理
+を書く
 ```
 
-## Test Structure (Specification Format)
+## テスト構造（仕様書形式）
 
 ```typescript
-describe("機能名 (FeatureName)", () => {
-  // 1. Setup & Initial State
-  describe("初期状態 (Initial State)", () => {
-    it("should render without errors", () => {});
-    it("should have default values", () => {});
+describe("機能名", () => {
+  // 1. セットアップと初期状態
+  describe("初期状態", () => {
+    it("エラーなくレンダリングされること", () => {});
+    it("デフォルト値を持つこと", () => {});
   });
 
-  // 2. Core Functionality
-  describe("主要機能 (Core Functionality)", () => {
-    it("should [action] when [condition]", () => {});
+  // 2. コア機能
+  describe("主要機能", () => {
+    it("[条件]のとき[動作]すること", () => {});
   });
 
-  // 3. User Interactions
-  describe("ユーザー操作 (User Interactions)", () => {
-    it("should respond to click events", () => {});
-    it("should handle keyboard navigation", () => {});
+  // 3. ユーザー操作
+  describe("ユーザー操作", () => {
+    it("クリックイベントに反応すること", () => {});
+    it("キーボード操作を処理すること", () => {});
   });
 
-  // 4. Edge Cases & Error Handling
-  describe("エッジケース (Edge Cases)", () => {
-    it("should handle null/undefined gracefully", () => {});
-    it("should display error message when API fails", () => {});
+  // 4. エッジケースとエラー処理
+  describe("エッジケース", () => {
+    it("null/undefinedを適切に処理すること", () => {});
+    it("API失敗時にエラーメッセージを表示すること", () => {});
   });
 });
 ```
 
-## Specification Checklist
+## 仕様チェックリスト
 
-Before writing implementation, tests MUST cover:
+実装前に、テストで以下をカバーする必要がある:
 
-| Category | Questions to Answer |
-|----------|---------------------|
-| **Props/Input** | What does it accept? What are defaults? |
-| **Output/Render** | What does it display? |
-| **Interactions** | How does user interact with it? |
-| **State** | How does state change over time? |
-| **Errors** | What happens when things fail? |
-| **Accessibility** | Is it keyboard/screen-reader friendly? |
+| カテゴリ | 確認すべき内容 |
+|----------|----------------|
+| **Props/入力** | 何を受け取るか？デフォルト値は？ |
+| **出力/表示** | 何を表示するか？ |
+| **操作** | ユーザーはどう操作するか？ |
+| **状態** | 状態はどう変化するか？ |
+| **エラー** | 失敗時どうなるか？ |
+| **アクセシビリティ** | キーボード/スクリーンリーダー対応か？ |
 
-## References
+## リファレンス
 
-- [component-tests.md](references/component-tests.md) - React component testing patterns
-- [function-tests.md](references/function-tests.md) - Pure function testing patterns
-- [async-tests.md](references/async-tests.md) - Async/API testing patterns
+- [component-tests.md](references/component-tests.md) - Reactコンポーネントのテストパターン
+- [function-tests.md](references/function-tests.md) - 純粋関数のテストパターン
+- [async-tests.md](references/async-tests.md) - 非同期/APIのテストパターン

@@ -1,100 +1,100 @@
-# Function Test Patterns
+# 関数テストパターン
 
-## Test File Location
+## テストファイルの配置
 
 ```
 src/lib/
 ├── utils.ts
-├── utils.test.ts    ← Specification
+├── utils.test.ts    ← 仕様書
 └── ...
 ```
 
-## Specification Template
+## 仕様テンプレート
 
 ```typescript
 import { describe, expect, it } from "vitest";
 import { functionName } from "./module";
 
 /**
- * functionName Specification
+ * functionName 仕様
  *
- * Purpose: [What does this function do]
- * Input: [What parameters does it accept]
- * Output: [What does it return]
+ * 目的: [この関数が何をするか]
+ * 入力: [受け取るパラメータ]
+ * 出力: [返す値]
  */
 describe("functionName", () => {
   // ===========================================
-  // 基本動作 (Basic Behavior)
+  // 基本動作
   // ===========================================
-  describe("基本動作 (Basic Behavior)", () => {
-    it("should return expected output for typical input", () => {
+  describe("基本動作", () => {
+    it("一般的な入力に対して期待される出力を返すこと", () => {
       expect(functionName("input")).toBe("expected output");
     });
 
-    it("should handle multiple arguments correctly", () => {
+    it("複数の引数を正しく処理すること", () => {
       expect(functionName("a", "b", "c")).toBe("abc");
     });
   });
 
   // ===========================================
-  // 境界値 (Boundary Values)
+  // 境界値
   // ===========================================
-  describe("境界値 (Boundary Values)", () => {
-    it("should handle empty string", () => {
+  describe("境界値", () => {
+    it("空文字列を処理すること", () => {
       expect(functionName("")).toBe("");
     });
 
-    it("should handle minimum value", () => {
+    it("最小値を処理すること", () => {
       expect(functionName(0)).toBe(0);
     });
 
-    it("should handle maximum value", () => {
+    it("最大値を処理すること", () => {
       expect(functionName(Number.MAX_SAFE_INTEGER)).toBeDefined();
     });
   });
 
   // ===========================================
-  // エッジケース (Edge Cases)
+  // エッジケース
   // ===========================================
-  describe("エッジケース (Edge Cases)", () => {
-    it("should handle null/undefined gracefully", () => {
+  describe("エッジケース", () => {
+    it("null/undefinedを適切に処理すること", () => {
       expect(functionName(null)).toBe(defaultValue);
       expect(functionName(undefined)).toBe(defaultValue);
     });
 
-    it("should handle special characters", () => {
+    it("特殊文字を処理すること", () => {
       expect(functionName("日本語")).toBe("日本語");
       expect(functionName("émoji 🎉")).toBe("émoji 🎉");
     });
 
-    it("should handle whitespace", () => {
+    it("空白を処理すること", () => {
       expect(functionName("  trimmed  ")).toBe("trimmed");
     });
   });
 
   // ===========================================
-  // エラーケース (Error Cases)
+  // エラーケース
   // ===========================================
-  describe("エラーケース (Error Cases)", () => {
-    it("should throw error for invalid input", () => {
-      expect(() => functionName(-1)).toThrow("Input must be positive");
+  describe("エラーケース", () => {
+    it("無効な入力でエラーをスローすること", () => {
+      expect(() => functionName(-1)).toThrow("入力は正の数である必要があります");
     });
 
-    it("should throw TypeError for wrong type", () => {
+    it("間違った型でTypeErrorをスローすること", () => {
       expect(() => functionName({} as string)).toThrow(TypeError);
     });
   });
 
   // ===========================================
-  // 型安全性 (Type Safety)
+  // 型安全性
   // ===========================================
-  describe("型安全性 (Type Safety)", () => {
-    it("should return correct type", () => {
+  describe("型安全性", () => {
+    it("正しい型を返すこと", () => {
       const result = functionName("input");
       expect(typeof result).toBe("string");
     });
 
-    it("should accept all valid union types", () => {
+    it("すべての有効なユニオン型を受け入れること", () => {
       expect(functionName("option1")).toBeDefined();
       expect(functionName("option2")).toBeDefined();
     });
@@ -102,9 +102,9 @@ describe("functionName", () => {
 });
 ```
 
-## Common Patterns
+## 一般的なパターン
 
-### Table-Driven Tests
+### テーブル駆動テスト
 
 ```typescript
 describe("capitalize", () => {
@@ -114,62 +114,62 @@ describe("capitalize", () => {
     ["ALREADY", "ALREADY"],
     ["", ""],
     ["a", "A"],
-  ])("capitalize(%s) should return %s", (input, expected) => {
+  ])("capitalize(%s)は%sを返すこと", (input, expected) => {
     expect(capitalize(input)).toBe(expected);
   });
 });
 ```
 
-### Testing Pure Functions
+### 純粋関数のテスト
 
 ```typescript
 describe("add", () => {
-  it("should be commutative: a + b = b + a", () => {
+  it("交換法則を満たすこと: a + b = b + a", () => {
     expect(add(2, 3)).toBe(add(3, 2));
   });
 
-  it("should be associative: (a + b) + c = a + (b + c)", () => {
+  it("結合法則を満たすこと: (a + b) + c = a + (b + c)", () => {
     expect(add(add(1, 2), 3)).toBe(add(1, add(2, 3)));
   });
 
-  it("should have identity element: a + 0 = a", () => {
+  it("単位元を持つこと: a + 0 = a", () => {
     expect(add(5, 0)).toBe(5);
   });
 });
 ```
 
-### Testing Transformations
+### 変換のテスト
 
 ```typescript
 describe("formatDate", () => {
-  describe("入力形式 (Input Formats)", () => {
-    it("should accept Date object", () => {
+  describe("入力形式", () => {
+    it("Dateオブジェクトを受け入れること", () => {
       const date = new Date("2024-01-15");
       expect(formatDate(date)).toBe("2024-01-15");
     });
 
-    it("should accept ISO string", () => {
+    it("ISO文字列を受け入れること", () => {
       expect(formatDate("2024-01-15T00:00:00Z")).toBe("2024-01-15");
     });
 
-    it("should accept timestamp", () => {
+    it("タイムスタンプを受け入れること", () => {
       expect(formatDate(1705276800000)).toBe("2024-01-15");
     });
   });
 
-  describe("出力形式 (Output Formats)", () => {
-    it("should format as YYYY-MM-DD by default", () => {
+  describe("出力形式", () => {
+    it("デフォルトでYYYY-MM-DD形式にフォーマットすること", () => {
       expect(formatDate(new Date("2024-01-15"))).toBe("2024-01-15");
     });
 
-    it("should support custom format", () => {
+    it("カスタムフォーマットをサポートすること", () => {
       expect(formatDate(new Date("2024-01-15"), "MM/DD/YYYY")).toBe("01/15/2024");
     });
   });
 });
 ```
 
-### Testing Array/Object Operations
+### 配列/オブジェクト操作のテスト
 
 ```typescript
 describe("groupBy", () => {
@@ -179,7 +179,7 @@ describe("groupBy", () => {
     { name: "Carol", role: "admin" },
   ];
 
-  it("should group items by key", () => {
+  it("キーでアイテムをグループ化すること", () => {
     const grouped = groupBy(users, "role");
     expect(grouped).toEqual({
       admin: [{ name: "Alice", role: "admin" }, { name: "Carol", role: "admin" }],
@@ -187,11 +187,11 @@ describe("groupBy", () => {
     });
   });
 
-  it("should return empty object for empty array", () => {
+  it("空配列に対して空オブジェクトを返すこと", () => {
     expect(groupBy([], "key")).toEqual({});
   });
 
-  it("should handle missing keys", () => {
+  it("存在しないキーを処理すること", () => {
     const items = [{ a: 1 }, { b: 2 }];
     const grouped = groupBy(items, "a");
     expect(grouped).toEqual({

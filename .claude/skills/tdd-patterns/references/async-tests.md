@@ -1,16 +1,16 @@
-# Async Test Patterns
+# 非同期テストパターン
 
-## Testing Async Functions
+## 非同期関数のテスト
 
 ```typescript
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 
 describe("fetchUser", () => {
   // ===========================================
-  // 正常系 (Success Cases)
+  // 正常系
   // ===========================================
-  describe("正常系 (Success Cases)", () => {
-    it("should return user data on success", async () => {
+  describe("正常系", () => {
+    it("成功時にユーザーデータを返すこと", async () => {
       const user = await fetchUser("123");
       expect(user).toEqual({
         id: "123",
@@ -19,7 +19,7 @@ describe("fetchUser", () => {
       });
     });
 
-    it("should resolve with correct structure", async () => {
+    it("正しい構造でresolveすること", async () => {
       const user = await fetchUser("123");
       expect(user).toMatchObject({
         id: expect.any(String),
@@ -29,24 +29,24 @@ describe("fetchUser", () => {
   });
 
   // ===========================================
-  // 異常系 (Error Cases)
+  // 異常系
   // ===========================================
-  describe("異常系 (Error Cases)", () => {
-    it("should throw error for non-existent user", async () => {
-      await expect(fetchUser("non-existent")).rejects.toThrow("User not found");
+  describe("異常系", () => {
+    it("存在しないユーザーでエラーをスローすること", async () => {
+      await expect(fetchUser("non-existent")).rejects.toThrow("ユーザーが見つかりません");
     });
 
-    it("should throw network error on connection failure", async () => {
-      vi.spyOn(global, "fetch").mockRejectedValueOnce(new Error("Network error"));
-      await expect(fetchUser("123")).rejects.toThrow("Network error");
+    it("接続失敗時にネットワークエラーをスローすること", async () => {
+      vi.spyOn(global, "fetch").mockRejectedValueOnce(new Error("ネットワークエラー"));
+      await expect(fetchUser("123")).rejects.toThrow("ネットワークエラー");
     });
   });
 });
 ```
 
-## Mocking API Calls
+## API呼び出しのモック
 
-### Using vi.mock
+### vi.mockを使用
 
 ```typescript
 import { describe, expect, it, vi, beforeEach } from "vitest";
@@ -60,7 +60,7 @@ describe("getUsers", () => {
     vi.clearAllMocks();
   });
 
-  it("should fetch users from API", async () => {
+  it("APIからユーザーを取得すること", async () => {
     const mockUsers = [{ id: "1", name: "User 1" }];
     vi.mocked(httpClient.get).mockResolvedValue({ data: mockUsers });
 
@@ -70,7 +70,7 @@ describe("getUsers", () => {
     expect(users).toEqual(mockUsers);
   });
 
-  it("should handle empty response", async () => {
+  it("空のレスポンスを処理すること", async () => {
     vi.mocked(httpClient.get).mockResolvedValue({ data: [] });
 
     const users = await getUsers();
@@ -80,7 +80,7 @@ describe("getUsers", () => {
 });
 ```
 
-### Using MSW (Mock Service Worker)
+### MSW（Mock Service Worker）を使用
 
 ```typescript
 import { http, HttpResponse } from "msw";
@@ -90,7 +90,7 @@ import { describe, expect, it, beforeAll, afterAll, afterEach } from "vitest";
 const server = setupServer(
   http.get("/api/users/:id", ({ params }) => {
     if (params.id === "not-found") {
-      return HttpResponse.json({ error: "Not found" }, { status: 404 });
+      return HttpResponse.json({ error: "見つかりません" }, { status: 404 });
     }
     return HttpResponse.json({ id: params.id, name: "Test User" });
   })
@@ -100,15 +100,15 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-describe("API Integration", () => {
-  it("should fetch user successfully", async () => {
+describe("API統合テスト", () => {
+  it("ユーザーを正常に取得すること", async () => {
     const response = await fetch("/api/users/123");
     const data = await response.json();
 
     expect(data).toEqual({ id: "123", name: "Test User" });
   });
 
-  it("should handle 404 error", async () => {
+  it("404エラーを処理すること", async () => {
     const response = await fetch("/api/users/not-found");
 
     expect(response.status).toBe(404);
@@ -116,16 +116,16 @@ describe("API Integration", () => {
 });
 ```
 
-## Testing Loading States
+## ローディング状態のテスト
 
 ```typescript
 import { render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 describe("UserProfile", () => {
-  describe("ローディング状態 (Loading State)", () => {
-    it("should show loading spinner while fetching", async () => {
-      // Create a promise that we can control
+  describe("ローディング状態", () => {
+    it("取得中にローディングスピナーを表示すること", async () => {
+      // 制御可能なPromiseを作成
       let resolvePromise: (value: any) => void;
       const promise = new Promise((resolve) => {
         resolvePromise = resolve;
@@ -135,47 +135,47 @@ describe("UserProfile", () => {
 
       render(<UserProfile userId="123" />);
 
-      // Loading state
+      // ローディング状態
       expect(screen.getByTestId("loading-spinner")).toBeInTheDocument();
 
-      // Resolve the promise
+      // Promiseをresolve
       resolvePromise!({ id: "123", name: "Test User" });
 
-      // Wait for loading to complete
+      // ローディング完了を待つ
       await waitFor(() => {
         expect(screen.queryByTestId("loading-spinner")).not.toBeInTheDocument();
       });
 
-      // Data is displayed
+      // データが表示される
       expect(screen.getByText("Test User")).toBeInTheDocument();
     });
   });
 
-  describe("エラー状態 (Error State)", () => {
-    it("should show error message on fetch failure", async () => {
-      vi.mocked(fetchUser).mockRejectedValue(new Error("Failed to fetch"));
+  describe("エラー状態", () => {
+    it("取得失敗時にエラーメッセージを表示すること", async () => {
+      vi.mocked(fetchUser).mockRejectedValue(new Error("取得に失敗しました"));
 
       render(<UserProfile userId="123" />);
 
       await waitFor(() => {
-        expect(screen.getByRole("alert")).toHaveTextContent("Failed to fetch");
+        expect(screen.getByRole("alert")).toHaveTextContent("取得に失敗しました");
       });
     });
 
-    it("should provide retry option on error", async () => {
-      vi.mocked(fetchUser).mockRejectedValueOnce(new Error("Failed"));
+    it("エラー時にリトライオプションを提供すること", async () => {
+      vi.mocked(fetchUser).mockRejectedValueOnce(new Error("失敗"));
 
       render(<UserProfile userId="123" />);
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: /retry/i })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /リトライ/i })).toBeInTheDocument();
       });
     });
   });
 });
 ```
 
-## Testing Debounced/Throttled Functions
+## デバウンス/スロットル関数のテスト
 
 ```typescript
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
@@ -190,7 +190,7 @@ describe("debounce", () => {
     vi.useRealTimers();
   });
 
-  it("should delay function execution", () => {
+  it("関数の実行を遅延させること", () => {
     const fn = vi.fn();
     const debouncedFn = debounce(fn, 300);
 
@@ -201,7 +201,7 @@ describe("debounce", () => {
     expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  it("should cancel previous call on rapid invocations", () => {
+  it("連続呼び出し時に前の呼び出しをキャンセルすること", () => {
     const fn = vi.fn();
     const debouncedFn = debounce(fn, 300);
 
@@ -220,29 +220,29 @@ describe("debounce", () => {
 });
 ```
 
-## Testing with Suspense
+## Suspenseを使用したテスト
 
 ```typescript
 import { render, screen } from "@testing-library/react";
 import { Suspense } from "react";
 import { describe, expect, it } from "vitest";
 
-describe("SuspenseComponent", () => {
-  it("should show fallback while loading", async () => {
+describe("Suspenseコンポーネント", () => {
+  it("ローディング中にフォールバックを表示すること", async () => {
     render(
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>読み込み中...</div>}>
         <AsyncComponent />
       </Suspense>
     );
 
-    // Initially shows fallback
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    // 最初はフォールバックを表示
+    expect(screen.getByText("読み込み中...")).toBeInTheDocument();
 
-    // Wait for actual content
-    expect(await screen.findByText("Loaded Content")).toBeInTheDocument();
+    // 実際のコンテンツを待つ
+    expect(await screen.findByText("読み込み完了")).toBeInTheDocument();
 
-    // Fallback is removed
-    expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
+    // フォールバックは削除される
+    expect(screen.queryByText("読み込み中...")).not.toBeInTheDocument();
   });
 });
 ```
