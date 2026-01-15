@@ -2,6 +2,7 @@
 title: "Next.js入門"
 date: "2024-01-20"
 description: "Next.jsの基本的な使い方と特徴について解説します。"
+tags: ["nextjs", "react", "tutorial"]
 ---
 
 # Next.js入門

@@ -2,6 +2,7 @@
 title: "TypeScriptの便利なテクニック"
 date: "2024-01-25"
 description: "TypeScriptを使いこなすための便利なテクニックを紹介します。"
+tags: ["typescript", "tips", "programming"]
 ---
 
 # TypeScriptの便利なテクニック

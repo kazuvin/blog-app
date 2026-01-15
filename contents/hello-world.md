@@ -2,6 +2,7 @@
 title: "Hello World"
 date: "2024-01-15"
 description: "初めてのブログ記事です。このブログについて紹介します。"
+tags: ["nextjs", "typescript", "cloudflare"]
 ---
 
 # Hello World
