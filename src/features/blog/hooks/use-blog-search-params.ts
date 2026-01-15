@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
-import type { SortOption } from "@/lib/blog-utils";
+import type { SortOption } from "../lib/blog-utils";
 
 const VALID_SORT_OPTIONS: SortOption[] = ["date-desc", "date-asc", "title-asc", "title-desc"];
 const DEFAULT_SORT: SortOption = "date-desc";

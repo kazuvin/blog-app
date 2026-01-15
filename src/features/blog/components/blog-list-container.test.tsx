@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PostMeta, SortOption } from "@/lib/blog-utils";
+import type { PostMeta, SortOption } from "../lib/blog-utils";
 import { BlogListContainer } from "./blog-list-container";
 
 // Mock next/link
@@ -24,7 +24,7 @@ const createMockHookState = () => ({
 let mockHookState = createMockHookState();
 
 // Mock useBlogSearchParams hook
-vi.mock("../_hooks/use-blog-search-params", () => ({
+vi.mock("../hooks/use-blog-search-params", () => ({
   useBlogSearchParams: () => mockHookState,
 }));
 

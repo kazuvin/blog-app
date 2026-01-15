@@ -1,6 +1,5 @@
 import { Suspense } from "react";
-import { getSortedPostsData } from "@/lib/blog";
-import { BlogListContainer } from "./_components/blog-list-container";
+import { BlogListContainer, getSortedPostsData } from "@/features/blog";
 
 export const metadata = {
   title: "Blog",
