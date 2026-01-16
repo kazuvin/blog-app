@@ -1,4 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
+import { createStore, Provider } from "jotai";
+import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useSearchCommand } from "./use-search-command";
 
@@ -9,7 +11,15 @@ import { useSearchCommand } from "./use-search-command";
  * 用途: グローバルキーボードショートカットの登録・解除
  */
 describe("useSearchCommand", () => {
+  let store: ReturnType<typeof createStore>;
+
+  // 各テストで新しいストアを作成（状態をリセット）
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <Provider store={store}>{children}</Provider>
+  );
+
   beforeEach(() => {
+    store = createStore();
     vi.clearAllMocks();
   });
 
@@ -22,13 +32,13 @@ describe("useSearchCommand", () => {
   // ===========================================
   describe("初期状態 (Initial State)", () => {
     it("初期状態でisOpen=falseを返すこと", () => {
-      const { result } = renderHook(() => useSearchCommand());
+      const { result } = renderHook(() => useSearchCommand(), { wrapper });
 
       expect(result.current.isOpen).toBe(false);
     });
 
     it("setIsOpen関数を返すこと", () => {
-      const { result } = renderHook(() => useSearchCommand());
+      const { result } = renderHook(() => useSearchCommand(), { wrapper });
 
       expect(typeof result.current.setIsOpen).toBe("function");
     });
@@ -39,7 +49,7 @@ describe("useSearchCommand", () => {
   // ===========================================
   describe("キーボードショートカット (Keyboard Shortcut)", () => {
     it("Cmd+Kでダイアログが開くこと（Mac）", () => {
-      const { result } = renderHook(() => useSearchCommand());
+      const { result } = renderHook(() => useSearchCommand(), { wrapper });
 
       act(() => {
         // metaKey = Cmd on Mac
@@ -56,7 +66,7 @@ describe("useSearchCommand", () => {
     });
 
     it("Ctrl+Kでダイアログが開くこと（Windows/Linux）", () => {
-      const { result } = renderHook(() => useSearchCommand());
+      const { result } = renderHook(() => useSearchCommand(), { wrapper });
 
       act(() => {
         window.dispatchEvent(
@@ -72,7 +82,7 @@ describe("useSearchCommand", () => {
     });
 
     it("Kキー単体では開かないこと", () => {
-      const { result } = renderHook(() => useSearchCommand());
+      const { result } = renderHook(() => useSearchCommand(), { wrapper });
 
       act(() => {
         window.dispatchEvent(
@@ -87,7 +97,7 @@ describe("useSearchCommand", () => {
     });
 
     it("Cmd+他のキーでは開かないこと", () => {
-      const { result } = renderHook(() => useSearchCommand());
+      const { result } = renderHook(() => useSearchCommand(), { wrapper });
 
       act(() => {
         window.dispatchEvent(
@@ -103,7 +113,7 @@ describe("useSearchCommand", () => {
     });
 
     it("ショートカットでトグルすること", () => {
-      const { result } = renderHook(() => useSearchCommand());
+      const { result } = renderHook(() => useSearchCommand(), { wrapper });
 
       // 1回目: 開く
       act(() => {
@@ -138,7 +148,7 @@ describe("useSearchCommand", () => {
   // ===========================================
   describe("setIsOpen (Manual Control)", () => {
     it("setIsOpenで手動で開くことができること", () => {
-      const { result } = renderHook(() => useSearchCommand());
+      const { result } = renderHook(() => useSearchCommand(), { wrapper });
 
       act(() => {
         result.current.setIsOpen(true);
@@ -148,7 +158,7 @@ describe("useSearchCommand", () => {
     });
 
     it("setIsOpenで手動で閉じることができること", () => {
-      const { result } = renderHook(() => useSearchCommand());
+      const { result } = renderHook(() => useSearchCommand(), { wrapper });
 
       // まず開く
       act(() => {
@@ -172,7 +182,7 @@ describe("useSearchCommand", () => {
       const addEventListenerSpy = vi.spyOn(window, "addEventListener");
       const removeEventListenerSpy = vi.spyOn(window, "removeEventListener");
 
-      const { unmount } = renderHook(() => useSearchCommand());
+      const { unmount } = renderHook(() => useSearchCommand(), { wrapper });
 
       expect(addEventListenerSpy).toHaveBeenCalledWith("keydown", expect.any(Function));
 
@@ -187,7 +197,7 @@ describe("useSearchCommand", () => {
   // ===========================================
   describe("デフォルト動作防止 (Prevent Default)", () => {
     it("Cmd+Kでブラウザのデフォルト動作が防止されること", () => {
-      renderHook(() => useSearchCommand());
+      renderHook(() => useSearchCommand(), { wrapper });
 
       const event = new KeyboardEvent("keydown", {
         key: "k",

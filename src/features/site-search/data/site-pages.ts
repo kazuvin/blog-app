@@ -1,31 +1,15 @@
+import { searchableRoutes } from "@/config/routes";
 import type { SearchItem } from "../lib/site-search-utils";
 
 /**
- * 静的ページの検索アイテム
+ * ルート定義から検索アイテムを生成
+ *
+ * src/config/routes.ts で定義されたルートから
+ * 自動的に検索対象のページを生成
  */
-export const staticPages: SearchItem[] = [
-  {
-    type: "page",
-    title: "Home",
-    description: "ホームページ",
-    href: "/",
-  },
-  {
-    type: "page",
-    title: "Blog",
-    description: "ブログ記事一覧",
-    href: "/blog",
-  },
-  {
-    type: "page",
-    title: "Showcases",
-    description: "プロジェクトの紹介",
-    href: "/showcases",
-  },
-  {
-    type: "page",
-    title: "About",
-    description: "サイトについて",
-    href: "/about",
-  },
-];
+export const staticPages: SearchItem[] = searchableRoutes.map((route) => ({
+  type: "page" as const,
+  title: route.label,
+  description: route.description,
+  href: route.href,
+}));
