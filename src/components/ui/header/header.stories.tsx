@@ -23,7 +23,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <Header>
-      <HeaderLogo>My Blog</HeaderLogo>
+      <HeaderLogo />
     </Header>
   ),
 };
@@ -31,10 +31,9 @@ export const Default: Story = {
 export const WithNavigation: Story = {
   render: () => (
     <Header>
-      <HeaderLogo>My Blog</HeaderLogo>
+      <HeaderLogo />
       <HeaderNav>
         <HeaderNavList>
-          <HeaderNavItem href="/">Home</HeaderNavItem>
           <HeaderNavItem href="/blog">Blog</HeaderNavItem>
           <HeaderNavItem href="/about">About</HeaderNavItem>
         </HeaderNavList>
@@ -46,7 +45,7 @@ export const WithNavigation: Story = {
 export const WithGitHub: Story = {
   render: () => (
     <Header>
-      <HeaderLogo>My Blog</HeaderLogo>
+      <HeaderLogo />
       <HeaderNav>
         <HeaderGitHubLink url="https://github.com/username/blog-app" />
       </HeaderNav>
@@ -57,10 +56,9 @@ export const WithGitHub: Story = {
 export const Full: Story = {
   render: () => (
     <Header>
-      <HeaderLogo>My Blog</HeaderLogo>
+      <HeaderLogo />
       <HeaderNav>
         <HeaderNavList>
-          <HeaderNavItem href="/">Home</HeaderNavItem>
           <HeaderNavItem href="/blog">Blog</HeaderNavItem>
           <HeaderNavItem href="/about">About</HeaderNavItem>
           <HeaderNavItem href="/contact">Contact</HeaderNavItem>
