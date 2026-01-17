@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { useScrollHeader } from "./use-scroll-header";
@@ -30,7 +31,10 @@ export type HeaderLogoProps = Omit<ComponentProps<typeof Link>, "href"> & {
   href?: string;
 };
 
-export function HeaderLogo({ href = "/", className, ...props }: HeaderLogoProps) {
+export function HeaderLogo({ href = "/", className, onClick, ...props }: HeaderLogoProps) {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
   return (
     <Link
       href={href}
@@ -39,6 +43,12 @@ export function HeaderLogo({ href = "/", className, ...props }: HeaderLogoProps)
         className
       )}
       aria-label="Home"
+      onClick={(e) => {
+        if (isActive) {
+          e.preventDefault();
+        }
+        onClick?.(e);
+      }}
       {...props}
     >
       {/* Animated gradient overlay */}
