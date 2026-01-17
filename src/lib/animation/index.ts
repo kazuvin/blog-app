@@ -1,6 +1,11 @@
 // Animation Hooks
 
 export {
+  type UseInViewOptions,
+  type UseInViewResult,
+  useInView,
+} from "./use-in-view";
+export {
   type UseScrollPositionOptions,
   type UseScrollPositionResult,
   useScrollPosition,

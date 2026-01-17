@@ -16,6 +16,12 @@
 
   /* Page transition animation */
   --animate-fade-in: fade-in 0.2s ease-out;
+
+  /* Pop animation - springy micro-interaction */
+  --animate-pop: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Fade in up animation - scroll reveal with pop */
+  --animate-fade-in-up: fade-in-up 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes fade-in {
@@ -24,6 +30,32 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.04);
+  }
+  60% {
+    transform: scale(0.98);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

@@ -1,5 +1,6 @@
 import { Badge, Button, Card, CardContent, CardHeader, Input, Label } from "@/components/ui";
 import type { ShowcaseItem } from "../types";
+import { AnimatedCardFullDemo, AnimatedCardPreview } from "./animated-card-demo";
 
 export const showcaseItems: ShowcaseItem[] = [
   {
@@ -190,5 +191,12 @@ export const showcaseItems: ShowcaseItem[] = [
         </div>
       </div>
     ),
+  },
+  {
+    id: "animated-card",
+    name: "Animated Card",
+    description: "Card component with fade-in and slide-up animation triggered by scroll.",
+    preview: <AnimatedCardPreview />,
+    fullDemo: <AnimatedCardFullDemo />,
   },
 ];

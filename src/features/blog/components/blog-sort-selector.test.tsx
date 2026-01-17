@@ -41,12 +41,12 @@ describe("BlogSortSelector", () => {
   });
 
   describe("ユーザー操作 (User Interactions)", () => {
-    it("should open dropdown when clicked", async () => {
+    it("should open dropdown when hovered", async () => {
       const user = userEvent.setup();
 
       render(<BlogSortSelector currentSort="date-desc" onSortChange={mockOnSortChange} />);
 
-      await user.click(screen.getByRole("button"));
+      await user.hover(screen.getByRole("button"));
 
       // All sort options should be visible
       expect(screen.getByText(/古い順|oldest first/i)).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe("BlogSortSelector", () => {
 
       render(<BlogSortSelector currentSort="date-desc" onSortChange={mockOnSortChange} />);
 
-      await user.click(screen.getByRole("button"));
+      await user.hover(screen.getByRole("button"));
       await user.click(screen.getByText(/古い順|oldest first/i));
 
       expect(mockOnSortChange).toHaveBeenCalledWith("date-asc");
@@ -69,7 +69,7 @@ describe("BlogSortSelector", () => {
 
       render(<BlogSortSelector currentSort="date-desc" onSortChange={mockOnSortChange} />);
 
-      await user.click(screen.getByRole("button"));
+      await user.hover(screen.getByRole("button"));
       await user.click(screen.getByText(/古い順|oldest first/i));
 
       // Dropdown should be closed (only the selected option should be visible)

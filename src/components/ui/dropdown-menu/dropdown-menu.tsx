@@ -39,7 +39,7 @@ export function DropdownMenuSubTrigger({
   return (
     <DropdownMenuPrimitive.SubTrigger
       className={cn(
-        "flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none",
+        "flex cursor-pointer select-none items-center rounded-2xl px-2 py-1.5 text-sm outline-none",
         "focus:bg-foreground/10 data-[state=open]:bg-foreground/10",
         inset && "pl-8",
         className
@@ -74,7 +74,7 @@ export function DropdownMenuSubContent({ className, ...props }: DropdownMenuSubC
   return (
     <DropdownMenuPrimitive.SubContent
       className={cn(
-        "z-50 min-w-[8rem] overflow-hidden rounded-md border border-foreground/10 bg-background p-1 text-foreground shadow-lg",
+        "z-50 min-w-[8rem] overflow-hidden rounded-2xl bg-background p-1 text-foreground shadow-lg hover:bg-stone-200",
         "data-[state=closed]:animate-out data-[state=open]:animate-in",
         "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
         "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
@@ -101,7 +101,7 @@ export function DropdownMenuContent({
       <DropdownMenuPrimitive.Content
         sideOffset={sideOffset}
         className={cn(
-          "z-50 min-w-[8rem] overflow-hidden rounded-md border border-foreground/10 bg-background p-1 text-foreground shadow-md",
+          "z-50 min-w-[8rem] overflow-hidden rounded-lg border border-foreground/10 bg-background p-2 text-foreground shadow-md",
           "data-[state=closed]:animate-out data-[state=open]:animate-in",
           "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
           "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
@@ -126,7 +126,7 @@ export function DropdownMenuItem({ className, inset, ...props }: DropdownMenuIte
     <DropdownMenuPrimitive.Item
       className={cn(
         "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors",
-        "focus:bg-foreground/10 focus:text-foreground",
+        "focus:text-foreground/60",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         inset && "pl-8",
         className

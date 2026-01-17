@@ -10,7 +10,7 @@ export function Input({ variant = "default", inputSize = "md", className, ...pro
   return (
     <input
       className={cn(
-        "w-full rounded-md border bg-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "w-full transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50",
         variantStyles[variant],
         sizeStyles[inputSize],
         className
@@ -22,13 +22,13 @@ export function Input({ variant = "default", inputSize = "md", className, ...pro
 
 const variantStyles = {
   default:
-    "border-foreground/20 text-foreground placeholder:text-foreground/50 focus:border-foreground focus:ring-foreground",
+    "bg-stone-100 rounded-2xl placeholder:text-foreground/50 outline-transparent focus:outline-indigo-300 outline-2",
   error:
     "border-red-500 text-foreground placeholder:text-foreground/50 focus:border-red-500 focus:ring-red-500",
 } as const;
 
 const sizeStyles = {
-  sm: "px-3 py-1.5 text-sm",
-  md: "px-4 py-2 text-base",
-  lg: "px-4 py-3 text-lg",
+  sm: "px-3 py-2 text-sm",
+  md: "px-4 py-3 text-base",
+  lg: "px-5 py-4 text-lg",
 } as const;

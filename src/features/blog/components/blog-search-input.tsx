@@ -36,7 +36,7 @@ export function BlogSearchInput({ searchQuery, onSearchChange, className }: Blog
         value={searchQuery}
         onChange={(e) => onSearchChange(e.target.value)}
         className="pl-10"
-        inputSize="sm"
+        inputSize="md"
         aria-label="記事を検索"
       />
     </div>

@@ -32,12 +32,15 @@ export function BlogTagFilter({ tags, selectedTags, onTagSelect }: BlogTagFilter
     <fieldset className="flex flex-wrap gap-2 border-none p-0" aria-label="Filter by tag">
       <button type="button" onClick={handleAllClick}>
         <Badge
-          variant={isAllSelected ? "info" : "default"}
+          key={`all-${isAllSelected}`}
+          variant={isAllSelected ? "accent" : "default"}
           size="md"
           data-selected={isAllSelected}
           className={cn(
             "cursor-pointer transition-colors",
-            isAllSelected ? "ring-2 ring-primary/50" : "hover:bg-foreground/20"
+            isAllSelected
+              ? "animate-pop ring-violet-400/50 dark:ring-violet-500/50"
+              : "hover:bg-foreground/20"
           )}
         >
           All
@@ -48,12 +51,15 @@ export function BlogTagFilter({ tags, selectedTags, onTagSelect }: BlogTagFilter
         return (
           <button key={tag} type="button" onClick={() => handleTagClick(tag)}>
             <Badge
-              variant={isSelected ? "info" : "default"}
+              key={`${tag}-${isSelected}`}
+              variant={isSelected ? "accent" : "default"}
               size="md"
               data-selected={isSelected}
               className={cn(
                 "cursor-pointer transition-colors",
-                isSelected ? "ring-2 ring-primary/50" : "hover:bg-foreground/20"
+                isSelected
+                  ? "animate-pop ring-violet-400/50 dark:ring-violet-500/50"
+                  : "hover:bg-foreground/20"
               )}
             >
               {tag}
