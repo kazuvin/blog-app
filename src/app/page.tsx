@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <>
       {/* Introduction Section */}
-      <section className="mb-16 pt-4">
+      <section className="mb-16">
         <h1 className="mb-4 font-bold text-3xl">Introduction</h1>
         <p className="text-foreground/80 text-lg leading-relaxed">
           Welcome to my blog! I&apos;m a passionate developer who loves building web applications
