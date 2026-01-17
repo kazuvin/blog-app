@@ -1,13 +1,22 @@
+"use client";
+
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useScrollHeader } from "./use-scroll-header";
 
 export type HeaderProps = ComponentProps<"header">;
 
 export function Header({ className, children, ...props }: HeaderProps) {
+  const { paddingTop, borderOpacity } = useScrollHeader();
+
   return (
     <header
-      className={cn("w-full border-foreground/10 border-b bg-background", className)}
+      className={cn("fixed top-0 right-0 left-0 z-50 bg-background", className)}
+      style={{
+        paddingTop: `${paddingTop}px`,
+        borderBottom: `1px solid color-mix(in srgb, var(--foreground) ${borderOpacity * 10}%, transparent)`,
+      }}
       {...props}
     >
       <div className="container mx-auto flex items-center justify-between px-4 py-4">

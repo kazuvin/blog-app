@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   Header,
   HeaderGitHubLink,
@@ -8,6 +8,15 @@ import {
   HeaderNavItem,
   HeaderNavList,
 } from "./header";
+
+// Mock the useScrollHeader hook
+vi.mock("./use-scroll-header", () => ({
+  useScrollHeader: () => ({
+    isScrolled: false,
+    paddingTop: 16,
+    borderOpacity: 0,
+  }),
+}));
 
 describe("Header", () => {
   describe("Header", () => {
@@ -31,8 +40,20 @@ describe("Header", () => {
 
       const header = screen.getByTestId("header");
       expect(header).toHaveClass("custom-class");
-      expect(header).toHaveClass("w-full");
-      expect(header).toHaveClass("border-b");
+      expect(header).toHaveClass("fixed");
+      expect(header).toHaveClass("top-0");
+      expect(header).toHaveClass("z-50");
+    });
+
+    it("applies scroll-based inline styles", () => {
+      render(
+        <Header data-testid="header">
+          <HeaderLogo>My Blog</HeaderLogo>
+        </Header>
+      );
+
+      const header = screen.getByTestId("header");
+      expect(header).toHaveStyle({ paddingTop: "16px" });
     });
 
     it("passes additional props to header element", () => {
