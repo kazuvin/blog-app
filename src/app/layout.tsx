@@ -52,7 +52,7 @@ export default function RootLayout({
               <HeaderGitHubLink url="https://github.com" />
             </HeaderNav>
           </Header>
-          <main className="container mx-auto px-4 pt-8 pb-12">{children}</main>
+          <main className="container mx-auto px-4 pt-32 pb-12">{children}</main>
         </Providers>
       </body>
     </html>
