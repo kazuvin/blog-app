@@ -7,7 +7,7 @@ import {
   HeaderNav,
   HeaderNavItem,
   HeaderNavList,
-  MainContent,
+  Main,
 } from "@/components";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -52,9 +52,7 @@ export default function RootLayout({
               <HeaderGitHubLink url="https://github.com" />
             </HeaderNav>
           </Header>
-          <main className="container mx-auto px-4 pt-32 pb-12">
-            <MainContent>{children}</MainContent>
-          </main>
+          <Main>{children}</Main>
         </Providers>
       </body>
     </html>
