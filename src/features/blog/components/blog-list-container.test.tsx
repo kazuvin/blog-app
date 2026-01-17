@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { PostMeta, SortOption } from "../lib/blog-utils";
 import { BlogListContainer } from "./blog-list-container";
 
@@ -92,15 +92,64 @@ describe("BlogListContainer", () => {
   });
 
   describe("検索機能 (Search Functionality)", () => {
-    it("should call setSearchQuery when user types in search input", async () => {
-      const user = userEvent.setup();
+    describe("debounced search input", () => {
+      beforeEach(() => {
+        vi.useFakeTimers();
+      });
 
-      render(<BlogListContainer posts={mockPosts} />);
+      afterEach(() => {
+        vi.useRealTimers();
+      });
 
-      const searchInput = screen.getByRole("searchbox");
-      await user.type(searchInput, "T");
+      it("should call setSearchQuery after debounce delay when user types", () => {
+        render(<BlogListContainer posts={mockPosts} />);
 
-      expect(mockHookState.setSearchQuery).toHaveBeenCalled();
+        const searchInput = screen.getByRole("searchbox");
+
+        // Use fireEvent for synchronous behavior with fake timers
+        fireEvent.change(searchInput, { target: { value: "T" } });
+
+        // Not called immediately due to debouncing
+        expect(mockHookState.setSearchQuery).not.toHaveBeenCalled();
+
+        // After debounce delay, setSearchQuery should be called
+        act(() => {
+          vi.advanceTimersByTime(300);
+        });
+
+        expect(mockHookState.setSearchQuery).toHaveBeenCalledWith("T");
+      });
+
+      it("should only call setSearchQuery once for rapid typing", () => {
+        render(<BlogListContainer posts={mockPosts} />);
+
+        const searchInput = screen.getByRole("searchbox");
+
+        // Rapid typing simulation
+        fireEvent.change(searchInput, { target: { value: "T" } });
+        act(() => {
+          vi.advanceTimersByTime(100);
+        });
+
+        fireEvent.change(searchInput, { target: { value: "Te" } });
+        act(() => {
+          vi.advanceTimersByTime(100);
+        });
+
+        fireEvent.change(searchInput, { target: { value: "Test" } });
+
+        // Should not have been called yet
+        expect(mockHookState.setSearchQuery).not.toHaveBeenCalled();
+
+        // After debounce delay from last change
+        act(() => {
+          vi.advanceTimersByTime(300);
+        });
+
+        // Should only be called once with final value
+        expect(mockHookState.setSearchQuery).toHaveBeenCalledTimes(1);
+        expect(mockHookState.setSearchQuery).toHaveBeenCalledWith("Test");
+      });
     });
 
     it("should filter posts when searchQuery state changes", () => {
