@@ -15,6 +15,7 @@ export {
 } from "./use-animation-frame";
 export { type UseInViewOptions, type UseInViewResult, useInView } from "./use-in-view";
 export { useReducedMotion } from "./use-reduced-motion";
+export { useScrollToTop } from "./use-scroll-to-top";
 export {
   type SpringConfig,
   SpringPresets,

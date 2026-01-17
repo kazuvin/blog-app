@@ -1,11 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
+import type { Root } from "hast";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeStringify from "rehype-stringify";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
+import { visit } from "unist-util-visit";
 
 // Re-export client-safe utilities for server components
 export {
@@ -20,6 +22,24 @@ export {
 import type { PostMeta } from "./blog-utils";
 
 const contentsDirectory = path.join(process.cwd(), "contents");
+
+/**
+ * Rehype plugin to remove the first H1 element from the content.
+ * This prevents duplicate titles since the title is already displayed
+ * via the page component using frontmatter data.
+ */
+function rehypeRemoveFirstH1() {
+  return (tree: Root) => {
+    let removed = false;
+    visit(tree, "element", (node, index, parent) => {
+      if (!removed && node.tagName === "h1" && parent && typeof index === "number") {
+        parent.children.splice(index, 1);
+        removed = true;
+        return index; // Continue from the same index since we removed an element
+      }
+    });
+  };
+}
 
 export interface Post extends PostMeta {
   content: string;
@@ -67,6 +87,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   const processedContent = await unified()
     .use(remarkParse)
     .use(remarkRehype)
+    .use(rehypeRemoveFirstH1)
     .use(rehypePrettyCode, {
       theme: "github-dark",
       keepBackground: true,
