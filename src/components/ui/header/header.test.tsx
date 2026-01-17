@@ -13,8 +13,6 @@ import {
 vi.mock("./use-scroll-header", () => ({
   useScrollHeader: () => ({
     isScrolled: false,
-    paddingTop: 16,
-    borderOpacity: 0,
   }),
 }));
 
@@ -45,7 +43,7 @@ describe("Header", () => {
       expect(header).toHaveClass("z-50");
     });
 
-    it("applies scroll-based inline styles", () => {
+    it("applies scroll-based CSS classes", () => {
       render(
         <Header data-testid="header">
           <HeaderLogo />
@@ -53,7 +51,10 @@ describe("Header", () => {
       );
 
       const header = screen.getByTestId("header");
-      expect(header).toHaveStyle({ paddingTop: "16px" });
+      // When not scrolled (isScrolled: false), should have pt-4 class
+      expect(header).toHaveClass("pt-4");
+      expect(header).toHaveClass("border-transparent");
+      expect(header).toHaveClass("transition-all");
     });
 
     it("passes additional props to header element", () => {

@@ -9,15 +9,15 @@ import { useScrollHeader } from "./use-scroll-header";
 export type HeaderProps = ComponentProps<"header">;
 
 export function Header({ className, children, ...props }: HeaderProps) {
-  const { paddingTop, borderOpacity } = useScrollHeader();
+  const { isScrolled } = useScrollHeader();
 
   return (
     <header
-      className={cn("fixed top-0 right-0 left-0 z-50 bg-background", className)}
-      style={{
-        paddingTop: `${paddingTop}px`,
-        borderBottom: `1px solid color-mix(in srgb, var(--foreground) ${borderOpacity * 10}%, transparent)`,
-      }}
+      className={cn(
+        "fixed top-0 right-0 left-0 z-50 border-b bg-background transition-all duration-200 ease-out",
+        isScrolled ? "border-foreground/10 pt-0" : "border-transparent pt-4",
+        className
+      )}
       {...props}
     >
       <div className="container mx-auto flex items-center justify-between px-4 py-4">
