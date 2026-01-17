@@ -30,7 +30,7 @@ export default function Home() {
           <div className="grid gap-6">
             {recentPosts.map((post) => (
               <Link key={post.slug} href={`/blog/${post.slug}`} className="block">
-                <Card className="h-full transition-shadow hover:shadow-lg">
+                <Card className="h-full">
                   <CardHeader>
                     <div className="mb-2 flex items-center gap-2">
                       <Badge>New</Badge>

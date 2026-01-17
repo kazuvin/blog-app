@@ -51,7 +51,7 @@ export function BlogListContainer({ posts }: BlogListContainerProps) {
         <div className="space-y-6">
           {filteredAndSortedPosts.map((post) => (
             <Link key={post.slug} href={`/blog/${post.slug}`} className="block">
-              <Card className="transition-shadow hover:shadow-md">
+              <Card>
                 <CardHeader>
                   <h2 className="font-semibold text-xl">{post.title}</h2>
                   <div className="flex items-center gap-3">
