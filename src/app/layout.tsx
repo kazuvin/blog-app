@@ -7,8 +7,8 @@ import {
   HeaderNav,
   HeaderNavItem,
   HeaderNavList,
+  MainContent,
 } from "@/components";
-import { MainContent } from "./main-content";
 import { Providers } from "./providers";
 import "./globals.css";
 
