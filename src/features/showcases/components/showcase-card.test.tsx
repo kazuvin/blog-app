@@ -31,18 +31,18 @@ describe("ShowcaseCard", () => {
       expect(screen.getByText("Preview Content")).toBeInTheDocument();
     });
 
-    it("アクセシビリティのためにbutton要素としてレンダリングされること", () => {
+    it("アクセシビリティのためにrole=buttonとして認識されること", () => {
       render(<ShowcaseCard {...defaultProps} />);
 
       const button = screen.getByRole("button");
       expect(button).toBeInTheDocument();
     });
 
-    it("type='button'属性を持つこと", () => {
+    it("キーボードフォーカス可能であること", () => {
       render(<ShowcaseCard {...defaultProps} />);
 
       const button = screen.getByRole("button");
-      expect(button).toHaveAttribute("type", "button");
+      expect(button).toHaveAttribute("tabIndex", "0");
     });
   });
 
@@ -119,6 +119,13 @@ describe("ShowcaseCard", () => {
 
       const button = screen.getByRole("button");
       expect(button).toHaveClass("text-left");
+    });
+
+    it("クリック可能であることを示すcursor-pointerクラスを持つこと", () => {
+      render(<ShowcaseCard {...defaultProps} />);
+
+      const button = screen.getByRole("button");
+      expect(button).toHaveClass("cursor-pointer");
     });
   });
 });
