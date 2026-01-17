@@ -1,25 +1,28 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import type { ComponentProps } from "react";
 import { useScrollToTop } from "@/lib/animation";
+import { cn } from "@/lib/utils";
 
-interface MainContentProps {
-  children: ReactNode;
-}
+export type MainProps = ComponentProps<"main">;
 
 /**
  * Client component that handles scroll-to-top and fade-in animation on route changes.
  * Uses CSS animation triggered by key change for fade-in effect.
  */
-export function MainContent({ children }: MainContentProps) {
+export function Main({ className, children, ...props }: MainProps) {
   const pathname = usePathname();
 
   useScrollToTop();
 
   return (
-    <div key={pathname} className="animate-fade-in">
+    <main
+      key={pathname}
+      className={cn("container mx-auto animate-fade-in px-4 pt-32 pb-12", className)}
+      {...props}
+    >
       {children}
-    </div>
+    </main>
   );
 }
