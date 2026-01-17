@@ -8,7 +8,6 @@ import {
   HeaderNavItem,
   HeaderNavList,
 } from "@/components";
-import { SiteSearchContainer } from "@/features/site-search";
 import { Providers } from "./providers";
 import "./globals.css";
 
@@ -49,9 +48,7 @@ export default function RootLayout({
                 <HeaderNavItem href="/">Home</HeaderNavItem>
                 <HeaderNavItem href="/blog">Blog</HeaderNavItem>
                 <HeaderNavItem href="/showcases">Showcases</HeaderNavItem>
-                <HeaderNavItem href="/about">About</HeaderNavItem>
               </HeaderNavList>
-              <SiteSearchContainer />
               <HeaderGitHubLink url="https://github.com" />
             </HeaderNav>
           </Header>
