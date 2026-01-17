@@ -18,7 +18,7 @@ import fs from "node:fs";
 import matter from "gray-matter";
 import {
   getAllTags,
-  getPostsByTag,
+  getPostsByTags,
   getSortedPostsData,
   type PostMeta,
   type SortOption,
@@ -209,7 +209,7 @@ describe("Blog Utilities", () => {
     });
   });
 
-  describe("getPostsByTag", () => {
+  describe("getPostsByTags", () => {
     describe("タグフィルタリング (Tag Filtering)", () => {
       const samplePosts: PostMeta[] = [
         {
@@ -236,29 +236,34 @@ describe("Blog Utilities", () => {
       ];
 
       it("should filter posts by single tag", () => {
-        const filtered = getPostsByTag(samplePosts, "react");
+        const filtered = getPostsByTags(samplePosts, ["react"]);
 
         expect(filtered).toHaveLength(2);
         expect(filtered.map((p) => p.slug)).toContain("post-2");
         expect(filtered.map((p) => p.slug)).toContain("post-3");
       });
 
-      it("should return all posts when tag is null or undefined", () => {
-        const filteredNull = getPostsByTag(samplePosts, null);
-        const filteredUndefined = getPostsByTag(samplePosts, undefined);
+      it("should filter posts by multiple tags (AND logic)", () => {
+        const filtered = getPostsByTags(samplePosts, ["react", "tips"]);
 
-        expect(filteredNull).toHaveLength(3);
-        expect(filteredUndefined).toHaveLength(3);
+        expect(filtered).toHaveLength(1);
+        expect(filtered[0].slug).toBe("post-3"); // Only post with both "react" and "tips"
       });
 
-      it("should return empty array when no posts match the tag", () => {
-        const filtered = getPostsByTag(samplePosts, "nonexistent");
+      it("should return all posts when tags array is empty", () => {
+        const filtered = getPostsByTags(samplePosts, []);
+
+        expect(filtered).toHaveLength(3);
+      });
+
+      it("should return empty array when no posts match the tags", () => {
+        const filtered = getPostsByTags(samplePosts, ["nonexistent"]);
 
         expect(filtered).toHaveLength(0);
       });
 
       it("should be case-sensitive for tag matching", () => {
-        const filtered = getPostsByTag(samplePosts, "TypeScript");
+        const filtered = getPostsByTags(samplePosts, ["TypeScript"]);
 
         expect(filtered).toHaveLength(0); // "typescript" !== "TypeScript"
       });

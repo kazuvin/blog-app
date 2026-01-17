@@ -6,7 +6,7 @@ import { Badge, Card, CardContent, CardHeader } from "@/components/ui";
 import { useBlogSearchParams } from "../hooks/use-blog-search-params";
 import {
   getAllTags,
-  getPostsByTag,
+  getPostsByTags,
   type PostMeta,
   searchPosts,
   sortPosts,
@@ -20,23 +20,27 @@ export interface BlogListContainerProps {
 }
 
 export function BlogListContainer({ posts }: BlogListContainerProps) {
-  const { searchQuery, selectedTag, sortOption, setSearchQuery, setSelectedTag, setSortOption } =
+  const { searchQuery, selectedTags, sortOption, setSearchQuery, setSelectedTags, setSortOption } =
     useBlogSearchParams();
 
   const allTags = useMemo(() => getAllTags(posts), [posts]);
 
   const filteredAndSortedPosts = useMemo(() => {
     const searched = searchPosts(posts, searchQuery);
-    const filtered = getPostsByTag(searched, selectedTag);
+    const filtered = getPostsByTags(searched, selectedTags);
     return sortPosts(filtered, sortOption);
-  }, [posts, selectedTag, sortOption, searchQuery]);
+  }, [posts, selectedTags, sortOption, searchQuery]);
 
   return (
     <div className="space-y-6">
       <BlogSearchInput searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <BlogTagFilter tags={allTags} selectedTag={selectedTag} onTagSelect={setSelectedTag} />
-        <BlogSortSelector currentSort={sortOption} onSortChange={setSortOption} />
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <BlogTagFilter tags={allTags} selectedTags={selectedTags} onTagSelect={setSelectedTags} />
+        </div>
+        <div className="shrink-0">
+          <BlogSortSelector currentSort={sortOption} onSortChange={setSortOption} />
+        </div>
       </div>
 
       {filteredAndSortedPosts.length === 0 ? (

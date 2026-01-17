@@ -12,7 +12,7 @@
   --font-mono: var(--font-geist-mono);
 
   /* Custom container max-width: narrower for better readability */
-  --container-max: 56rem; /* max-w-4xl (896px) */
+  --container-max: 36rem; /* 576px - very narrow for simple text */
 }
 
 @media (prefers-color-scheme: dark) {

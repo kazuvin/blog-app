@@ -35,13 +35,13 @@ describe("useBlogSearchParams", () => {
       const { result } = renderHook(() => useBlogSearchParams());
 
       expect(result.current.searchQuery).toBe("");
-      expect(result.current.selectedTag).toBeNull();
+      expect(result.current.selectedTags).toEqual([]);
       expect(result.current.sortOption).toBe("date-desc");
     });
 
     it("should initialize from URL search params", () => {
       vi.mocked(useSearchParams).mockReturnValue(
-        new URLSearchParams("q=react&tag=typescript&sort=title-asc") as ReturnType<
+        new URLSearchParams("q=react&tags=typescript,nextjs&sort=title-asc") as ReturnType<
           typeof useSearchParams
         >
       );
@@ -49,7 +49,7 @@ describe("useBlogSearchParams", () => {
       const { result } = renderHook(() => useBlogSearchParams());
 
       expect(result.current.searchQuery).toBe("react");
-      expect(result.current.selectedTag).toBe("typescript");
+      expect(result.current.selectedTags).toEqual(["typescript", "nextjs"]);
       expect(result.current.sortOption).toBe("title-asc");
     });
 
@@ -75,14 +75,14 @@ describe("useBlogSearchParams", () => {
       expect(mockReplace).toHaveBeenCalledWith("/blog?q=nextjs", { scroll: false });
     });
 
-    it("should update URL when tag is selected", () => {
+    it("should update URL when tags are selected", () => {
       const { result } = renderHook(() => useBlogSearchParams());
 
       act(() => {
-        result.current.setSelectedTag("react");
+        result.current.setSelectedTags(["react", "typescript"]);
       });
 
-      expect(mockReplace).toHaveBeenCalledWith("/blog?tag=react", { scroll: false });
+      expect(mockReplace).toHaveBeenCalledWith("/blog?tags=react%2Ctypescript", { scroll: false });
     });
 
     it("should update URL when sort option changes", () => {
@@ -103,15 +103,15 @@ describe("useBlogSearchParams", () => {
       const { result } = renderHook(() => useBlogSearchParams());
 
       act(() => {
-        result.current.setSelectedTag("typescript");
+        result.current.setSelectedTags(["typescript"]);
       });
 
-      expect(mockReplace).toHaveBeenCalledWith("/blog?q=react&tag=typescript", { scroll: false });
+      expect(mockReplace).toHaveBeenCalledWith("/blog?q=react&tags=typescript", { scroll: false });
     });
 
-    it("should remove param from URL when value is empty/null", () => {
+    it("should remove param from URL when value is empty", () => {
       vi.mocked(useSearchParams).mockReturnValue(
-        new URLSearchParams("q=react&tag=typescript") as ReturnType<typeof useSearchParams>
+        new URLSearchParams("q=react&tags=typescript") as ReturnType<typeof useSearchParams>
       );
 
       const { result } = renderHook(() => useBlogSearchParams());
@@ -120,18 +120,18 @@ describe("useBlogSearchParams", () => {
         result.current.setSearchQuery("");
       });
 
-      expect(mockReplace).toHaveBeenCalledWith("/blog?tag=typescript", { scroll: false });
+      expect(mockReplace).toHaveBeenCalledWith("/blog?tags=typescript", { scroll: false });
     });
 
-    it("should remove tag param when null is passed", () => {
+    it("should remove tags param when empty array is passed", () => {
       vi.mocked(useSearchParams).mockReturnValue(
-        new URLSearchParams("tag=typescript") as ReturnType<typeof useSearchParams>
+        new URLSearchParams("tags=typescript") as ReturnType<typeof useSearchParams>
       );
 
       const { result } = renderHook(() => useBlogSearchParams());
 
       act(() => {
-        result.current.setSelectedTag(null);
+        result.current.setSelectedTags([]);
       });
 
       expect(mockReplace).toHaveBeenCalledWith("/blog", { scroll: false });
@@ -154,7 +154,7 @@ describe("useBlogSearchParams", () => {
       const { result } = renderHook(() => useBlogSearchParams());
 
       expect(result.current.searchQuery).toBe("");
-      expect(result.current.selectedTag).toBeNull();
+      expect(result.current.selectedTags).toEqual([]);
       expect(result.current.sortOption).toBe("date-desc");
     });
 
@@ -166,6 +166,16 @@ describe("useBlogSearchParams", () => {
       const { result } = renderHook(() => useBlogSearchParams());
 
       expect(result.current.searchQuery).toBe("react");
+    });
+
+    it("should filter out empty tags from URL", () => {
+      vi.mocked(useSearchParams).mockReturnValue(
+        new URLSearchParams("tags=react,,typescript,") as ReturnType<typeof useSearchParams>
+      );
+
+      const { result } = renderHook(() => useBlogSearchParams());
+
+      expect(result.current.selectedTags).toEqual(["react", "typescript"]);
     });
   });
 });

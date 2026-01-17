@@ -10,7 +10,7 @@ import { unified } from "unified";
 // Re-export client-safe utilities for server components
 export {
   getAllTags,
-  getPostsByTag,
+  getPostsByTags,
   type PostMeta,
   type SortOption,
   searchPosts,

@@ -14,10 +14,10 @@ vi.mock("next/link", () => ({
 // Mock state for useBlogSearchParams
 const createMockHookState = () => ({
   searchQuery: "",
-  selectedTag: null as string | null,
+  selectedTags: [] as string[],
   sortOption: "date-desc" as SortOption,
   setSearchQuery: vi.fn(),
-  setSelectedTag: vi.fn(),
+  setSelectedTags: vi.fn(),
   setSortOption: vi.fn(),
 });
 
@@ -141,18 +141,18 @@ describe("BlogListContainer", () => {
   });
 
   describe("タグフィルター (Tag Filter)", () => {
-    it("should call setSelectedTag when tag is clicked", async () => {
+    it("should call setSelectedTags when tag is clicked", async () => {
       const user = userEvent.setup();
 
       render(<BlogListContainer posts={mockPosts} />);
 
       await user.click(screen.getByRole("button", { name: "react" }));
 
-      expect(mockHookState.setSelectedTag).toHaveBeenCalledWith("react");
+      expect(mockHookState.setSelectedTags).toHaveBeenCalledWith(["react"]);
     });
 
-    it("should filter posts when selectedTag state changes", () => {
-      mockHookState.selectedTag = "react";
+    it("should filter posts when selectedTags state changes", () => {
+      mockHookState.selectedTags = ["react"];
 
       render(<BlogListContainer posts={mockPosts} />);
 
@@ -160,11 +160,22 @@ describe("BlogListContainer", () => {
       expect(screen.getByText("React Performance Tips")).toBeInTheDocument();
       expect(screen.queryByText("TypeScript Complete Guide")).not.toBeInTheDocument();
     });
+
+    it("should filter posts when multiple tags are selected (AND logic)", () => {
+      mockHookState.selectedTags = ["react", "performance"];
+
+      render(<BlogListContainer posts={mockPosts} />);
+
+      // Only "React Performance Tips" has both "react" and "performance" tags
+      expect(screen.getByText("React Performance Tips")).toBeInTheDocument();
+      expect(screen.queryByText("TypeScript Complete Guide")).not.toBeInTheDocument();
+      expect(screen.queryByText("Next.js App Router Tutorial")).not.toBeInTheDocument();
+    });
   });
 
   describe("検索とフィルターの組み合わせ (Search Combined with Tag Filter)", () => {
     it("should apply both search and tag filter", () => {
-      mockHookState.selectedTag = "react";
+      mockHookState.selectedTags = ["react"];
       mockHookState.searchQuery = "performance";
 
       render(<BlogListContainer posts={mockPosts} />);

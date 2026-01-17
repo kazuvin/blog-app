@@ -18,11 +18,11 @@ export function getAllTags(posts: PostMeta[]): string[] {
   return Array.from(tagSet).sort();
 }
 
-export function getPostsByTag(posts: PostMeta[], tag: string | null | undefined): PostMeta[] {
-  if (tag === null || tag === undefined) {
+export function getPostsByTags(posts: PostMeta[], tags: string[]): PostMeta[] {
+  if (tags.length === 0) {
     return posts;
   }
-  return posts.filter((post) => post.tags.includes(tag));
+  return posts.filter((post) => tags.every((tag) => post.tags.includes(tag)));
 }
 
 export function sortPosts(posts: PostMeta[], sortOption: SortOption): PostMeta[] {

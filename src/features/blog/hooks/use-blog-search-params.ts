@@ -20,8 +20,10 @@ export function useBlogSearchParams() {
     return (searchParams.get("q") ?? "").trim();
   }, [searchParams]);
 
-  const selectedTag = useMemo(() => {
-    return searchParams.get("tag") ?? null;
+  const selectedTags = useMemo((): string[] => {
+    const tags = searchParams.get("tags");
+    if (!tags) return [];
+    return tags.split(",").filter((t) => t.trim() !== "");
   }, [searchParams]);
 
   const sortOption = useMemo((): SortOption => {
@@ -33,7 +35,7 @@ export function useBlogSearchParams() {
   }, [searchParams]);
 
   const updateUrl = useCallback(
-    (updates: { q?: string; tag?: string | null; sort?: SortOption }) => {
+    (updates: { q?: string; tags?: string[]; sort?: SortOption }) => {
       const params = new URLSearchParams(searchParams.toString());
 
       // Handle search query
@@ -45,12 +47,12 @@ export function useBlogSearchParams() {
         }
       }
 
-      // Handle tag
-      if (updates.tag !== undefined) {
-        if (updates.tag) {
-          params.set("tag", updates.tag);
+      // Handle tags
+      if (updates.tags !== undefined) {
+        if (updates.tags.length > 0) {
+          params.set("tags", updates.tags.join(","));
         } else {
-          params.delete("tag");
+          params.delete("tags");
         }
       }
 
@@ -77,9 +79,9 @@ export function useBlogSearchParams() {
     [updateUrl]
   );
 
-  const setSelectedTag = useCallback(
-    (tag: string | null) => {
-      updateUrl({ tag });
+  const setSelectedTags = useCallback(
+    (tags: string[]) => {
+      updateUrl({ tags });
     },
     [updateUrl]
   );
@@ -93,10 +95,10 @@ export function useBlogSearchParams() {
 
   return {
     searchQuery,
-    selectedTag,
+    selectedTags,
     sortOption,
     setSearchQuery,
-    setSelectedTag,
+    setSelectedTags,
     setSortOption,
   };
 }

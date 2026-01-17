@@ -26,11 +26,10 @@ export function BlogSortSelector({ currentSort, onSortChange }: BlogSortSelector
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 font-medium text-sm transition-colors hover:bg-surface"
+        className="inline-flex items-center gap-2 rounded-md border border-foreground/20 bg-transparent px-3 py-1.5 text-sm transition-colors hover:bg-surface focus:border-foreground focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2"
         aria-haspopup="true"
       >
-        <span>並び替え:</span>
-        <span className="text-foreground/80">{sortLabels[currentSort]}</span>
+        <span>{sortLabels[currentSort]}</span>
         <svg
           className="h-4 w-4 text-foreground/60"
           fill="none"
