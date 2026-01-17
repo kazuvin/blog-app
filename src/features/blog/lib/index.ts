@@ -4,7 +4,7 @@ export { getAllPostSlugs, getPostBySlug, getSortedPostsData, type Post } from ".
 // Client-safe utilities (can be used in Client Components)
 export {
   getAllTags,
-  getPostsByTag,
+  getPostsByTags,
   type PostMeta,
   type SortOption,
   searchPosts,

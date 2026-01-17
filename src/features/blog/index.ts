@@ -15,7 +15,7 @@ export {
   getAllPostSlugs,
   getAllTags,
   getPostBySlug,
-  getPostsByTag,
+  getPostsByTags,
   getSortedPostsData,
   searchPosts,
   sortPosts,
