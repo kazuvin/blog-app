@@ -7,25 +7,70 @@ export default function Home() {
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="mb-16 pt-4 text-center">
-        <h1 className="mb-4 font-bold text-4xl tracking-tight sm:text-5xl md:text-6xl">
-          Welcome to My Blog
-        </h1>
-        <p className="mx-auto mb-8 max-w-2xl text-foreground/70 text-lg">
-          Thoughts, stories, and ideas about web development, technology, and everything in between.
-        </p>
-        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Link href="/blog">
-            <Button variant="primary" size="lg">
-              Explore Articles
-            </Button>
-          </Link>
-          <Link href="/about">
-            <Button variant="secondary" size="lg">
-              About Me
-            </Button>
-          </Link>
+      {/* About Section */}
+      <section className="mb-16 pt-4">
+        <h1 className="mb-8 font-bold text-3xl">About Me</h1>
+
+        <div className="space-y-6">
+          {/* Bio Section */}
+          <Card>
+            <CardHeader>
+              <h2 className="font-semibold text-xl">Introduction</h2>
+            </CardHeader>
+            <CardContent>
+              <p className="text-foreground/80">
+                Welcome to my blog! I&apos;m a passionate developer who loves building web
+                applications and sharing knowledge with the community. This is a placeholder bio
+                that can be customized with your personal story, background, and what drives your
+                work.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Skills/Interests Section */}
+          <Card>
+            <CardHeader>
+              <h2 className="font-semibold text-xl">Skills &amp; Interests</h2>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="info">Next.js</Badge>
+                <Badge variant="info">TypeScript</Badge>
+                <Badge variant="info">React</Badge>
+                <Badge variant="success">Web Development</Badge>
+                <Badge variant="success">UI/UX Design</Badge>
+                <Badge variant="default">Cloud Computing</Badge>
+                <Badge variant="default">Performance Optimization</Badge>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Contact Section */}
+          <Card>
+            <CardHeader>
+              <h2 className="font-semibold text-xl">Get in Touch</h2>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-foreground/80">
+                Feel free to reach out if you&apos;d like to connect or collaborate on projects.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Button variant="primary" size="md" disabled>
+                  Email
+                </Button>
+                <Button variant="secondary" size="md" disabled>
+                  GitHub
+                </Button>
+                <Button variant="secondary" size="md" disabled>
+                  Twitter
+                </Button>
+                <Button variant="ghost" size="md" disabled>
+                  LinkedIn
+                </Button>
+              </div>
+              <p className="mt-3 text-foreground/60 text-sm">(Contact links will be added soon)</p>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
@@ -64,17 +109,6 @@ export default function Home() {
             </CardContent>
           </Card>
         )}
-      </section>
-
-      {/* Call to Action Section */}
-      <section className="rounded-lg bg-foreground/5 px-8 py-12 text-center">
-        <h2 className="mb-4 font-bold text-2xl">Stay Updated</h2>
-        <p className="mx-auto mb-6 max-w-xl text-foreground/70">
-          Subscribe to get notified about new posts and updates.
-        </p>
-        <Button variant="primary" size="lg" disabled>
-          Coming Soon
-        </Button>
       </section>
     </>
   );

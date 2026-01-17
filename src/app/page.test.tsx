@@ -3,28 +3,34 @@ import { describe, expect, it } from "vitest";
 import Home from "./page";
 
 describe("Home", () => {
-  it("renders the welcome heading", () => {
+  it("renders the about me heading", () => {
     render(<Home />);
 
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Welcome to My Blog");
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("About Me");
   });
 
-  it("renders the hero section with description", () => {
+  it("renders the introduction section", () => {
     render(<Home />);
 
-    expect(screen.getByText(/Thoughts, stories, and ideas/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Introduction/i })).toBeInTheDocument();
+    expect(screen.getByText(/Welcome to my blog/i)).toBeInTheDocument();
   });
 
-  it("renders the blog navigation links", () => {
+  it("renders the skills section with badges", () => {
     render(<Home />);
 
-    const exploreLink = screen.getByRole("link", { name: /Explore Articles/i });
-    expect(exploreLink).toBeInTheDocument();
-    expect(exploreLink).toHaveAttribute("href", "/blog");
+    expect(screen.getByRole("heading", { name: /Skills & Interests/i })).toBeInTheDocument();
+    expect(screen.getByText("Next.js")).toBeInTheDocument();
+    expect(screen.getByText("TypeScript")).toBeInTheDocument();
+    expect(screen.getByText("React")).toBeInTheDocument();
+  });
 
-    const aboutLink = screen.getByRole("link", { name: /About Me/i });
-    expect(aboutLink).toBeInTheDocument();
-    expect(aboutLink).toHaveAttribute("href", "/about");
+  it("renders the contact section", () => {
+    render(<Home />);
+
+    expect(screen.getByRole("heading", { name: /Get in Touch/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Email/i })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /GitHub/i })).toBeDisabled();
   });
 
   it("renders the recent posts section", () => {
@@ -32,13 +38,5 @@ describe("Home", () => {
 
     expect(screen.getByRole("heading", { name: /Recent Posts/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /View all/i })).toHaveAttribute("href", "/blog");
-  });
-
-  it("renders the stay updated section", () => {
-    render(<Home />);
-
-    expect(screen.getByRole("heading", { name: /Stay Updated/i })).toBeInTheDocument();
-    expect(screen.getByText(/Subscribe to get notified/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Coming Soon/i })).toBeDisabled();
   });
 });
