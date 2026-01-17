@@ -30,17 +30,21 @@ export type HeaderLogoProps = Omit<ComponentProps<typeof Link>, "href"> & {
   href?: string;
 };
 
-export function HeaderLogo({ href = "/", className, children, ...props }: HeaderLogoProps) {
+export function HeaderLogo({ href = "/", className, ...props }: HeaderLogoProps) {
   return (
     <Link
       href={href}
       className={cn(
-        "font-bold text-foreground text-xl transition-colors hover:text-foreground/80",
+        "group relative inline-flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-500 shadow-md transition-all duration-300 ease-out hover:scale-110 hover:shadow-lg hover:shadow-purple-500/40",
         className
       )}
+      aria-label="Home"
       {...props}
     >
-      {children}
+      {/* Animated gradient overlay */}
+      <span className="absolute inset-0 bg-gradient-to-br from-indigo-400 via-violet-400 to-purple-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      {/* Shimmer effect */}
+      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 ease-out group-hover:translate-x-full" />
     </Link>
   );
 }

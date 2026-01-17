@@ -23,7 +23,7 @@ describe("Header", () => {
     it("renders as header element", () => {
       render(
         <Header>
-          <HeaderLogo>My Blog</HeaderLogo>
+          <HeaderLogo />
         </Header>
       );
 
@@ -34,7 +34,7 @@ describe("Header", () => {
     it("applies custom className", () => {
       render(
         <Header className="custom-class" data-testid="header">
-          <HeaderLogo>My Blog</HeaderLogo>
+          <HeaderLogo />
         </Header>
       );
 
@@ -48,7 +48,7 @@ describe("Header", () => {
     it("applies scroll-based inline styles", () => {
       render(
         <Header data-testid="header">
-          <HeaderLogo>My Blog</HeaderLogo>
+          <HeaderLogo />
         </Header>
       );
 
@@ -59,7 +59,7 @@ describe("Header", () => {
     it("passes additional props to header element", () => {
       render(
         <Header data-testid="custom-header" aria-label="Site header">
-          <HeaderLogo>My Blog</HeaderLogo>
+          <HeaderLogo />
         </Header>
       );
 
@@ -72,11 +72,11 @@ describe("Header", () => {
     it("renders as link to home by default", () => {
       render(
         <Header>
-          <HeaderLogo>My Blog</HeaderLogo>
+          <HeaderLogo />
         </Header>
       );
 
-      const logo = screen.getByRole("link", { name: "My Blog" });
+      const logo = screen.getByRole("link", { name: "Home" });
       expect(logo).toBeInTheDocument();
       expect(logo).toHaveAttribute("href", "/");
     });
@@ -84,22 +84,22 @@ describe("Header", () => {
     it("renders with custom href", () => {
       render(
         <Header>
-          <HeaderLogo href="/custom">My Blog</HeaderLogo>
+          <HeaderLogo href="/custom" />
         </Header>
       );
 
-      const logo = screen.getByRole("link", { name: "My Blog" });
+      const logo = screen.getByRole("link", { name: "Home" });
       expect(logo).toHaveAttribute("href", "/custom");
     });
 
     it("applies custom className", () => {
       render(
         <Header>
-          <HeaderLogo className="custom-logo">My Blog</HeaderLogo>
+          <HeaderLogo className="custom-logo" />
         </Header>
       );
 
-      const logo = screen.getByRole("link", { name: "My Blog" });
+      const logo = screen.getByRole("link", { name: "Home" });
       expect(logo).toHaveClass("custom-logo");
     });
   });
@@ -108,20 +108,15 @@ describe("Header", () => {
     it("renders navigation items with correct links", () => {
       render(
         <Header>
-          <HeaderLogo>My Blog</HeaderLogo>
+          <HeaderLogo />
           <HeaderNav>
             <HeaderNavList>
-              <HeaderNavItem href="/">Home</HeaderNavItem>
               <HeaderNavItem href="/blog">Blog</HeaderNavItem>
               <HeaderNavItem href="/about">About</HeaderNavItem>
             </HeaderNavList>
           </HeaderNav>
         </Header>
       );
-
-      const homeLink = screen.getByRole("link", { name: "Home" });
-      expect(homeLink).toBeInTheDocument();
-      expect(homeLink).toHaveAttribute("href", "/");
 
       const blogLink = screen.getByRole("link", { name: "Blog" });
       expect(blogLink).toBeInTheDocument();
@@ -137,15 +132,15 @@ describe("Header", () => {
         <Header>
           <HeaderNav>
             <HeaderNavList>
-              <HeaderNavItem href="/" className="custom-nav-item">
-                Home
+              <HeaderNavItem href="/blog" className="custom-nav-item">
+                Blog
               </HeaderNavItem>
             </HeaderNavList>
           </HeaderNav>
         </Header>
       );
 
-      const link = screen.getByRole("link", { name: "Home" });
+      const link = screen.getByRole("link", { name: "Blog" });
       expect(link).toHaveClass("custom-nav-item");
     });
   });
@@ -185,11 +180,11 @@ describe("Header", () => {
     it("renders complete header with all components", () => {
       render(
         <Header data-testid="header">
-          <HeaderLogo>My Blog</HeaderLogo>
+          <HeaderLogo />
           <HeaderNav>
             <HeaderNavList>
-              <HeaderNavItem href="/">Home</HeaderNavItem>
               <HeaderNavItem href="/blog">Blog</HeaderNavItem>
+              <HeaderNavItem href="/showcases">Showcases</HeaderNavItem>
             </HeaderNavList>
             <HeaderGitHubLink url="https://github.com/example" />
           </HeaderNav>
@@ -197,9 +192,9 @@ describe("Header", () => {
       );
 
       expect(screen.getByRole("banner")).toBeInTheDocument();
-      expect(screen.getByRole("link", { name: "My Blog" })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: "Home" })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: "Blog" })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: "Showcases" })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: "GitHub repository" })).toBeInTheDocument();
     });
   });

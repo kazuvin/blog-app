@@ -42,10 +42,9 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
           <Header>
-            <HeaderLogo>My Blog</HeaderLogo>
+            <HeaderLogo />
             <HeaderNav>
               <HeaderNavList>
-                <HeaderNavItem href="/">Home</HeaderNavItem>
                 <HeaderNavItem href="/blog">Blog</HeaderNavItem>
                 <HeaderNavItem href="/showcases">Showcases</HeaderNavItem>
               </HeaderNavList>
