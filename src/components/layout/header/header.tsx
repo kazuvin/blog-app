@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ComponentProps, ReactNode } from "react";
+import { useScrollPosition } from "@/lib/animation";
 import { cn } from "@/lib/utils";
-import { useScrollHeader } from "./use-scroll-header";
 
 export type HeaderProps = ComponentProps<"header">;
 
 export function Header({ className, children, ...props }: HeaderProps) {
-  const { isScrolled } = useScrollHeader();
+  const { isScrolled } = useScrollPosition();
 
   return (
     <header

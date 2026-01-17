@@ -9,9 +9,10 @@ import {
   HeaderNavList,
 } from "./header";
 
-// Mock the useScrollHeader hook
-vi.mock("./use-scroll-header", () => ({
-  useScrollHeader: () => ({
+// Mock the useScrollPosition hook
+vi.mock("@/lib/animation", () => ({
+  useScrollPosition: () => ({
+    scrollY: 0,
     isScrolled: false,
   }),
 }));
