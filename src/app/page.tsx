@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components";
 import { BlogCard, getSortedPostsData } from "@/features/blog";
 
+export const dynamic = "force-static";
+
 export default function Home() {
   const recentPosts = getSortedPostsData().slice(0, 3);
 

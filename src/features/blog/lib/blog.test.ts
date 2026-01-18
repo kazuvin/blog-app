@@ -1,23 +1,64 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// Mock fs module
-vi.mock("node:fs", () => ({
+// Mock blog-data.json
+vi.mock("../data/blog-data.json", () => ({
   default: {
-    readdirSync: vi.fn(),
-    readFileSync: vi.fn(),
-    existsSync: vi.fn(),
+    posts: [
+      {
+        slug: "post-2",
+        title: "Post 2",
+        date: "2024-01-20",
+        description: "Description 2",
+        tags: ["nextjs", "react"],
+      },
+      {
+        slug: "post-3",
+        title: "Post 3",
+        date: "2024-01-15",
+        description: "Description 3",
+        tags: ["typescript", "tips"],
+      },
+      {
+        slug: "post-1",
+        title: "Post 1",
+        date: "2024-01-10",
+        description: "Description 1",
+        tags: ["typescript"],
+      },
+    ],
+    postContents: {
+      "post-1": {
+        slug: "post-1",
+        title: "Post 1",
+        date: "2024-01-10",
+        description: "Description 1",
+        tags: ["typescript"],
+        content: "<p>Content 1</p>",
+      },
+      "post-2": {
+        slug: "post-2",
+        title: "Post 2",
+        date: "2024-01-20",
+        description: "Description 2",
+        tags: ["nextjs", "react"],
+        content: "<p>Content 2</p>",
+      },
+      "post-3": {
+        slug: "post-3",
+        title: "Post 3",
+        date: "2024-01-15",
+        description: "Description 3",
+        tags: ["typescript", "tips"],
+        content: "<p>Content 3</p>",
+      },
+    },
   },
 }));
 
-// Mock gray-matter
-vi.mock("gray-matter", () => ({
-  default: vi.fn(),
-}));
-
-import fs from "node:fs";
-import matter from "gray-matter";
 import {
+  getAllPostSlugs,
   getAllTags,
+  getPostBySlug,
   getPostsByTags,
   getSortedPostsData,
   type PostMeta,
@@ -34,46 +75,6 @@ describe("Blog Utilities", () => {
   describe("getSortedPostsData", () => {
     describe("基本機能 (Basic Functionality)", () => {
       it("should return posts sorted by date descending by default", () => {
-        vi.mocked(fs.readdirSync).mockReturnValue([
-          "post-1.md",
-          "post-2.md",
-          "post-3.md",
-        ] as unknown as ReturnType<typeof fs.readdirSync>);
-
-        vi.mocked(fs.readFileSync)
-          .mockReturnValueOnce("content1")
-          .mockReturnValueOnce("content2")
-          .mockReturnValueOnce("content3");
-
-        vi.mocked(matter)
-          .mockReturnValueOnce({
-            data: {
-              title: "Post 1",
-              date: "2024-01-10",
-              description: "Description 1",
-              tags: ["typescript"],
-            },
-            content: "",
-          } as unknown as ReturnType<typeof matter>)
-          .mockReturnValueOnce({
-            data: {
-              title: "Post 2",
-              date: "2024-01-20",
-              description: "Description 2",
-              tags: ["nextjs", "react"],
-            },
-            content: "",
-          } as unknown as ReturnType<typeof matter>)
-          .mockReturnValueOnce({
-            data: {
-              title: "Post 3",
-              date: "2024-01-15",
-              description: "Description 3",
-              tags: ["typescript", "tips"],
-            },
-            content: "",
-          } as unknown as ReturnType<typeof matter>);
-
         const posts = getSortedPostsData();
 
         expect(posts).toHaveLength(3);
@@ -83,47 +84,50 @@ describe("Blog Utilities", () => {
       });
 
       it("should include tags in PostMeta when present", () => {
-        vi.mocked(fs.readdirSync).mockReturnValue(["post-with-tags.md"] as unknown as ReturnType<
-          typeof fs.readdirSync
-        >);
-
-        vi.mocked(fs.readFileSync).mockReturnValue("content");
-
-        vi.mocked(matter).mockReturnValue({
-          data: {
-            title: "Post with Tags",
-            date: "2024-01-15",
-            description: "Description",
-            tags: ["typescript", "nextjs"],
-          },
-          content: "",
-        } as unknown as ReturnType<typeof matter>);
-
         const posts = getSortedPostsData();
 
-        expect(posts[0].tags).toEqual(["typescript", "nextjs"]);
+        expect(posts[0].tags).toEqual(["nextjs", "react"]);
       });
 
-      it("should return empty tags array when tags not specified in frontmatter", () => {
-        vi.mocked(fs.readdirSync).mockReturnValue(["post-without-tags.md"] as unknown as ReturnType<
-          typeof fs.readdirSync
-        >);
-
-        vi.mocked(fs.readFileSync).mockReturnValue("content");
-
-        vi.mocked(matter).mockReturnValue({
-          data: {
-            title: "Post without Tags",
-            date: "2024-01-15",
-            description: "Description",
-          },
-          content: "",
-        } as unknown as ReturnType<typeof matter>);
-
+      it("should return correct post metadata", () => {
         const posts = getSortedPostsData();
 
-        expect(posts[0].tags).toEqual([]);
+        expect(posts[0]).toEqual({
+          slug: "post-2",
+          title: "Post 2",
+          date: "2024-01-20",
+          description: "Description 2",
+          tags: ["nextjs", "react"],
+        });
       });
+    });
+  });
+
+  describe("getAllPostSlugs", () => {
+    it("should return all post slugs", () => {
+      const slugs = getAllPostSlugs();
+
+      expect(slugs).toHaveLength(3);
+      expect(slugs).toContain("post-1");
+      expect(slugs).toContain("post-2");
+      expect(slugs).toContain("post-3");
+    });
+  });
+
+  describe("getPostBySlug", () => {
+    it("should return post with content for valid slug", async () => {
+      const post = await getPostBySlug("post-1");
+
+      expect(post).not.toBeNull();
+      expect(post?.slug).toBe("post-1");
+      expect(post?.title).toBe("Post 1");
+      expect(post?.content).toBe("<p>Content 1</p>");
+    });
+
+    it("should return null for invalid slug", async () => {
+      const post = await getPostBySlug("nonexistent");
+
+      expect(post).toBeNull();
     });
   });
 
