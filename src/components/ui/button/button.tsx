@@ -2,7 +2,7 @@
 
 import { type ComponentProps, type RefObject, useRef } from "react";
 import { LoadingSpinnerIcon } from "@/components/icons";
-import { useElementWidth } from "@/lib/animation";
+import { useElementDimensions } from "@/lib/animation";
 import { cn } from "@/lib/utils";
 
 // ============================================================================
@@ -269,7 +269,7 @@ export function Button({
     error: errorRef,
   };
 
-  const textWidth = useElementWidth(textRefs[state]);
+  const { width: textWidth } = useElementDimensions(textRefs[state], { type: "width" });
 
   return (
     <button

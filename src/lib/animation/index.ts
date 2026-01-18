@@ -6,7 +6,6 @@ export {
   type UseElementDimensionsResult,
   useElementDimensions,
 } from "./use-element-dimensions";
-export { useElementWidth } from "./use-element-width";
 export {
   type UseInViewOptions,
   type UseInViewResult,
