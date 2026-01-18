@@ -15,13 +15,13 @@
   --container-max: 36rem; /* 576px - very narrow for simple text */
 
   /* Page transition animation */
-  --animate-fade-in: fade-in 0.2s ease-out;
+  --animate-fade-in: fade-in 0.2s ease;
 
   /* Pop animation - springy micro-interaction */
   --animate-pop: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* Fade in up animation - scroll reveal with pop */
-  --animate-fade-in-up: fade-in-up 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  /* Fade in up animation - scroll reveal */
+  --animate-fade-in-up: fade-in-up 0.6s ease forwards;
 }
 
 @keyframes fade-in {
