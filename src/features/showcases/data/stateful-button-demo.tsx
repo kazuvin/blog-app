@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { type ButtonState, StatefulButton } from "../components/stateful-button";
+import { Button, type ButtonState } from "@/components/ui/button";
 
 const STATES: ButtonState[] = ["idle", "loading", "success", "loading", "error"];
 const STATE_INTERVAL = 1500;
@@ -10,7 +10,7 @@ const STATE_INTERVAL = 1500;
  * Preview component for the stateful button showcase item.
  * A single button cycles through all states automatically.
  */
-export function StatefulButtonPreview() {
+export function ButtonPreview() {
   const [stateIndex, setStateIndex] = useState(0);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export function StatefulButtonPreview() {
 
   return (
     <div className="flex scale-120 items-center justify-center">
-      <StatefulButton
+      <Button
         state={STATES[stateIndex]}
         size="md"
         idleText="ボタン"
@@ -38,7 +38,7 @@ export function StatefulButtonPreview() {
  * Full demo component for the stateful button showcase.
  * Provides interactive buttons that cycle through states automatically.
  */
-export function StatefulButtonFullDemo() {
+export function ButtonFullDemo() {
   const [successState, setSuccessState] = useState<ButtonState>("idle");
   const [errorState, setErrorState] = useState<ButtonState>("idle");
 
@@ -84,14 +84,14 @@ export function StatefulButtonFullDemo() {
       <div>
         <h4 className="mb-3 font-medium text-sm">All Button States</h4>
         <p className="mb-4 text-foreground/70 text-sm">
-          The StatefulButton component supports four states: idle, loading, success, and error. Each
-          state has distinct styling and icons.
+          The Button component supports four states: idle, loading, success, and error. Each state
+          has distinct styling and icons.
         </p>
         <div className="flex flex-wrap items-center gap-3 rounded-lg border border-stone-200 p-4">
-          <StatefulButton state="idle" idleText="Idle" />
-          <StatefulButton state="loading" loadingText="Loading..." />
-          <StatefulButton state="success" successText="Success!" />
-          <StatefulButton state="error" errorText="Error!" />
+          <Button state="idle" idleText="Idle" />
+          <Button state="loading" loadingText="Loading..." />
+          <Button state="success" successText="Success!" />
+          <Button state="error" errorText="Error!" />
         </div>
       </div>
 
@@ -105,7 +105,7 @@ export function StatefulButtonFullDemo() {
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex flex-col items-start gap-2">
               <span className="text-foreground/60 text-xs">Success Flow</span>
-              <StatefulButton
+              <Button
                 state={successState}
                 onClick={handleSuccessClick}
                 idleText="Submit"
@@ -115,7 +115,7 @@ export function StatefulButtonFullDemo() {
             </div>
             <div className="flex flex-col items-start gap-2">
               <span className="text-foreground/60 text-xs">Error Flow</span>
-              <StatefulButton
+              <Button
                 state={errorState}
                 onClick={handleErrorClick}
                 idleText="Try Again"
@@ -140,9 +140,9 @@ export function StatefulButtonFullDemo() {
           The component supports three variants: primary (default), secondary, and ghost.
         </p>
         <div className="flex flex-wrap items-center gap-3 rounded-lg border border-stone-200 p-4">
-          <StatefulButton variant="primary" idleText="Primary" />
-          <StatefulButton variant="secondary" idleText="Secondary" />
-          <StatefulButton variant="ghost" idleText="Ghost" />
+          <Button variant="primary" idleText="Primary" />
+          <Button variant="secondary" idleText="Secondary" />
+          <Button variant="ghost" idleText="Ghost" />
         </div>
       </div>
 
@@ -152,9 +152,9 @@ export function StatefulButtonFullDemo() {
           Three sizes are available: small, medium (default), and large.
         </p>
         <div className="flex flex-wrap items-center gap-3 rounded-lg border border-stone-200 p-4">
-          <StatefulButton size="sm" idleText="Small" />
-          <StatefulButton size="md" idleText="Medium" />
-          <StatefulButton size="lg" idleText="Large" />
+          <Button size="sm" idleText="Small" />
+          <Button size="md" idleText="Medium" />
+          <Button size="lg" idleText="Large" />
         </div>
       </div>
 

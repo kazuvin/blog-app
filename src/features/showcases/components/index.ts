@@ -6,5 +6,3 @@ export type { ShowcaseGridProps } from "./showcase-grid";
 export { ShowcaseGrid } from "./showcase-grid";
 export type { ShowcasesContainerProps } from "./showcases-container";
 export { ShowcasesContainer } from "./showcases-container";
-export type { ButtonState, StatefulButtonProps } from "./stateful-button";
-export { StatefulButton } from "./stateful-button";

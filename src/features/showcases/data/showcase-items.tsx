@@ -1,5 +1,5 @@
 import type { ShowcaseItem } from "../types";
-import { StatefulButtonFullDemo, StatefulButtonPreview } from "./stateful-button-demo";
+import { ButtonFullDemo, ButtonPreview } from "./stateful-button-demo";
 
 export const showcaseItems: ShowcaseItem[] = [
   {
@@ -7,7 +7,7 @@ export const showcaseItems: ShowcaseItem[] = [
     name: "Stateful Button",
     description:
       "Button component with seamless state transitions (idle, loading, success, error) and smooth animations.",
-    preview: <StatefulButtonPreview />,
-    fullDemo: <StatefulButtonFullDemo />,
+    preview: <ButtonPreview />,
+    fullDemo: <ButtonFullDemo />,
   },
 ];

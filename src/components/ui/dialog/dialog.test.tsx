@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -21,7 +20,7 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open Dialog</Button>
+            <button type="button">Open Dialog</button>
           </DialogTrigger>
           <DialogContent>
             <DialogTitle>Test Dialog</DialogTitle>
@@ -47,12 +46,12 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open Dialog</Button>
+            <button type="button">Open Dialog</button>
           </DialogTrigger>
           <DialogContent>
             <DialogTitle>Test Dialog</DialogTitle>
             <DialogClose asChild>
-              <Button>Dismiss</Button>
+              <button type="button">Dismiss</button>
             </DialogClose>
           </DialogContent>
         </Dialog>
@@ -75,7 +74,7 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open Dialog</Button>
+            <button type="button">Open Dialog</button>
           </DialogTrigger>
           <DialogContent>
             <DialogTitle>Test Dialog</DialogTitle>
@@ -102,7 +101,7 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open</Button>
+            <button type="button">Open</button>
           </DialogTrigger>
           <DialogContent size="sm" data-testid="dialog-content">
             <DialogTitle>Small Dialog</DialogTitle>
@@ -122,7 +121,7 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open</Button>
+            <button type="button">Open</button>
           </DialogTrigger>
           <DialogContent data-testid="dialog-content">
             <DialogTitle>Medium Dialog</DialogTitle>
@@ -142,7 +141,7 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open</Button>
+            <button type="button">Open</button>
           </DialogTrigger>
           <DialogContent size="lg" data-testid="dialog-content">
             <DialogTitle>Large Dialog</DialogTitle>
@@ -162,7 +161,7 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open</Button>
+            <button type="button">Open</button>
           </DialogTrigger>
           <DialogContent size="xl" data-testid="dialog-content">
             <DialogTitle>XL Dialog</DialogTitle>
@@ -182,7 +181,7 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open</Button>
+            <button type="button">Open</button>
           </DialogTrigger>
           <DialogContent size="full" data-testid="dialog-content">
             <DialogTitle>Full Width Dialog</DialogTitle>
@@ -204,7 +203,7 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open</Button>
+            <button type="button">Open</button>
           </DialogTrigger>
           <DialogContent>
             <DialogTitle>My Dialog Title</DialogTitle>
@@ -223,7 +222,7 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open</Button>
+            <button type="button">Open</button>
           </DialogTrigger>
           <DialogContent>
             <DialogTitle>Title</DialogTitle>
@@ -245,7 +244,7 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open</Button>
+            <button type="button">Open</button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -268,13 +267,13 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open</Button>
+            <button type="button">Open</button>
           </DialogTrigger>
           <DialogContent>
             <DialogTitle>Dialog</DialogTitle>
             <DialogFooter>
-              <Button>Cancel</Button>
-              <Button>Save</Button>
+              <button type="button">Cancel</button>
+              <button type="button">Save</button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -294,7 +293,7 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open Dialog</Button>
+            <button type="button">Open Dialog</button>
           </DialogTrigger>
           <DialogContent>
             <DialogTitle>Test Dialog</DialogTitle>
@@ -321,7 +320,7 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open Dialog</Button>
+            <button type="button">Open Dialog</button>
           </DialogTrigger>
           <DialogContent>
             <DialogTitle>Test Dialog</DialogTitle>
@@ -352,7 +351,7 @@ describe("Dialog", () => {
       render(
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Open</Button>
+            <button type="button">Open</button>
           </DialogTrigger>
           <DialogContent className="custom-dialog-class" data-testid="dialog-content">
             <DialogTitle>Custom Class Dialog</DialogTitle>
