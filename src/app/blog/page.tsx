@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import { BlogListContainer, BlogListSkeleton, getSortedPostsData } from "@/features/blog";
 
+export const dynamic = "force-static";
+
 export const metadata = {
   title: "Blog",
   description: "ブログ記事一覧",

@@ -4,6 +4,9 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui";
 import { getAllPostSlugs, getPostBySlug } from "@/features/blog";
 
+export const dynamic = "force-static";
+export const dynamicParams = false;
+
 type Props = {
   params: Promise<{ slug: string }>;
 };
