@@ -211,7 +211,7 @@ function applyStylesToElement(element: HTMLElement, style: CSSProperties): void 
   // Add more properties as needed
   for (const [key, value] of Object.entries(style)) {
     if (key !== "opacity" && key !== "transform" && value !== undefined) {
-      (element.style as Record<string, string>)[key] = String(value);
+      (element.style as unknown as Record<string, string>)[key] = String(value);
     }
   }
 }
