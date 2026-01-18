@@ -45,7 +45,7 @@ export const Default: Story = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Open Dialog</Button>
+        <Button idleText="Open Dialog" />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -59,9 +59,9 @@ export const Default: Story = {
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="ghost">Cancel</Button>
+            <Button variant="ghost" idleText="Cancel" />
           </DialogClose>
-          <Button>Save Changes</Button>
+          <Button idleText="Save Changes" />
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -72,7 +72,7 @@ export const Small: Story = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Open Small Dialog</Button>
+        <Button idleText="Open Small Dialog" />
       </DialogTrigger>
       <DialogContent size="sm">
         <DialogHeader>
@@ -84,7 +84,7 @@ export const Small: Story = {
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button>Close</Button>
+            <Button idleText="Close" />
           </DialogClose>
         </DialogFooter>
       </DialogContent>
@@ -96,7 +96,7 @@ export const Medium: Story = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Open Medium Dialog</Button>
+        <Button idleText="Open Medium Dialog" />
       </DialogTrigger>
       <DialogContent size="md">
         <DialogHeader>
@@ -110,7 +110,7 @@ export const Medium: Story = {
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button>Close</Button>
+            <Button idleText="Close" />
           </DialogClose>
         </DialogFooter>
       </DialogContent>
@@ -122,7 +122,7 @@ export const Large: Story = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Open Large Dialog</Button>
+        <Button idleText="Open Large Dialog" />
       </DialogTrigger>
       <DialogContent size="lg">
         <DialogHeader>
@@ -139,9 +139,9 @@ export const Large: Story = {
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="ghost">Cancel</Button>
+            <Button variant="ghost" idleText="Cancel" />
           </DialogClose>
-          <Button>Continue</Button>
+          <Button idleText="Continue" />
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -152,7 +152,7 @@ export const ExtraLarge: Story = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Open Extra Large Dialog</Button>
+        <Button idleText="Open Extra Large Dialog" />
       </DialogTrigger>
       <DialogContent size="xl">
         <DialogHeader>
@@ -170,9 +170,9 @@ export const ExtraLarge: Story = {
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="ghost">Cancel</Button>
+            <Button variant="ghost" idleText="Cancel" />
           </DialogClose>
-          <Button>Submit</Button>
+          <Button idleText="Submit" />
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -183,7 +183,7 @@ export const FullWidth: Story = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Open Full Width Dialog</Button>
+        <Button idleText="Open Full Width Dialog" />
       </DialogTrigger>
       <DialogContent size="full" className="mx-4">
         <DialogHeader>
@@ -201,9 +201,9 @@ export const FullWidth: Story = {
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="ghost">Cancel</Button>
+            <Button variant="ghost" idleText="Cancel" />
           </DialogClose>
-          <Button>Done</Button>
+          <Button idleText="Done" />
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -214,7 +214,7 @@ export const WithForm: Story = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Edit Profile</Button>
+        <Button idleText="Edit Profile" />
       </DialogTrigger>
       <DialogContent size="md">
         <DialogHeader>
@@ -253,9 +253,9 @@ export const WithForm: Story = {
         </form>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="ghost">Cancel</Button>
+            <Button variant="ghost" idleText="Cancel" />
           </DialogClose>
-          <Button type="submit">Save Changes</Button>
+          <Button type="submit" idleText="Save Changes" />
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -266,7 +266,7 @@ export const ConfirmationDialog: Story = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary">Delete Item</Button>
+        <Button variant="secondary" idleText="Delete Item" />
       </DialogTrigger>
       <DialogContent size="sm">
         <DialogHeader>
@@ -278,9 +278,9 @@ export const ConfirmationDialog: Story = {
         </DialogHeader>
         <DialogFooter className="mt-4">
           <DialogClose asChild>
-            <Button variant="ghost">Cancel</Button>
+            <Button variant="ghost" idleText="Cancel" />
           </DialogClose>
-          <Button>Delete</Button>
+          <Button idleText="Delete" />
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -291,7 +291,7 @@ export const AlertDialog: Story = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Show Alert</Button>
+        <Button idleText="Show Alert" />
       </DialogTrigger>
       <DialogContent size="sm">
         <DialogHeader>
@@ -302,7 +302,7 @@ export const AlertDialog: Story = {
         </DialogHeader>
         <DialogFooter className="mt-4">
           <DialogClose asChild>
-            <Button>OK</Button>
+            <Button idleText="OK" />
           </DialogClose>
         </DialogFooter>
       </DialogContent>
@@ -315,9 +315,7 @@ export const AllSizes: Story = {
     <div className="flex flex-wrap items-start gap-4">
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="secondary" size="sm">
-            Small
-          </Button>
+          <Button variant="secondary" size="sm" idleText="Small" />
         </DialogTrigger>
         <DialogContent size="sm">
           <DialogHeader>
@@ -329,7 +327,7 @@ export const AllSizes: Story = {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button>Close</Button>
+              <Button idleText="Close" />
             </DialogClose>
           </DialogFooter>
         </DialogContent>
@@ -337,9 +335,7 @@ export const AllSizes: Story = {
 
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="secondary" size="sm">
-            Medium
-          </Button>
+          <Button variant="secondary" size="sm" idleText="Medium" />
         </DialogTrigger>
         <DialogContent size="md">
           <DialogHeader>
@@ -351,7 +347,7 @@ export const AllSizes: Story = {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button>Close</Button>
+              <Button idleText="Close" />
             </DialogClose>
           </DialogFooter>
         </DialogContent>
@@ -359,9 +355,7 @@ export const AllSizes: Story = {
 
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="secondary" size="sm">
-            Large
-          </Button>
+          <Button variant="secondary" size="sm" idleText="Large" />
         </DialogTrigger>
         <DialogContent size="lg">
           <DialogHeader>
@@ -373,7 +367,7 @@ export const AllSizes: Story = {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button>Close</Button>
+              <Button idleText="Close" />
             </DialogClose>
           </DialogFooter>
         </DialogContent>
@@ -381,9 +375,7 @@ export const AllSizes: Story = {
 
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="secondary" size="sm">
-            Extra Large
-          </Button>
+          <Button variant="secondary" size="sm" idleText="Extra Large" />
         </DialogTrigger>
         <DialogContent size="xl">
           <DialogHeader>
@@ -395,7 +387,7 @@ export const AllSizes: Story = {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button>Close</Button>
+              <Button idleText="Close" />
             </DialogClose>
           </DialogFooter>
         </DialogContent>
@@ -403,9 +395,7 @@ export const AllSizes: Story = {
 
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="secondary" size="sm">
-            Full Width
-          </Button>
+          <Button variant="secondary" size="sm" idleText="Full Width" />
         </DialogTrigger>
         <DialogContent size="full" className="mx-4">
           <DialogHeader>
@@ -417,7 +407,7 @@ export const AllSizes: Story = {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button>Close</Button>
+              <Button idleText="Close" />
             </DialogClose>
           </DialogFooter>
         </DialogContent>

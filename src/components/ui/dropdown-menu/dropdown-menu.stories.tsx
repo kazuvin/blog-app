@@ -35,7 +35,7 @@ export const Basic: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary">Open Menu</Button>
+        <Button variant="secondary" idleText="Open Menu" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>Profile</DropdownMenuItem>
@@ -51,7 +51,7 @@ export const WithLabels: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary">My Account</Button>
+        <Button variant="secondary" idleText="My Account" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -73,7 +73,7 @@ export const WithShortcuts: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary">Edit</Button>
+        <Button variant="secondary" idleText="Edit" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuItem>
@@ -112,7 +112,7 @@ export const WithCheckboxes: Story = {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="secondary">View</Button>
+          <Button variant="secondary" idleText="View" />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>Appearance</DropdownMenuLabel>
@@ -140,7 +140,7 @@ export const WithRadioGroup: Story = {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="secondary">Panel Position</Button>
+          <Button variant="secondary" idleText="Panel Position" />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>Panel Position</DropdownMenuLabel>
@@ -161,7 +161,7 @@ export const WithSubmenu: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary">Options</Button>
+        <Button variant="secondary" idleText="Options" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuItem>New Tab</DropdownMenuItem>
@@ -187,7 +187,7 @@ export const WithDisabledItems: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary">Actions</Button>
+        <Button variant="secondary" idleText="Actions" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>Edit</DropdownMenuItem>
@@ -205,7 +205,7 @@ export const WithInsetItems: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary">View</Button>
+        <Button variant="secondary" idleText="View" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel inset>Display</DropdownMenuLabel>
@@ -228,7 +228,7 @@ export const FullExample: Story = {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button>Open Full Menu</Button>
+          <Button idleText="Open Full Menu" />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
