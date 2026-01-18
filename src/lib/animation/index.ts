@@ -25,6 +25,8 @@ export {
 export {
   type UseScrollPositionOptions,
   type UseScrollPositionResult,
+  useIsScrolled,
   useScrollPosition,
+  useScrollY,
 } from "./use-scroll-position";
 export { useScrollToTop } from "./use-scroll-to-top";
