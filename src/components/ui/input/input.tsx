@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
-export type InputProps = ComponentProps<"input"> & {
+export type InputProps = Omit<ComponentProps<"input">, "size"> & {
   variant?: "default" | "error";
   size?: "sm" | "md" | "lg";
 };
