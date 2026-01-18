@@ -18,7 +18,7 @@ export function BlogCard({
 }: BlogCardProps) {
   return (
     <Link href={`/blog/${post.slug}`} className="block">
-      <Card className={cn(className)}>
+      <Card className={cn("ease transition-colors hover:bg-stone-100", className)}>
         <CardHeader>
           <h2 className="font-semibold text-xl">{post.title}</h2>
           <div className="flex items-center gap-3">
