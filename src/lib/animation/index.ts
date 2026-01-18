@@ -12,14 +12,6 @@ export {
   useInView,
 } from "./use-in-view";
 export {
-  type AnimationDirection,
-  type AnimationState,
-  type AnimationVariant,
-  type UseScrollAnimationOptions,
-  type UseScrollAnimationResult,
-  useScrollAnimation,
-} from "./use-scroll-animation";
-export {
   type Easing,
   type EasingFunction,
   type EasingName,
