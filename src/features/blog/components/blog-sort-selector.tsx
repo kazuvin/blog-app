@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { ChevronDownIcon } from "@/components/icons";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui";
+import { useHoverDropdown } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { SortOption } from "../lib/blog-utils";
 
@@ -25,41 +26,12 @@ const sortLabels: Record<SortOption, string> = {
 const sortOptions: SortOption[] = ["date-desc", "date-asc", "title-asc", "title-desc"];
 
 export function BlogSortSelector({ currentSort, onSortChange }: BlogSortSelectorProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const isHoveredRef = useRef(false);
-
-  const clearCloseTimeout = () => {
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current);
-      closeTimeoutRef.current = null;
-    }
-  };
-
-  const handleMouseEnter = () => {
-    isHoveredRef.current = true;
-    clearCloseTimeout();
-    setIsOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    isHoveredRef.current = false;
-    clearCloseTimeout();
-    closeTimeoutRef.current = setTimeout(() => {
-      if (!isHoveredRef.current) {
-        setIsOpen(false);
-      }
-    }, 100);
-  };
-
-  const handleOpenChange = (open: boolean) => {
-    setIsOpen(open);
-  };
+  const { isOpen, handleMouseEnter, handleMouseLeave, handleOpenChange, close } =
+    useHoverDropdown();
 
   const handleSelect = (option: SortOption) => {
     onSortChange(option);
-    isHoveredRef.current = false;
-    setIsOpen(false);
+    close();
   };
 
   return (
@@ -72,18 +44,12 @@ export function BlogSortSelector({ currentSort, onSortChange }: BlogSortSelector
           aria-expanded={isOpen}
         >
           <span>{sortLabels[currentSort]}</span>
-          <svg
+          <ChevronDownIcon
             className={cn(
               "h-4 w-4 text-foreground/60 transition-transform duration-200",
               isOpen && "rotate-180"
             )}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
+          />
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
