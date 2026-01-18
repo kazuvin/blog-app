@@ -1,6 +1,7 @@
 // Components
-export type { BlogListContainerProps } from "./components";
+export type { BlogCardProps, BlogListContainerProps } from "./components";
 export {
+  BlogCard,
   BlogListContainer,
   BlogListSkeleton,
   BlogSearchInput,

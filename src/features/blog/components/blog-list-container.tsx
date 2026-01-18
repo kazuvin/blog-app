@@ -1,8 +1,6 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Badge, Card, CardContent, CardHeader } from "@/components/ui";
 import { useDebounce } from "@/hooks";
 import { useBlogSearchParams } from "../hooks/use-blog-search-params";
 import {
@@ -12,6 +10,7 @@ import {
   searchPosts,
   sortPosts,
 } from "../lib/blog-utils";
+import { BlogCard } from "./blog-card";
 import { BlogSearchInput } from "./blog-search-input";
 import { BlogSortSelector } from "./blog-sort-selector";
 import { BlogTagFilter } from "./blog-tag-filter";
@@ -77,28 +76,7 @@ export function BlogListContainer({ posts }: BlogListContainerProps) {
       ) : (
         <div className="space-y-6">
           {filteredAndSortedPosts.map((post) => (
-            <Link key={post.slug} href={`/blog/${post.slug}`} className="block">
-              <Card>
-                <CardHeader>
-                  <h2 className="font-semibold text-xl">{post.title}</h2>
-                  <div className="flex items-center gap-3">
-                    <time className="text-foreground/60 text-sm">{post.date}</time>
-                    {post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
-                        {post.tags.map((tag) => (
-                          <Badge key={tag} variant="default" size="sm">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-foreground/80">{post.description}</p>
-                </CardContent>
-              </Card>
-            </Link>
+            <BlogCard key={post.slug} post={post} />
           ))}
         </div>
       )}
