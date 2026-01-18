@@ -178,6 +178,13 @@ function buildTransformString(style: KeyframeStyle): string {
 }
 
 /**
+ * Check if a property is a CSS custom property (starts with --)
+ */
+function isCustomProperty(key: string): boolean {
+  return key.startsWith("--");
+}
+
+/**
  * Convert KeyframeStyle to CSS style object
  */
 function toCSSStyle(interpolatedStyle: KeyframeStyle): CSSProperties {
@@ -187,7 +194,12 @@ function toCSSStyle(interpolatedStyle: KeyframeStyle): CSSProperties {
   // Copy non-transform properties
   for (const [key, value] of Object.entries(interpolatedStyle)) {
     if (!transformProperties.has(key) && value !== undefined) {
-      (resultStyle as Record<string, unknown>)[key] = value;
+      // Handle CSS custom properties
+      if (isCustomProperty(key)) {
+        (resultStyle as Record<string, unknown>)[key] = value;
+      } else {
+        (resultStyle as Record<string, unknown>)[key] = value;
+      }
     }
   }
 
@@ -208,10 +220,15 @@ function applyStylesToElement(element: HTMLElement, style: CSSProperties): void 
   if (style.transform !== undefined) {
     element.style.transform = style.transform;
   }
-  // Add more properties as needed
+  // Handle other properties including CSS custom properties
   for (const [key, value] of Object.entries(style)) {
     if (key !== "opacity" && key !== "transform" && value !== undefined) {
-      (element.style as unknown as Record<string, string>)[key] = String(value);
+      // Use setProperty for CSS custom properties
+      if (isCustomProperty(key)) {
+        element.style.setProperty(key, String(value));
+      } else {
+        (element.style as unknown as Record<string, string>)[key] = String(value);
+      }
     }
   }
 }

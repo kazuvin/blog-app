@@ -21,7 +21,7 @@ export function ButtonPreview() {
   }, []);
 
   return (
-    <div className="flex scale-120 items-center justify-center">
+    <div className="flex items-center justify-center">
       <Button
         state={STATES[stateIndex]}
         size="md"
