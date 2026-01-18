@@ -44,7 +44,7 @@ export function ShowcaseCard({ name, description, preview, onClick }: ShowcaseCa
         <CardContent>
           <div
             className={cn(
-              "flex min-h-[80px] items-center justify-center rounded-md bg-surface p-4",
+              "pointer-events-none flex min-h-[80px] items-center justify-center rounded-md bg-surface p-4",
               inView ? "animate-fade-in-up" : "opacity-0"
             )}
           >
