@@ -6,13 +6,13 @@ describe("Home", () => {
   it("renders the introduction heading", () => {
     render(<Home />);
 
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Introduction");
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("kazuvin");
   });
 
   it("renders the introduction section", () => {
     render(<Home />);
 
-    expect(screen.getByRole("heading", { name: /Introduction/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /kazuvin/i })).toBeInTheDocument();
     expect(screen.getByText(/Welcome to my blog/i)).toBeInTheDocument();
   });
 
