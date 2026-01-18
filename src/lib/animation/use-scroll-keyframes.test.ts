@@ -12,7 +12,7 @@ const mockRequestAnimationFrame = vi.fn((callback: FrameRequestCallback) => {
 });
 const mockCancelAnimationFrame = vi.fn();
 
-// Helper to simulate scroll
+// Helper to simulate scroll and trigger RAF
 function simulateScroll(scrollY: number) {
   Object.defineProperty(window, "scrollY", { value: scrollY, writable: true });
   window.dispatchEvent(new Event("scroll"));
@@ -21,11 +21,18 @@ function simulateScroll(scrollY: number) {
   }
 }
 
+// Helper to create a mock HTMLElement
+function createMockElement(): HTMLElement {
+  const element = document.createElement("div");
+  return element;
+}
+
 describe("useScrollKeyframes", () => {
   beforeEach(() => {
     vi.stubGlobal("requestAnimationFrame", mockRequestAnimationFrame);
     vi.stubGlobal("cancelAnimationFrame", mockCancelAnimationFrame);
     Object.defineProperty(window, "scrollY", { value: 0, writable: true });
+    Object.defineProperty(window, "innerHeight", { value: 768, writable: true });
     mockRequestAnimationFrame.mockClear();
     mockCancelAnimationFrame.mockClear();
     rafCallback = null;
@@ -37,7 +44,7 @@ describe("useScrollKeyframes", () => {
   });
 
   describe("初期状態 (Initial State)", () => {
-    it("should return initial style based on first keyframe when scroll is 0", () => {
+    it("should return initial style based on first keyframe", () => {
       const keyframes: Keyframe[] = [
         { at: 0, style: { opacity: 0 } },
         { at: 100, style: { opacity: 1 } },
@@ -45,7 +52,7 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
-      expect(result.current.style).toEqual({ opacity: 0 });
+      expect(result.current.style.opacity).toBe(0);
     });
 
     it("should return a ref callback function", () => {
@@ -59,7 +66,7 @@ describe("useScrollKeyframes", () => {
       expect(typeof result.current.ref).toBe("function");
     });
 
-    it("should return current scroll position as 0 initially", () => {
+    it("should return getScrollY function that returns 0 initially", () => {
       const keyframes: Keyframe[] = [
         { at: 0, style: { opacity: 0 } },
         { at: 100, style: { opacity: 1 } },
@@ -67,10 +74,10 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
-      expect(result.current.scrollY).toBe(0);
+      expect(result.current.getScrollY()).toBe(0);
     });
 
-    it("should return progress as 0 initially", () => {
+    it("should return getProgress function that returns 0 initially", () => {
       const keyframes: Keyframe[] = [
         { at: 0, style: { opacity: 0 } },
         { at: 100, style: { opacity: 1 } },
@@ -78,7 +85,85 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
-      expect(result.current.progress).toBe(0);
+      expect(result.current.getProgress()).toBe(0);
+    });
+
+    it("should include transform in initial style", () => {
+      const keyframes: Keyframe[] = [
+        { at: 0, style: { translateY: 50 } },
+        { at: 100, style: { translateY: 0 } },
+      ];
+
+      const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
+
+      expect(result.current.style.transform).toContain("translateY(50px)");
+    });
+  });
+
+  describe("DOM直接操作 (Direct DOM Manipulation)", () => {
+    it("should apply styles directly to DOM element on scroll", () => {
+      const keyframes: Keyframe[] = [
+        { at: 0, style: { opacity: 0 } },
+        { at: 100, style: { opacity: 1 } },
+      ];
+
+      const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
+
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
+      act(() => {
+        simulateScroll(50);
+      });
+
+      // Check DOM element directly
+      expect(Number.parseFloat(element.style.opacity)).toBeCloseTo(0.5, 1);
+    });
+
+    it("should update transform on DOM element", () => {
+      const keyframes: Keyframe[] = [
+        { at: 0, style: { translateY: 100 } },
+        { at: 100, style: { translateY: 0 } },
+      ];
+
+      const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
+
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
+      act(() => {
+        simulateScroll(50);
+      });
+
+      expect(element.style.transform).toContain("translateY(50px)");
+    });
+
+    it("should not cause re-renders on scroll (style prop stays initial)", () => {
+      const keyframes: Keyframe[] = [
+        { at: 0, style: { opacity: 0 } },
+        { at: 100, style: { opacity: 1 } },
+      ];
+
+      const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
+
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
+      const initialStyle = result.current.style;
+
+      act(() => {
+        simulateScroll(50);
+      });
+
+      // Style prop should remain the same (no re-render)
+      expect(result.current.style).toBe(initialStyle);
+      expect(result.current.style.opacity).toBe(0); // Initial value
     });
   });
 
@@ -91,11 +176,16 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(50);
       });
 
-      expect(result.current.style.opacity).toBeCloseTo(0.5, 1);
+      expect(Number.parseFloat(element.style.opacity)).toBeCloseTo(0.5, 1);
     });
 
     it("should interpolate between multiple keyframes", () => {
@@ -107,12 +197,16 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
-      // At scroll 150, should be between 0.5 and 1 (= 0.75)
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(150);
       });
 
-      expect(result.current.style.opacity).toBeCloseTo(0.75, 1);
+      expect(Number.parseFloat(element.style.opacity)).toBeCloseTo(0.75, 1);
     });
 
     it("should handle scroll before first keyframe", () => {
@@ -123,7 +217,6 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
-      // Scroll is 0, before first keyframe at 100
       expect(result.current.style.opacity).toBe(0.5);
     });
 
@@ -135,14 +228,19 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(200);
       });
 
-      expect(result.current.style.opacity).toBe(1);
+      expect(Number.parseFloat(element.style.opacity)).toBe(1);
     });
 
-    it("should update scrollY value on scroll", () => {
+    it("should update getScrollY value on scroll", () => {
       const keyframes: Keyframe[] = [
         { at: 0, style: { opacity: 0 } },
         { at: 100, style: { opacity: 1 } },
@@ -150,11 +248,16 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(75);
       });
 
-      expect(result.current.scrollY).toBe(75);
+      expect(result.current.getScrollY()).toBe(75);
     });
 
     it("should calculate progress based on keyframe range", () => {
@@ -165,12 +268,16 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(200);
       });
 
-      // Progress: (200 - 100) / (300 - 100) = 0.5
-      expect(result.current.progress).toBeCloseTo(0.5, 2);
+      expect(result.current.getProgress()).toBeCloseTo(0.5, 2);
     });
   });
 
@@ -183,12 +290,17 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(50);
       });
 
-      expect(result.current.style.opacity).toBeCloseTo(0.5, 1);
-      expect(result.current.style.scale).toBeCloseTo(0.75, 1);
+      expect(Number.parseFloat(element.style.opacity)).toBeCloseTo(0.5, 1);
+      expect(element.style.transform).toContain("scale(0.75)");
     });
 
     it("should handle translateX interpolation", () => {
@@ -199,11 +311,16 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(50);
       });
 
-      expect(result.current.style.translateX).toBeCloseTo(-50, 1);
+      expect(element.style.transform).toContain("translateX(-50px)");
     });
 
     it("should handle translateY interpolation", () => {
@@ -214,11 +331,16 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(50);
       });
 
-      expect(result.current.style.translateY).toBeCloseTo(25, 1);
+      expect(element.style.transform).toContain("translateY(25px)");
     });
 
     it("should handle rotate interpolation", () => {
@@ -229,11 +351,16 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(50);
       });
 
-      expect(result.current.style.rotate).toBeCloseTo(90, 1);
+      expect(element.style.transform).toContain("rotate(90deg)");
     });
   });
 
@@ -246,11 +373,16 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(50);
       });
 
-      expect(result.current.style.opacity).toBeCloseTo(0.5, 2);
+      expect(Number.parseFloat(element.style.opacity)).toBeCloseTo(0.5, 2);
     });
 
     it("should apply easeInOut easing", () => {
@@ -261,12 +393,16 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(50);
       });
 
-      // easeInOut at t=0.5 should be 0.5 (it's symmetric)
-      expect(result.current.style.opacity).toBeCloseTo(0.5, 1);
+      expect(Number.parseFloat(element.style.opacity)).toBeCloseTo(0.5, 1);
     });
 
     it("should apply easeIn easing", () => {
@@ -277,12 +413,16 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(50);
       });
 
-      // easeIn at t=0.5 should be less than 0.5 (starts slow)
-      expect(result.current.style.opacity).toBeLessThan(0.5);
+      expect(Number.parseFloat(element.style.opacity)).toBeLessThan(0.5);
     });
 
     it("should apply easeOut easing", () => {
@@ -293,16 +433,20 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(50);
       });
 
-      // easeOut at t=0.5 should be greater than 0.5 (starts fast)
-      expect(result.current.style.opacity).toBeGreaterThan(0.5);
+      expect(Number.parseFloat(element.style.opacity)).toBeGreaterThan(0.5);
     });
 
     it("should support custom easing function", () => {
-      const customEasing = (t: number) => t * t; // quadratic easeIn
+      const customEasing = (t: number) => t * t;
 
       const keyframes: Keyframe[] = [
         { at: 0, style: { opacity: 0 } },
@@ -311,12 +455,16 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(50);
       });
 
-      // At t=0.5, custom easing should return 0.25 (0.5^2)
-      expect(result.current.style.opacity).toBeCloseTo(0.25, 2);
+      expect(Number.parseFloat(element.style.opacity)).toBeCloseTo(0.25, 2);
     });
   });
 
@@ -329,11 +477,10 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes, relative: true }));
 
-      // Create mock element with getBoundingClientRect
-      const element = document.createElement("div");
+      const element = createMockElement();
       Object.defineProperty(element, "getBoundingClientRect", {
         value: () => ({
-          top: 0, // Element is at top of viewport
+          top: 0,
           bottom: 100,
           left: 0,
           right: 100,
@@ -346,7 +493,6 @@ describe("useScrollKeyframes", () => {
         result.current.ref(element);
       });
 
-      // Verify the ref was attached
       expect(typeof result.current.ref).toBe("function");
     });
   });
@@ -360,16 +506,16 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes, offset: { start: 50 } }));
 
-      // With start offset of 50, keyframes shift:
-      // at: 0 becomes at: 50
-      // at: 100 becomes at: 150
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
 
       act(() => {
         simulateScroll(100);
       });
 
-      // At scroll 100, we're at 50% between shifted keyframes (50 to 150)
-      expect(result.current.style.opacity).toBeCloseTo(0.5, 1);
+      expect(Number.parseFloat(element.style.opacity)).toBeCloseTo(0.5, 1);
     });
 
     it("should apply end offset to stop animation early", () => {
@@ -380,49 +526,16 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes, offset: { end: -50 } }));
 
-      // With end offset of -50, last keyframe shifts from 200 to 150
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(150);
       });
 
-      expect(result.current.style.opacity).toBe(1);
-    });
-  });
-
-  describe("CSS transform 出力 (CSS Transform Output)", () => {
-    it("should output combined transform string when outputTransform is true", () => {
-      const keyframes: Keyframe[] = [
-        { at: 0, style: { translateX: 0, translateY: 0, scale: 1, rotate: 0 } },
-        { at: 100, style: { translateX: 100, translateY: 50, scale: 1.5, rotate: 45 } },
-      ];
-
-      const { result } = renderHook(() => useScrollKeyframes({ keyframes, outputTransform: true }));
-
-      act(() => {
-        simulateScroll(50);
-      });
-
-      expect(result.current.style.transform).toContain("translateX(50px)");
-      expect(result.current.style.transform).toContain("translateY(25px)");
-      expect(result.current.style.transform).toContain("scale(1.25)");
-      expect(result.current.style.transform).toContain("rotate(22.5deg)");
-    });
-
-    it("should not include individual transform properties when outputTransform is true", () => {
-      const keyframes: Keyframe[] = [
-        { at: 0, style: { translateX: 0, scale: 1 } },
-        { at: 100, style: { translateX: 100, scale: 2 } },
-      ];
-
-      const { result } = renderHook(() => useScrollKeyframes({ keyframes, outputTransform: true }));
-
-      act(() => {
-        simulateScroll(50);
-      });
-
-      expect(result.current.style.translateX).toBeUndefined();
-      expect(result.current.style.scale).toBeUndefined();
-      expect(result.current.style.transform).toBeDefined();
+      expect(Number.parseFloat(element.style.opacity)).toBe(1);
     });
   });
 
@@ -451,7 +564,7 @@ describe("useScrollKeyframes", () => {
       expect(mockCancelAnimationFrame).toHaveBeenCalled();
     });
 
-    it("should not update state when scroll position unchanged", () => {
+    it("should not update DOM when scroll position unchanged", () => {
       const keyframes: Keyframe[] = [
         { at: 0, style: { opacity: 0 } },
         { at: 100, style: { opacity: 1 } },
@@ -459,19 +572,29 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
-      const initialStyle = result.current.style;
-
-      // Simulate scroll to same position
+      const element = createMockElement();
       act(() => {
-        simulateScroll(0);
+        result.current.ref(element);
       });
 
-      expect(result.current.style).toBe(initialStyle);
+      // First scroll
+      act(() => {
+        simulateScroll(50);
+      });
+
+      const opacityAfterFirstScroll = element.style.opacity;
+
+      // Same scroll position
+      act(() => {
+        simulateScroll(50);
+      });
+
+      expect(element.style.opacity).toBe(opacityAfterFirstScroll);
     });
   });
 
   describe("disabled オプション (Disabled Option)", () => {
-    it("should not update styles when disabled", () => {
+    it("should not update DOM when disabled", () => {
       const keyframes: Keyframe[] = [
         { at: 0, style: { opacity: 0 } },
         { at: 100, style: { opacity: 1 } },
@@ -479,12 +602,17 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes, disabled: true }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(50);
       });
 
-      // Should remain at initial state
-      expect(result.current.style.opacity).toBe(0);
+      // DOM should not be updated when disabled
+      expect(element.style.opacity).toBe("");
     });
 
     it("should not add scroll listener when disabled", () => {
@@ -497,25 +625,21 @@ describe("useScrollKeyframes", () => {
 
       renderHook(() => useScrollKeyframes({ keyframes, disabled: true }));
 
-      // RAF should not be called for scroll tracking when disabled
       expect(mockRequestAnimationFrame).not.toHaveBeenCalled();
     });
   });
 
   describe("SSR安全性 (SSR Safety)", () => {
     it("should handle window being undefined gracefully in the hook", () => {
-      // This test verifies the hook checks for window before using it
-      // The actual SSR behavior is tested through the typeof window check in the hook
       const keyframes: Keyframe[] = [
         { at: 0, style: { opacity: 0 } },
         { at: 100, style: { opacity: 1 } },
       ];
 
-      // Hook should return initial styles and not crash
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
-      expect(result.current.style).toEqual({ opacity: 0 });
-      expect(result.current.scrollY).toBe(0);
+      expect(result.current.style.opacity).toBe(0);
+      expect(result.current.getScrollY()).toBe(0);
     });
   });
 
@@ -532,27 +656,26 @@ describe("useScrollKeyframes", () => {
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
       expect(result.current.style.opacity).toBe(0.5);
-
-      act(() => {
-        simulateScroll(200);
-      });
-
-      expect(result.current.style.opacity).toBe(0.5);
     });
 
     it("should sort keyframes by 'at' position", () => {
       const keyframes: Keyframe[] = [
         { at: 100, style: { opacity: 1 } },
-        { at: 0, style: { opacity: 0 } }, // Out of order
+        { at: 0, style: { opacity: 0 } },
       ];
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
+
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
 
       act(() => {
         simulateScroll(50);
       });
 
-      expect(result.current.style.opacity).toBeCloseTo(0.5, 1);
+      expect(Number.parseFloat(element.style.opacity)).toBeCloseTo(0.5, 1);
     });
 
     it("should handle negative scroll values", () => {
@@ -563,29 +686,38 @@ describe("useScrollKeyframes", () => {
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(-50);
       });
 
-      expect(result.current.style.opacity).toBe(0);
+      expect(Number.parseFloat(element.style.opacity)).toBe(0);
     });
 
     it("should handle keyframes with same 'at' position", () => {
       const keyframes: Keyframe[] = [
         { at: 0, style: { opacity: 0 } },
         { at: 100, style: { opacity: 0.5 } },
-        { at: 100, style: { opacity: 0.8 } }, // Same position
+        { at: 100, style: { opacity: 0.8 } },
         { at: 200, style: { opacity: 1 } },
       ];
 
       const { result } = renderHook(() => useScrollKeyframes({ keyframes }));
 
+      const element = createMockElement();
+      act(() => {
+        result.current.ref(element);
+      });
+
       act(() => {
         simulateScroll(100);
       });
 
-      // Should use the later keyframe value
-      expect(result.current.style.opacity).toBe(0.8);
+      expect(Number.parseFloat(element.style.opacity)).toBe(0.8);
     });
   });
 });

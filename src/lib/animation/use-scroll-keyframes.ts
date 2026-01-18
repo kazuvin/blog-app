@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useRef } from "react";
 
 /**
  * Easing function type - takes progress (0-1) and returns eased value (0-1)
@@ -64,21 +64,19 @@ export interface UseScrollKeyframesOptions {
   relative?: boolean;
   /** Offset to apply to keyframe positions */
   offset?: ScrollOffset;
-  /** Whether to output a combined transform string instead of individual properties */
-  outputTransform?: boolean;
   /** Disable the hook (useful for conditional animations) */
   disabled?: boolean;
 }
 
 export interface UseScrollKeyframesResult {
   /** Ref callback to attach to the target element */
-  ref: (node: Element | null) => void;
-  /** Current interpolated style values */
-  style: CSSProperties & KeyframeStyle;
-  /** Current scroll position (window.scrollY or relative) */
-  scrollY: number;
-  /** Animation progress from 0 to 1 based on keyframe range */
-  progress: number;
+  ref: (node: HTMLElement | null) => void;
+  /** Initial style for SSR/first render (subsequent updates go directly to DOM) */
+  style: CSSProperties;
+  /** Get current scroll position (reads from ref, does not cause re-render) */
+  getScrollY: () => number;
+  /** Get current progress (reads from ref, does not cause re-render) */
+  getProgress: () => number;
 }
 
 // Built-in easing functions
@@ -140,7 +138,7 @@ function buildTransformString(style: KeyframeStyle): string {
     const z = style.translateZ ?? 0;
     if (z !== 0) {
       parts.push(`translate3d(${x}px, ${y}px, ${z}px)`);
-    } else if (y !== 0 || x !== 0) {
+    } else {
       parts.push(`translateX(${x}px)`);
       parts.push(`translateY(${y}px)`);
     }
@@ -180,10 +178,49 @@ function buildTransformString(style: KeyframeStyle): string {
 }
 
 /**
+ * Convert KeyframeStyle to CSS style object
+ */
+function toCSSStyle(interpolatedStyle: KeyframeStyle): CSSProperties {
+  const transformString = buildTransformString(interpolatedStyle);
+  const resultStyle: CSSProperties = {};
+
+  // Copy non-transform properties
+  for (const [key, value] of Object.entries(interpolatedStyle)) {
+    if (!transformProperties.has(key) && value !== undefined) {
+      (resultStyle as Record<string, unknown>)[key] = value;
+    }
+  }
+
+  if (transformString) {
+    resultStyle.transform = transformString;
+  }
+
+  return resultStyle;
+}
+
+/**
+ * Apply styles directly to DOM element (no re-render)
+ */
+function applyStylesToElement(element: HTMLElement, style: CSSProperties): void {
+  if (style.opacity !== undefined) {
+    element.style.opacity = String(style.opacity);
+  }
+  if (style.transform !== undefined) {
+    element.style.transform = style.transform;
+  }
+  // Add more properties as needed
+  for (const [key, value] of Object.entries(style)) {
+    if (key !== "opacity" && key !== "transform" && value !== undefined) {
+      (element.style as Record<string, string>)[key] = String(value);
+    }
+  }
+}
+
+/**
  * Custom hook for scroll-based keyframe animations.
  *
- * Uses requestAnimationFrame for smooth scroll tracking and supports
- * keyframe-based animations with configurable easing functions.
+ * Uses requestAnimationFrame and direct DOM manipulation for optimal performance.
+ * Does NOT cause React re-renders on scroll - styles are written directly to the DOM.
  *
  * @example
  * ```tsx
@@ -194,7 +231,6 @@ function buildTransformString(style: KeyframeStyle): string {
  *       { at: 200, style: { opacity: 1, translateY: 0 }, easing: 'easeOut' },
  *       { at: 400, style: { opacity: 0, translateY: -50 }, easing: 'easeIn' },
  *     ],
- *     outputTransform: true,
  *   });
  *
  *   return (
@@ -206,13 +242,7 @@ function buildTransformString(style: KeyframeStyle): string {
  * ```
  */
 export function useScrollKeyframes(options: UseScrollKeyframesOptions): UseScrollKeyframesResult {
-  const {
-    keyframes,
-    relative = false,
-    offset,
-    outputTransform = false,
-    disabled = false,
-  } = options;
+  const { keyframes, relative = false, offset, disabled = false } = options;
 
   // Sort keyframes by position and handle offsets
   const sortedKeyframes = [...keyframes].sort((a, b) => a.at - b.at);
@@ -226,22 +256,22 @@ export function useScrollKeyframes(options: UseScrollKeyframesOptions): UseScrol
     if (offset?.end && index === sortedKeyframes.length - 1) {
       adjustedAt += offset.end;
     }
-    // Apply start offset to all keyframes except first gets special handling
+    // Apply start offset to all keyframes
     if (offset?.start) {
       adjustedAt = kf.at + offset.start;
     }
     return { ...kf, at: adjustedAt };
   });
 
-  // Calculate initial style from first keyframe
-  const initialStyle = adjustedKeyframes[0]?.style ?? {};
+  // Calculate initial style from first keyframe (for SSR/first render)
+  const initialKeyframeStyle = adjustedKeyframes[0]?.style ?? {};
+  const initialStyle = toCSSStyle(initialKeyframeStyle);
 
-  const [scrollY, setScrollY] = useState(0);
-  const [style, setStyle] = useState<CSSProperties & KeyframeStyle>(initialStyle);
-
-  const elementRef = useRef<Element | null>(null);
+  // Refs for tracking state without re-renders
+  const elementRef = useRef<HTMLElement | null>(null);
   const rafIdRef = useRef<number | null>(null);
   const lastScrollYRef = useRef<number>(0);
+  const progressRef = useRef<number>(0);
 
   // Calculate progress based on keyframe range
   const calculateProgress = useCallback(
@@ -262,7 +292,7 @@ export function useScrollKeyframes(options: UseScrollKeyframesOptions): UseScrol
 
   // Interpolate style based on scroll position
   const interpolateStyle = useCallback(
-    (currentScrollY: number): CSSProperties & KeyframeStyle => {
+    (currentScrollY: number): KeyframeStyle => {
       if (adjustedKeyframes.length === 0) return {};
       if (adjustedKeyframes.length === 1) return adjustedKeyframes[0].style;
 
@@ -273,7 +303,6 @@ export function useScrollKeyframes(options: UseScrollKeyframesOptions): UseScrol
 
       // Handle after last keyframe
       if (currentScrollY >= adjustedKeyframes[adjustedKeyframes.length - 1].at) {
-        // Find the last keyframe at the final position (for same-position keyframes)
         const lastAt = adjustedKeyframes[adjustedKeyframes.length - 1].at;
         for (let i = adjustedKeyframes.length - 1; i >= 0; i--) {
           if (adjustedKeyframes[i].at === lastAt) {
@@ -284,10 +313,8 @@ export function useScrollKeyframes(options: UseScrollKeyframesOptions): UseScrol
       }
 
       // Check if we're exactly at a keyframe position
-      // If there are multiple keyframes at the same position, use the last one
       for (let i = 0; i < adjustedKeyframes.length; i++) {
         if (currentScrollY === adjustedKeyframes[i].at) {
-          // Find the last keyframe at this position
           let lastAtPosition = i;
           while (
             lastAtPosition < adjustedKeyframes.length - 1 &&
@@ -314,7 +341,7 @@ export function useScrollKeyframes(options: UseScrollKeyframesOptions): UseScrol
         }
       }
 
-      // Handle same position keyframes - use the later one
+      // Handle same position keyframes
       if (prevKeyframe.at === nextKeyframe.at) {
         return nextKeyframe.style;
       }
@@ -347,36 +374,21 @@ export function useScrollKeyframes(options: UseScrollKeyframesOptions): UseScrol
         }
       }
 
-      // Convert to CSS properties
-      if (outputTransform) {
-        const transformString = buildTransformString(interpolatedStyle);
-        const resultStyle: CSSProperties & KeyframeStyle = {};
-
-        // Copy non-transform properties
-        for (const [key, value] of Object.entries(interpolatedStyle)) {
-          if (!transformProperties.has(key)) {
-            (resultStyle as Record<string, unknown>)[key] = value;
-          }
-        }
-
-        if (transformString) {
-          resultStyle.transform = transformString;
-        }
-
-        return resultStyle;
-      }
-
       return interpolatedStyle;
     },
-    [adjustedKeyframes, outputTransform]
+    [adjustedKeyframes]
   );
 
   // Ref callback
-  const ref = useCallback((node: Element | null) => {
+  const ref = useCallback((node: HTMLElement | null) => {
     elementRef.current = node;
   }, []);
 
-  // Scroll handler with RAF
+  // Getter functions that read from refs (no re-render)
+  const getScrollY = useCallback(() => lastScrollYRef.current, []);
+  const getProgress = useCallback(() => progressRef.current, []);
+
+  // Scroll handler with RAF - writes directly to DOM
   useEffect(() => {
     if (typeof window === "undefined" || disabled) {
       return;
@@ -388,17 +400,21 @@ export function useScrollKeyframes(options: UseScrollKeyframesOptions): UseScrol
       // Calculate relative scroll if element is attached and relative mode is on
       if (relative && elementRef.current) {
         const rect = elementRef.current.getBoundingClientRect();
-        // Element's position relative to document
         const elementTop = rect.top + window.scrollY;
-        // How far the element has scrolled past the viewport top
         currentScrollY = window.scrollY - elementTop + window.innerHeight;
       }
 
       // Only update if scroll position changed
       if (currentScrollY !== lastScrollYRef.current) {
         lastScrollYRef.current = currentScrollY;
-        setScrollY(currentScrollY);
-        setStyle(interpolateStyle(currentScrollY));
+        progressRef.current = calculateProgress(currentScrollY);
+
+        // Apply styles directly to DOM (no React re-render)
+        if (elementRef.current) {
+          const interpolated = interpolateStyle(currentScrollY);
+          const cssStyle = toCSSStyle(interpolated);
+          applyStylesToElement(elementRef.current, cssStyle);
+        }
       }
 
       rafIdRef.current = requestAnimationFrame(updateScroll);
@@ -412,14 +428,12 @@ export function useScrollKeyframes(options: UseScrollKeyframesOptions): UseScrol
         cancelAnimationFrame(rafIdRef.current);
       }
     };
-  }, [relative, interpolateStyle, disabled]);
-
-  const progress = calculateProgress(scrollY);
+  }, [relative, interpolateStyle, calculateProgress, disabled]);
 
   return {
     ref,
-    style,
-    scrollY,
-    progress,
+    style: initialStyle,
+    getScrollY,
+    getProgress,
   };
 }
