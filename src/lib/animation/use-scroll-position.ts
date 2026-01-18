@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 export interface UseScrollPositionOptions {
   /**
@@ -23,7 +23,23 @@ export interface UseScrollPositionResult {
 }
 
 /**
+ * Shared scroll store for use with useSyncExternalStore.
+ * This allows multiple components to share the same scroll state
+ * without duplicating event listeners.
+ */
+const scrollStore = {
+  subscribe: (callback: () => void) => {
+    window.addEventListener("scroll", callback, { passive: true });
+    return () => window.removeEventListener("scroll", callback);
+  },
+  getSnapshot: () => window.scrollY,
+  getServerSnapshot: () => 0,
+};
+
+/**
  * Custom hook that tracks the window scroll position.
+ * Uses useSyncExternalStore for optimal performance and
+ * shared state across multiple components.
  *
  * @param options - Configuration options
  * @returns Object containing scrollY and isScrolled
@@ -54,29 +70,30 @@ export interface UseScrollPositionResult {
  *   );
  * }
  * ```
+ *
+ * @example
+ * ```tsx
+ * // Multiple components sharing the same scroll state
+ * function Header() {
+ *   const { scrollY } = useScrollPosition();
+ *   return <header>Scroll: {scrollY}px</header>;
+ * }
+ *
+ * function ProgressBar() {
+ *   const { scrollY } = useScrollPosition();
+ *   const progress = (scrollY / document.body.scrollHeight) * 100;
+ *   return <div style={{ width: `${progress}%` }} />;
+ * }
+ * ```
  */
 export function useScrollPosition(options: UseScrollPositionOptions = {}): UseScrollPositionResult {
   const { threshold = 0 } = options;
 
-  const [scrollY, setScrollY] = useState(() =>
-    typeof window !== "undefined" ? window.scrollY : 0
+  const scrollY = useSyncExternalStore(
+    scrollStore.subscribe,
+    scrollStore.getSnapshot,
+    scrollStore.getServerSnapshot
   );
-
-  const handleScroll = useCallback(() => {
-    setScrollY(window.scrollY);
-  }, []);
-
-  useEffect(() => {
-    // Check initial scroll position
-    handleScroll();
-
-    // Add scroll listener with passive option for performance
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [handleScroll]);
 
   return {
     scrollY,
