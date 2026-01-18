@@ -8,7 +8,7 @@
 | --------- | ------------------------------- | ---------- | ---------------------------- |
 | Button    | primary, secondary, ghost       | sm, md, lg | -                            |
 | Card      | default, outline                | -          | CardHeader/Content/Footer    |
-| Input     | default, error                  | sm, md, lg | `inputSize` prop             |
+| Input     | default, error                  | sm, md, lg | `size` prop                  |
 | Badge     | default, success, warning, etc. | sm, md     | -                            |
 | Label     | -                               | -          | `required` prop              |
 | Dialog    | default, alert                  | sm, md, lg | ESC/overlay click supported  |

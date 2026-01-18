@@ -4,8 +4,6 @@ export function CircleIcon({ className, ...props }: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="8"
-      height="8"
       viewBox="0 0 24 24"
       fill="currentColor"
       className={className}

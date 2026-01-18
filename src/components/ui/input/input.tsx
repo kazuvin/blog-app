@@ -1,18 +1,18 @@
 import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
-export type InputProps = ComponentProps<"input"> & {
+export type InputProps = Omit<ComponentProps<"input">, "size"> & {
   variant?: "default" | "error";
-  inputSize?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg";
 };
 
-export function Input({ variant = "default", inputSize = "md", className, ...props }: InputProps) {
+export function Input({ variant = "default", size = "md", className, ...props }: InputProps) {
   return (
     <input
       className={cn(
         "w-full transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50",
         variantStyles[variant],
-        sizeStyles[inputSize],
+        sizeStyles[size],
         className
       )}
       {...props}
