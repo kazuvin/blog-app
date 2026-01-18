@@ -2,9 +2,9 @@ import { createStore } from "jotai";
 import { beforeEach, describe, expect, it } from "vitest";
 import type { ShowcaseItem } from "../types";
 import {
-  clearSelectionAtom,
+  closeDialogAtom,
+  displayItemAtom,
   isDialogOpenAtom,
-  selectedItemValueAtom,
   selectItemAtom,
 } from "./showcases-atoms";
 
@@ -34,8 +34,8 @@ describe("showcases-atoms", () => {
   });
 
   describe("初期状態", () => {
-    it("選択アイテムの初期値がnullであること", () => {
-      const value = store.get(selectedItemValueAtom);
+    it("表示アイテムの初期値がnullであること", () => {
+      const value = store.get(displayItemAtom);
       expect(value).toBeNull();
     });
 
@@ -46,119 +46,112 @@ describe("showcases-atoms", () => {
   });
 
   describe("selectItemAtom アクション", () => {
-    it("selectItemAtomを呼び出すと選択アイテムが設定されること", () => {
+    it("selectItemAtomを呼び出すとアイテムが設定されダイアログが開くこと", () => {
       store.set(selectItemAtom, mockItem);
 
-      const value = store.get(selectedItemValueAtom);
-      expect(value).toEqual(mockItem);
+      expect(store.get(displayItemAtom)).toEqual(mockItem);
+      expect(store.get(isDialogOpenAtom)).toBe(true);
     });
 
-    it("別のアイテムで呼び出すと選択アイテムが置換されること", () => {
+    it("別のアイテムで呼び出すとアイテムが置換されること", () => {
       store.set(selectItemAtom, mockItem);
       store.set(selectItemAtom, mockItem2);
 
-      const value = store.get(selectedItemValueAtom);
-      expect(value).toEqual(mockItem2);
-    });
-
-    it("アイテムを選択するとダイアログが開くこと", () => {
-      store.set(selectItemAtom, mockItem);
-
-      const isOpen = store.get(isDialogOpenAtom);
-      expect(isOpen).toBe(true);
+      expect(store.get(displayItemAtom)).toEqual(mockItem2);
+      expect(store.get(isDialogOpenAtom)).toBe(true);
     });
   });
 
-  describe("clearSelectionAtom アクション", () => {
-    it("clearSelectionAtomを呼び出すと選択がクリアされること", () => {
-      // まずアイテムを選択
-      store.set(selectItemAtom, mockItem);
-      expect(store.get(selectedItemValueAtom)).toEqual(mockItem);
-
-      // 選択をクリア
-      store.set(clearSelectionAtom);
-
-      const value = store.get(selectedItemValueAtom);
-      expect(value).toBeNull();
-    });
-
-    it("選択をクリアするとダイアログが閉じること", () => {
+  describe("closeDialogAtom アクション", () => {
+    it("closeDialogAtomを呼び出すとダイアログが閉じること", () => {
       // まずアイテムを選択してダイアログを開く
       store.set(selectItemAtom, mockItem);
       expect(store.get(isDialogOpenAtom)).toBe(true);
 
-      // 選択をクリア
-      store.set(clearSelectionAtom);
+      // ダイアログを閉じる
+      store.set(closeDialogAtom);
 
-      const isOpen = store.get(isDialogOpenAtom);
-      expect(isOpen).toBe(false);
+      expect(store.get(isDialogOpenAtom)).toBe(false);
     });
 
-    it("何も選択されていない状態でclearSelectionAtomを呼んでもエラーにならないこと", () => {
-      // 何も選択されていない状態でクリアを呼び出しても問題ないことを確認
-      expect(() => store.set(clearSelectionAtom)).not.toThrow();
-      expect(store.get(selectedItemValueAtom)).toBeNull();
+    it("ダイアログを閉じてもアイテムは保持されること（アニメーション用）", () => {
+      // アイテムを選択
+      store.set(selectItemAtom, mockItem);
+      expect(store.get(displayItemAtom)).toEqual(mockItem);
+
+      // ダイアログを閉じる
+      store.set(closeDialogAtom);
+
+      // アイテムは保持される（閉じるアニメーション中に表示するため）
+      expect(store.get(displayItemAtom)).toEqual(mockItem);
+      expect(store.get(isDialogOpenAtom)).toBe(false);
+    });
+
+    it("何も選択されていない状態でcloseDialogAtomを呼んでもエラーにならないこと", () => {
+      expect(() => store.set(closeDialogAtom)).not.toThrow();
+      expect(store.get(displayItemAtom)).toBeNull();
       expect(store.get(isDialogOpenAtom)).toBe(false);
     });
   });
 
-  describe("selectedItemValueAtom 派生アトム", () => {
-    it("読み取り専用で現在の選択を反映すること", () => {
-      expect(store.get(selectedItemValueAtom)).toBeNull();
+  describe("displayItemAtom 派生アトム", () => {
+    it("読み取り専用で現在のアイテムを反映すること", () => {
+      expect(store.get(displayItemAtom)).toBeNull();
 
       store.set(selectItemAtom, mockItem);
-      expect(store.get(selectedItemValueAtom)).toEqual(mockItem);
+      expect(store.get(displayItemAtom)).toEqual(mockItem);
 
-      store.set(clearSelectionAtom);
-      expect(store.get(selectedItemValueAtom)).toBeNull();
+      // closeDialogでもアイテムは保持される
+      store.set(closeDialogAtom);
+      expect(store.get(displayItemAtom)).toEqual(mockItem);
     });
   });
 
   describe("isDialogOpenAtom 派生アトム", () => {
-    it("アイテムが選択されていない時はfalseを返すこと", () => {
+    it("初期状態ではfalseを返すこと", () => {
       expect(store.get(isDialogOpenAtom)).toBe(false);
     });
 
-    it("アイテムが選択されている時はtrueを返すこと", () => {
+    it("アイテムを選択するとtrueを返すこと", () => {
       store.set(selectItemAtom, mockItem);
       expect(store.get(isDialogOpenAtom)).toBe(true);
     });
 
-    it("選択がクリアされた後はfalseを返すこと", () => {
+    it("ダイアログを閉じた後はfalseを返すこと", () => {
       store.set(selectItemAtom, mockItem);
-      store.set(clearSelectionAtom);
+      store.set(closeDialogAtom);
       expect(store.get(isDialogOpenAtom)).toBe(false);
     });
   });
 
   describe("状態遷移シナリオ", () => {
-    it("複数回の選択/クリアサイクルを正しく処理すること", () => {
+    it("複数回の選択/閉じるサイクルを正しく処理すること", () => {
       // サイクル1: アイテム1を選択
       store.set(selectItemAtom, mockItem);
-      expect(store.get(selectedItemValueAtom)).toEqual(mockItem);
+      expect(store.get(displayItemAtom)).toEqual(mockItem);
       expect(store.get(isDialogOpenAtom)).toBe(true);
 
-      // サイクル1: クリア
-      store.set(clearSelectionAtom);
-      expect(store.get(selectedItemValueAtom)).toBeNull();
+      // サイクル1: ダイアログを閉じる（アイテムは保持）
+      store.set(closeDialogAtom);
+      expect(store.get(displayItemAtom)).toEqual(mockItem);
       expect(store.get(isDialogOpenAtom)).toBe(false);
 
-      // サイクル2: アイテム2を選択
+      // サイクル2: アイテム2を選択（前のアイテムが置き換わる）
       store.set(selectItemAtom, mockItem2);
-      expect(store.get(selectedItemValueAtom)).toEqual(mockItem2);
+      expect(store.get(displayItemAtom)).toEqual(mockItem2);
       expect(store.get(isDialogOpenAtom)).toBe(true);
 
-      // サイクル2: クリア
-      store.set(clearSelectionAtom);
-      expect(store.get(selectedItemValueAtom)).toBeNull();
+      // サイクル2: ダイアログを閉じる
+      store.set(closeDialogAtom);
+      expect(store.get(displayItemAtom)).toEqual(mockItem2);
       expect(store.get(isDialogOpenAtom)).toBe(false);
     });
 
-    it("クリアせずに直接アイテムを置換できること", () => {
+    it("閉じずに直接アイテムを置換できること", () => {
       store.set(selectItemAtom, mockItem);
       store.set(selectItemAtom, mockItem2);
 
-      expect(store.get(selectedItemValueAtom)).toEqual(mockItem2);
+      expect(store.get(displayItemAtom)).toEqual(mockItem2);
       expect(store.get(isDialogOpenAtom)).toBe(true);
     });
   });

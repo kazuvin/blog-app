@@ -2,7 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createStore, Provider } from "jotai";
 import { beforeEach, describe, expect, it } from "vitest";
-import { isDialogOpenAtom, selectedItemValueAtom } from "../stores";
+import { displayItemAtom, isDialogOpenAtom } from "../stores";
 import type { ShowcaseItem } from "../types";
 import { ShowcasesContainer } from "./showcases-container";
 
@@ -130,7 +130,7 @@ describe("ShowcasesContainer", () => {
         </TestWrapper>
       );
 
-      expect(store.get(selectedItemValueAtom)).toBeNull();
+      expect(store.get(displayItemAtom)).toBeNull();
       expect(store.get(isDialogOpenAtom)).toBe(false);
     });
 
@@ -146,7 +146,7 @@ describe("ShowcasesContainer", () => {
       const buttons = screen.getAllByRole("button");
       await user.click(buttons[0]); // 最初のカード（Button）をクリック
 
-      expect(store.get(selectedItemValueAtom)).toEqual(mockItems[0]);
+      expect(store.get(displayItemAtom)).toEqual(mockItems[0]);
       expect(store.get(isDialogOpenAtom)).toBe(true);
     });
   });
@@ -234,7 +234,7 @@ describe("ShowcasesContainer", () => {
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
 
-    it("ダイアログを閉じるとストアの選択がクリアされること", async () => {
+    it("ダイアログを閉じてもアイテムは保持されること（アニメーション用）", async () => {
       const user = userEvent.setup();
 
       render(
@@ -247,14 +247,14 @@ describe("ShowcasesContainer", () => {
       const cardButtons = screen.getAllByRole("button");
       await user.click(cardButtons[0]);
 
-      expect(store.get(selectedItemValueAtom)).toEqual(mockItems[0]);
+      expect(store.get(displayItemAtom)).toEqual(mockItems[0]);
 
       // クローズボタンをクリック
       const closeButton = screen.getByRole("button", { name: /close/i });
       await user.click(closeButton);
 
-      // ストアがクリアされる
-      expect(store.get(selectedItemValueAtom)).toBeNull();
+      // ダイアログは閉じるがアイテムは保持される（閉じるアニメーション用）
+      expect(store.get(displayItemAtom)).toEqual(mockItems[0]);
       expect(store.get(isDialogOpenAtom)).toBe(false);
     });
   });
@@ -275,7 +275,7 @@ describe("ShowcasesContainer", () => {
 
       // ダイアログ内のコンテンツを確認
       expect(screen.getByTestId("input-demo")).toBeInTheDocument();
-      expect(store.get(selectedItemValueAtom)).toEqual(mockItems[1]);
+      expect(store.get(displayItemAtom)).toEqual(mockItems[1]);
     });
 
     it("3番目のアイテムをクリックすると正しいコンテンツが表示されること", async () => {
@@ -293,7 +293,7 @@ describe("ShowcasesContainer", () => {
 
       // ダイアログ内のコンテンツを確認
       expect(screen.getByTestId("card-demo")).toBeInTheDocument();
-      expect(store.get(selectedItemValueAtom)).toEqual(mockItems[2]);
+      expect(store.get(displayItemAtom)).toEqual(mockItems[2]);
     });
   });
 
