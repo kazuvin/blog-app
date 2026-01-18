@@ -1,6 +1,7 @@
 "use client";
 
-import { type RefObject, useEffect, useState } from "react";
+import type { RefObject } from "react";
+import { useElementDimensions } from "./use-element-dimensions";
 
 /**
  * Observes an element's width using ResizeObserver.
@@ -23,23 +24,10 @@ import { type RefObject, useEffect, useState } from "react";
  *   </div>
  * );
  * ```
+ *
+ * @see useElementDimensions - For tracking both width and height
  */
 export function useElementWidth(ref: RefObject<HTMLElement | null>): number | undefined {
-  const [width, setWidth] = useState<number | undefined>(undefined);
-
-  useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
-    setWidth(element.offsetWidth);
-
-    const observer = new ResizeObserver(() => {
-      setWidth(element.offsetWidth);
-    });
-    observer.observe(element);
-
-    return () => observer.disconnect();
-  }, [ref]);
-
+  const { width } = useElementDimensions(ref, { type: "width" });
   return width;
 }
