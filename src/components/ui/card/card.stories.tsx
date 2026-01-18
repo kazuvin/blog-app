@@ -62,8 +62,8 @@ export const WithFooter: Story = {
         <p>This card has a footer with action buttons.</p>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
-        <Button variant="ghost">Cancel</Button>
-        <Button>Submit</Button>
+        <Button variant="ghost" idleText="Cancel" />
+        <Button idleText="Submit" />
       </CardFooter>
     </Card>
   ),
@@ -94,8 +94,8 @@ export const FullExample: Story = {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
-        <Button variant="ghost">Cancel</Button>
-        <Button>Create Account</Button>
+        <Button variant="ghost" idleText="Cancel" />
+        <Button idleText="Create Account" />
       </CardFooter>
     </Card>
   ),
