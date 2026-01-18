@@ -1,6 +1,6 @@
 export {
-  clearSelectionAtom,
+  closeDialogAtom,
+  displayItemAtom,
   isDialogOpenAtom,
-  selectedItemValueAtom,
   selectItemAtom,
 } from "./showcases-atoms";
