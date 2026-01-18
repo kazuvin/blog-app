@@ -1,6 +1,11 @@
 // Animation Hooks
 
-export { useElementWidth } from "./use-element-width";
+export {
+  type DimensionType,
+  type UseElementDimensionsOptions,
+  type UseElementDimensionsResult,
+  useElementDimensions,
+} from "./use-element-dimensions";
 export {
   type UseInViewOptions,
   type UseInViewResult,
