@@ -20,6 +20,17 @@ export {
   useScrollAnimation,
 } from "./use-scroll-animation";
 export {
+  type Easing,
+  type EasingFunction,
+  type EasingName,
+  type Keyframe,
+  type KeyframeStyle,
+  type ScrollOffset,
+  type UseScrollKeyframesOptions,
+  type UseScrollKeyframesResult,
+  useScrollKeyframes,
+} from "./use-scroll-keyframes";
+export {
   type UseScrollPositionOptions,
   type UseScrollPositionResult,
   useScrollPosition,
