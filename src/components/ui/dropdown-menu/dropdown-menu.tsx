@@ -5,6 +5,30 @@ import type { ComponentProps } from "react";
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
+// ============================================================================
+// Constants
+// ============================================================================
+
+/** Shared padding for menu items */
+const ITEM_PADDING = "px-2 py-1.5";
+
+/** Padding for items with indicator (checkbox/radio) */
+const ITEM_PADDING_WITH_INDICATOR = "py-1.5 pr-2 pl-8";
+
+/** Shared animation classes for content */
+const contentAnimationStyles = [
+  "data-[state=closed]:animate-out data-[state=open]:animate-in",
+  "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+  "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+  "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2",
+  "data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+  "duration-200",
+] as const;
+
+// ============================================================================
+// Re-exports
+// ============================================================================
+
 // Root DropdownMenu component
 export const DropdownMenu = DropdownMenuPrimitive.Root;
 
@@ -40,7 +64,8 @@ export function DropdownMenuSubTrigger({
   return (
     <DropdownMenuPrimitive.SubTrigger
       className={cn(
-        "flex cursor-pointer select-none items-center rounded-2xl px-2 py-1.5 text-sm outline-none",
+        "flex cursor-pointer select-none items-center rounded-2xl text-sm outline-none",
+        ITEM_PADDING,
         "focus:bg-foreground/10 data-[state=open]:bg-foreground/10",
         inset && "pl-8",
         className
@@ -62,12 +87,7 @@ export function DropdownMenuSubContent({ className, ...props }: DropdownMenuSubC
     <DropdownMenuPrimitive.SubContent
       className={cn(
         "z-50 min-w-[8rem] overflow-hidden rounded-2xl bg-background p-1 text-foreground shadow-lg hover:bg-stone-200",
-        "data-[state=closed]:animate-out data-[state=open]:animate-in",
-        "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-        "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
-        "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2",
-        "data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-        "duration-200",
+        contentAnimationStyles,
         className
       )}
       {...props}
@@ -90,12 +110,7 @@ export function DropdownMenuContent({
         sideOffset={sideOffset}
         className={cn(
           "z-50 min-w-[8rem] overflow-hidden rounded-lg border border-foreground/10 bg-background p-2 text-foreground shadow-md",
-          "data-[state=closed]:animate-out data-[state=open]:animate-in",
-          "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-          "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
-          "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2",
-          "data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-          "duration-200",
+          contentAnimationStyles,
           className
         )}
         {...props}
@@ -114,7 +129,8 @@ export function DropdownMenuItem({ className, inset, ...props }: DropdownMenuIte
   return (
     <DropdownMenuPrimitive.Item
       className={cn(
-        "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors",
+        "relative flex cursor-pointer select-none items-center rounded-sm text-sm outline-none transition-colors",
+        ITEM_PADDING,
         "focus:text-foreground/60",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         inset && "pl-8",
@@ -140,7 +156,8 @@ export function DropdownMenuCheckboxItem({
   return (
     <DropdownMenuPrimitive.CheckboxItem
       className={cn(
-        "relative flex cursor-pointer select-none items-center rounded-sm py-1.5 pr-2 pl-8 text-sm outline-none transition-colors",
+        "relative flex cursor-pointer select-none items-center rounded-sm text-sm outline-none transition-colors",
+        ITEM_PADDING_WITH_INDICATOR,
         "focus:bg-foreground/10 focus:text-foreground",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className
@@ -170,7 +187,8 @@ export function DropdownMenuRadioItem({
   return (
     <DropdownMenuPrimitive.RadioItem
       className={cn(
-        "relative flex cursor-pointer select-none items-center rounded-sm py-1.5 pr-2 pl-8 text-sm outline-none transition-colors",
+        "relative flex cursor-pointer select-none items-center rounded-sm text-sm outline-none transition-colors",
+        ITEM_PADDING_WITH_INDICATOR,
         "focus:bg-foreground/10 focus:text-foreground",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className
@@ -196,7 +214,7 @@ export type DropdownMenuLabelProps = ComponentProps<typeof DropdownMenuPrimitive
 export function DropdownMenuLabel({ className, inset, ...props }: DropdownMenuLabelProps) {
   return (
     <DropdownMenuPrimitive.Label
-      className={cn("px-2 py-1.5 font-semibold text-sm", inset && "pl-8", className)}
+      className={cn("font-semibold text-sm", ITEM_PADDING, inset && "pl-8", className)}
       {...props}
     />
   );

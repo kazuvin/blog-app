@@ -14,7 +14,7 @@ const meta = {
       options: ["default", "error"],
       description: "The visual style of the input",
     },
-    inputSize: {
+    size: {
       control: "select",
       options: ["sm", "md", "lg"],
       description: "The size of the input",
@@ -54,21 +54,21 @@ export const ErrorVariant: Story = {
 
 export const Small: Story = {
   args: {
-    inputSize: "sm",
+    size: "sm",
     placeholder: "Small input",
   },
 };
 
 export const Medium: Story = {
   args: {
-    inputSize: "md",
+    size: "md",
     placeholder: "Medium input",
   },
 };
 
 export const Large: Story = {
   args: {
-    inputSize: "lg",
+    size: "lg",
     placeholder: "Large input",
   },
 };
@@ -91,14 +91,14 @@ export const AllVariants: Story = {
   render: () => (
     <div className="flex w-80 flex-col gap-4">
       <div className="flex flex-col gap-2">
-        <Input inputSize="sm" placeholder="Small default" />
-        <Input inputSize="md" placeholder="Medium default" />
-        <Input inputSize="lg" placeholder="Large default" />
+        <Input size="sm" placeholder="Small default" />
+        <Input size="md" placeholder="Medium default" />
+        <Input size="lg" placeholder="Large default" />
       </div>
       <div className="flex flex-col gap-2">
-        <Input variant="error" inputSize="sm" placeholder="Small error" />
-        <Input variant="error" inputSize="md" placeholder="Medium error" />
-        <Input variant="error" inputSize="lg" placeholder="Large error" />
+        <Input variant="error" size="sm" placeholder="Small error" />
+        <Input variant="error" size="md" placeholder="Medium error" />
+        <Input variant="error" size="lg" placeholder="Large error" />
       </div>
     </div>
   ),
