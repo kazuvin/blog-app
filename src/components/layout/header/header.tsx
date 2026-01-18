@@ -4,13 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ComponentProps, ReactNode } from "react";
 import { GitHubIcon } from "@/components/icons";
-import { useScrollPosition } from "@/lib/animation";
+import { useIsScrolled } from "@/lib/animation";
 import { cn } from "@/lib/utils";
 
 export type HeaderProps = ComponentProps<"header">;
 
 export function Header({ className, children, ...props }: HeaderProps) {
-  const { isScrolled } = useScrollPosition();
+  const isScrolled = useIsScrolled();
 
   return (
     <header
