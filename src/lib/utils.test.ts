@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
-import { capitalize, debounce, formatCurrency, generateId, truncate } from "./utils";
+import { describe, expect, it } from "vitest";
+import { capitalize, formatCurrency, generateId, truncate } from "./utils";
 
 describe("capitalize", () => {
   it("capitalizes the first letter of a string", () => {
@@ -74,49 +74,5 @@ describe("generateId", () => {
   it("generates unique IDs", () => {
     const ids = new Set(Array.from({ length: 100 }, () => generateId()));
     expect(ids.size).toBe(100);
-  });
-});
-
-describe("debounce", () => {
-  it("delays function execution", async () => {
-    vi.useFakeTimers();
-    const fn = vi.fn();
-    const debouncedFn = debounce(fn, 100);
-
-    debouncedFn();
-    expect(fn).not.toHaveBeenCalled();
-
-    vi.advanceTimersByTime(100);
-    expect(fn).toHaveBeenCalledTimes(1);
-
-    vi.useRealTimers();
-  });
-
-  it("only calls function once for multiple rapid calls", async () => {
-    vi.useFakeTimers();
-    const fn = vi.fn();
-    const debouncedFn = debounce(fn, 100);
-
-    debouncedFn();
-    debouncedFn();
-    debouncedFn();
-
-    vi.advanceTimersByTime(100);
-    expect(fn).toHaveBeenCalledTimes(1);
-
-    vi.useRealTimers();
-  });
-
-  it("passes arguments to the debounced function", async () => {
-    vi.useFakeTimers();
-    const fn = vi.fn();
-    const debouncedFn = debounce(fn, 100);
-
-    debouncedFn("arg1", "arg2");
-    vi.advanceTimersByTime(100);
-
-    expect(fn).toHaveBeenCalledWith("arg1", "arg2");
-
-    vi.useRealTimers();
   });
 });

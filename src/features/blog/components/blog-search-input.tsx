@@ -1,5 +1,6 @@
 "use client";
 
+import { SearchIcon } from "@/components/icons";
 import { Input } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
@@ -13,21 +14,7 @@ export function BlogSearchInput({ searchQuery, onSearchChange, className }: Blog
   return (
     <div className={cn("relative", className)}>
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-        <svg
-          className="size-4 text-foreground/50"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          aria-hidden="true"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
+        <SearchIcon className="size-4 text-foreground/50" />
       </div>
       <Input
         type="search"
