@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Button, type ButtonState } from "@/components/ui/button";
+import { AUTO_CYCLE_INTERVAL } from "./constants";
 
 const STATES: ButtonState[] = ["idle", "loading", "success", "loading", "error"];
-const STATE_INTERVAL = 1500;
 
 /**
  * Preview component for the stateful button showcase item.
@@ -16,7 +16,7 @@ export function ButtonPreview() {
   useEffect(() => {
     const timer = setInterval(() => {
       setStateIndex((prev) => (prev + 1) % STATES.length);
-    }, STATE_INTERVAL);
+    }, AUTO_CYCLE_INTERVAL);
     return () => clearInterval(timer);
   }, []);
 
