@@ -45,7 +45,7 @@ const BUTTON_STATES: readonly ButtonState[] = ["idle", "loading", "success", "er
 /** Base styles applied to all button variants */
 const baseStyles = [
   "inline-flex items-center justify-center rounded-full font-medium",
-  "transition-all duration-300 ease-in-out",
+  "transition-all duration-300 ease-default",
   "focus:outline-none focus:ring-2 focus:ring-offset-2",
   "disabled:cursor-not-allowed disabled:opacity-50",
 ] as const;

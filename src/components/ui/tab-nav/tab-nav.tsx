@@ -81,7 +81,7 @@ const indicatorVariantStyles = {
 /** Base styles for button items */
 const itemBaseStyles = [
   "relative z-10 inline-flex items-center justify-center rounded-full font-medium",
-  "transition-colors duration-200 ease-in-out",
+  "transition-colors duration-200 ease-default",
   "focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
   "disabled:cursor-not-allowed disabled:opacity-50",
 ] as const;
