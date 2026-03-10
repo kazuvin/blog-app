@@ -48,6 +48,7 @@ export default function RootLayout({
               <HeaderNavList>
                 <HeaderNavItem href="/blog">Blog</HeaderNavItem>
                 <HeaderNavItem href="/showcases">Showcases</HeaderNavItem>
+                <HeaderNavItem href="/playgrounds">Playgrounds</HeaderNavItem>
               </HeaderNavList>
               <HeaderGitHubLink url="https://github.com" />
             </HeaderNav>
