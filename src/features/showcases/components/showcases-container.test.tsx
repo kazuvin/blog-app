@@ -1,8 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { createStore, Provider } from "jotai";
 import { beforeEach, describe, expect, it } from "vitest";
-import { displayItemAtom, isDialogOpenAtom } from "../stores";
+import { useShowcasesStore } from "../stores";
 import type { ShowcaseItem } from "../types";
 import { ShowcasesContainer } from "./showcases-container";
 
@@ -31,42 +30,23 @@ const mockItems: ShowcaseItem[] = [
   },
 ];
 
-// テスト用のラッパーコンポーネント
-function TestWrapper({
-  children,
-  store,
-}: {
-  children: React.ReactNode;
-  store: ReturnType<typeof createStore>;
-}) {
-  return <Provider store={store}>{children}</Provider>;
-}
-
 describe("ShowcasesContainer", () => {
-  let store: ReturnType<typeof createStore>;
-
   beforeEach(() => {
-    // 各テスト前に新しいストアを作成
-    store = createStore();
+    useShowcasesStore.setState({
+      isDialogOpen: false,
+      displayItem: null,
+    });
   });
 
   describe("初期表示", () => {
     it("ページタイトルが表示されること", () => {
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       expect(screen.getByText("Component Showcases")).toBeInTheDocument();
     });
 
     it("ページの説明が表示されること", () => {
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       expect(
         screen.getByText(
@@ -76,11 +56,7 @@ describe("ShowcasesContainer", () => {
     });
 
     it("すべてのショーケースアイテムが表示されること", () => {
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       expect(screen.getByText("Button")).toBeInTheDocument();
       expect(screen.getByText("Input")).toBeInTheDocument();
@@ -88,11 +64,7 @@ describe("ShowcasesContainer", () => {
     });
 
     it("アイテムの説明が表示されること", () => {
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       expect(screen.getByText("Interactive button component")).toBeInTheDocument();
       expect(screen.getByText("Text input component")).toBeInTheDocument();
@@ -100,11 +72,7 @@ describe("ShowcasesContainer", () => {
     });
 
     it("各アイテムのプレビューコンテンツが表示されること", () => {
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       expect(screen.getByTestId("button-preview")).toBeInTheDocument();
       expect(screen.getByTestId("input-preview")).toBeInTheDocument();
@@ -112,42 +80,30 @@ describe("ShowcasesContainer", () => {
     });
 
     it("初期状態ではダイアログが表示されないこと", () => {
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
   });
 
-  describe("Jotai状態との統合", () => {
+  describe("Store状態との統合", () => {
     it("初期状態で選択アイテムがnullであること", () => {
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
-      expect(store.get(displayItemAtom)).toBeNull();
-      expect(store.get(isDialogOpenAtom)).toBe(false);
+      expect(useShowcasesStore.getState().displayItem).toBeNull();
+      expect(useShowcasesStore.getState().isDialogOpen).toBe(false);
     });
 
     it("カードをクリックするとストアの選択アイテムが更新されること", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       const buttons = screen.getAllByRole("button");
       await user.click(buttons[0]); // 最初のカード（Button）をクリック
 
-      expect(store.get(displayItemAtom)).toEqual(mockItems[0]);
-      expect(store.get(isDialogOpenAtom)).toBe(true);
+      expect(useShowcasesStore.getState().displayItem).toEqual(mockItems[0]);
+      expect(useShowcasesStore.getState().isDialogOpen).toBe(true);
     });
   });
 
@@ -155,11 +111,7 @@ describe("ShowcasesContainer", () => {
     it("カードをクリックするとダイアログが開くこと", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       // カードをクリック
       const buttons = screen.getAllByRole("button");
@@ -172,11 +124,7 @@ describe("ShowcasesContainer", () => {
     it("選択したアイテムのコンテンツがダイアログに表示されること", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       // 最初のカード（Button）をクリック
       const buttons = screen.getAllByRole("button");
@@ -192,11 +140,7 @@ describe("ShowcasesContainer", () => {
     it("閉じるボタンをクリックするとダイアログが閉じること", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       // カードをクリックしてダイアログを開く
       const cardButtons = screen.getAllByRole("button");
@@ -215,11 +159,7 @@ describe("ShowcasesContainer", () => {
     it("Escapeキーを押すとダイアログが閉じること", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       // カードをクリックしてダイアログを開く
       const buttons = screen.getAllByRole("button");
@@ -237,25 +177,21 @@ describe("ShowcasesContainer", () => {
     it("ダイアログを閉じてもアイテムは保持されること（アニメーション用）", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       // カードをクリック
       const cardButtons = screen.getAllByRole("button");
       await user.click(cardButtons[0]);
 
-      expect(store.get(displayItemAtom)).toEqual(mockItems[0]);
+      expect(useShowcasesStore.getState().displayItem).toEqual(mockItems[0]);
 
       // クローズボタンをクリック
       const closeButton = screen.getByRole("button", { name: /close/i });
       await user.click(closeButton);
 
       // ダイアログは閉じるがアイテムは保持される（閉じるアニメーション用）
-      expect(store.get(displayItemAtom)).toEqual(mockItems[0]);
-      expect(store.get(isDialogOpenAtom)).toBe(false);
+      expect(useShowcasesStore.getState().displayItem).toEqual(mockItems[0]);
+      expect(useShowcasesStore.getState().isDialogOpen).toBe(false);
     });
   });
 
@@ -263,11 +199,7 @@ describe("ShowcasesContainer", () => {
     it("2番目のアイテムをクリックすると正しいコンテンツが表示されること", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       // 2番目のカード（Input）をクリック
       const buttons = screen.getAllByRole("button");
@@ -275,17 +207,13 @@ describe("ShowcasesContainer", () => {
 
       // ダイアログ内のコンテンツを確認
       expect(screen.getByTestId("input-demo")).toBeInTheDocument();
-      expect(store.get(displayItemAtom)).toEqual(mockItems[1]);
+      expect(useShowcasesStore.getState().displayItem).toEqual(mockItems[1]);
     });
 
     it("3番目のアイテムをクリックすると正しいコンテンツが表示されること", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       // 3番目のカード（Card）をクリック
       const buttons = screen.getAllByRole("button");
@@ -293,7 +221,7 @@ describe("ShowcasesContainer", () => {
 
       // ダイアログ内のコンテンツを確認
       expect(screen.getByTestId("card-demo")).toBeInTheDocument();
-      expect(store.get(displayItemAtom)).toEqual(mockItems[2]);
+      expect(useShowcasesStore.getState().displayItem).toEqual(mockItems[2]);
     });
   });
 
@@ -301,11 +229,7 @@ describe("ShowcasesContainer", () => {
     it("ダイアログの開閉を複数回行えること", async () => {
       const user = userEvent.setup();
 
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={mockItems} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={mockItems} />);
 
       const cardButtons = screen.getAllByRole("button");
 
@@ -333,11 +257,7 @@ describe("ShowcasesContainer", () => {
 
   describe("空の配列", () => {
     it("アイテムが空でもページヘッダーが表示されること", () => {
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={[]} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={[]} />);
 
       expect(screen.getByText("Component Showcases")).toBeInTheDocument();
       expect(
@@ -348,11 +268,7 @@ describe("ShowcasesContainer", () => {
     });
 
     it("アイテムが空の場合はカードが表示されないこと", () => {
-      render(
-        <TestWrapper store={store}>
-          <ShowcasesContainer items={[]} />
-        </TestWrapper>
-      );
+      render(<ShowcasesContainer items={[]} />);
 
       const buttons = screen.queryAllByRole("button");
       expect(buttons).toHaveLength(0);

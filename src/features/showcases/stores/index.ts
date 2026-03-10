@@ -1,6 +1,1 @@
-export {
-  closeDialogAtom,
-  displayItemAtom,
-  isDialogOpenAtom,
-  selectItemAtom,
-} from "./showcases-atoms";
+export { useShowcasesStore } from "./showcases-store";

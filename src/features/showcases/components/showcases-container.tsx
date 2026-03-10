@@ -1,7 +1,6 @@
 "use client";
 
-import { useAtomValue, useSetAtom } from "jotai";
-import { closeDialogAtom, displayItemAtom, isDialogOpenAtom, selectItemAtom } from "../stores";
+import { useShowcasesStore } from "../stores";
 import type { ShowcaseItem } from "../types";
 import { ShowcaseDialog } from "./showcase-dialog";
 import { ShowcaseGrid } from "./showcase-grid";
@@ -11,10 +10,10 @@ export type ShowcasesContainerProps = {
 };
 
 export function ShowcasesContainer({ items }: ShowcasesContainerProps) {
-  const displayItem = useAtomValue(displayItemAtom);
-  const isDialogOpen = useAtomValue(isDialogOpenAtom);
-  const selectItem = useSetAtom(selectItemAtom);
-  const closeDialog = useSetAtom(closeDialogAtom);
+  const displayItem = useShowcasesStore((s) => s.displayItem);
+  const isDialogOpen = useShowcasesStore((s) => s.isDialogOpen);
+  const selectItem = useShowcasesStore((s) => s.selectItem);
+  const closeDialog = useShowcasesStore((s) => s.closeDialog);
 
   return (
     <>
