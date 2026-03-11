@@ -1,10 +1,5 @@
-import dynamic from "next/dynamic";
+import RoguelikeGame from "../components/roguelike-game-loader";
 import type { PlaygroundItem } from "../types";
-
-const RoguelikeGame = dynamic(
-  () => import("../../../../playgrounds/roguelike-deckbuilder/ui/roguelike-game"),
-  { ssr: false }
-);
 
 export const playgroundItems: PlaygroundItem[] = [
   {
