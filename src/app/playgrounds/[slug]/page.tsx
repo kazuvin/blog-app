@@ -28,6 +28,8 @@ export default async function PlaygroundPage({ params }: Props) {
     notFound();
   }
 
+  const PlaygroundComponent = item.component;
+
   return (
     <div>
       <div className="mb-8">
@@ -35,9 +37,13 @@ export default async function PlaygroundPage({ params }: Props) {
         <p className="text-foreground/70">{item.description}</p>
       </div>
       <div className="rounded-xl border border-border p-6">
-        <p className="text-foreground/60">
-          Playground content for &ldquo;{item.name}&rdquo; goes here.
-        </p>
+        {PlaygroundComponent ? (
+          <PlaygroundComponent />
+        ) : (
+          <p className="text-foreground/60">
+            Playground content for &ldquo;{item.name}&rdquo; goes here.
+          </p>
+        )}
       </div>
     </div>
   );
