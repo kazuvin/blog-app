@@ -69,7 +69,7 @@ export const EnemyBaseSchema = v.object({
 
 export const FloorDefinitionSchema = v.object({
   floorNumber: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  enemies: v.pipe(v.array(v.omit(EnemyBaseSchema, ["remainingAttackCooldownMs"])), v.minLength(1)),
+  enemies: v.pipe(v.array(EnemyBaseSchema), v.minLength(1)),
 });
 
 // --------------- Validation helpers ---------------
