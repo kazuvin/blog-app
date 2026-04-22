@@ -35,18 +35,9 @@ const isLoading = useAuthStore((s) => s.isLoading);
 | セレクタ          | `(s) => s.xxx`           | `(s) => s.user`          |
 | アクション        | `verb + 名詞`            | `login`, `resetError`    |
 
-## ファイル構造
+## ファイル配置
 
-```
-features/{feature}/
-├── stores/
-│   └── {feature}-store.ts   # Store 定義
-├── components/
-├── schemas/
-├── hooks/
-├── types/
-└── index.ts
-```
+Store は `src/features/{feature}/stores/{feature}-store.ts` に置く。Feature 全体の folder layout は `component-creator` skill の `references/container.md` を参照（重複記述を避けるため本 skill では扱わない）。
 
 ## Store の基本構造
 

@@ -1,44 +1,61 @@
 # Presentation Components
 
-UI patterns: see [ui-components.md](ui-components.md)
+UI specifics: see [ui-components.md](ui-components.md). Hard rules (naming case, `any`, unused, hook rules, a11y, …) are enforced by `biome.jsonc` / `tsconfig.json`.
 
 ## Directory
 
 ```
 src/components/
-├── ui/        # Primitives (Button, Input, Card)
-├── layout/    # Layout (Header, Footer)
-└── shared/    # Shared composites
+├── ui/        # Primitives (Button, Input, Card, Dialog, ...)
+└── layout/    # Layout parts (Header, Main, ...)
 ```
 
 ## Naming
 
-- Directory: kebab-case (`user-avatar/`)
-- File: kebab-case (`user-avatar.tsx`)
-- Component: PascalCase (`UserAvatar`)
-- Props: `{Name}Props` (`UserAvatarProps`)
+- Directory / file: kebab-case
+- Component: PascalCase
+- Props type: `{Name}Props` — export alongside the component
 
 ## Template
+
+Styles use semantic tokens (see `.claude/rules/design.md`).
 
 ```tsx
 import { type ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 
-type ButtonProps = ComponentProps<"button"> & {
+export type ButtonProps = ComponentProps<"button"> & {
   variant?: "primary" | "secondary" | "ghost";
   size?: "sm" | "md" | "lg";
 };
 
 export function Button({ variant = "primary", size = "md", className, children, ...props }: ButtonProps) {
   return (
-    <button className={cn("rounded-md font-medium transition-colors", variantStyles[variant], sizeStyles[size], className)} {...props}>
+    <button
+      className={cn(
+        "rounded-md font-medium transition-colors",
+        variantStyles[variant],
+        sizeStyles[size],
+        className,
+      )}
+      {...props}
+    >
       {children}
     </button>
   );
 }
 
-const variantStyles = { primary: "bg-blue-600 text-white", secondary: "bg-gray-200", ghost: "bg-transparent" } as const;
-const sizeStyles = { sm: "px-3 py-1.5 text-sm", md: "px-4 py-2", lg: "px-6 py-3 text-lg" } as const;
+const variantStyles = {
+  primary: "bg-primary text-background hover:bg-primary-hover active:bg-primary-active",
+  secondary: "bg-surface-elevated text-foreground border border-border hover:bg-surface-hover",
+  ghost: "bg-transparent text-foreground hover:bg-surface-hover",
+} as const;
+
+const sizeStyles = {
+  sm: "px-3 py-1.5 text-sm",
+  md: "px-4 py-2 text-base",
+  lg: "px-6 py-3 text-lg",
+} as const;
 ```
 
 ## Exports
@@ -51,42 +68,71 @@ export type { ButtonProps } from "./button";
 
 ## Key Principles
 
-1. No internal data state (props in, render out)
+1. Props in, render out — no internal data state, no API calls, no global store
 2. Extend native HTML: `ComponentProps<"element">`
-3. Composable styling: accept `className`, merge with `cn()`
-4. Typed variants (not magic strings)
-5. Sensible defaults
-6. No business logic / API calls
-7. No global state (no Jotai, no Context)
-8. No forwardRef (React 19: ref in ComponentProps)
-
-## cn() Utility
-
-```tsx
-// src/lib/utils.ts
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-```
+3. Accept `className`, merge with `cn()` — user `className` **last** so it wins
+4. Typed variant union over boolean flags (`variant: "primary" | "ghost"`, not `isPrimary`)
+5. `createContext` is OK for coordinating a compound component's sub-parts; not for app-wide data
+6. No `forwardRef` (React 19: `ref` is in `ComponentProps`)
 
 ## Compound Components
 
+Individual named exports — never `Card.Header` / `Dialog.Trigger`. See `Card` / `Dialog` 実装 in `src/components/ui/`.
+
+## Templates
+
+### Radix UI Wrapper
+
 ```tsx
-import { createContext, useContext, type ReactNode } from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { type ComponentProps } from "react";
+import { cn } from "@/lib/utils";
 
-const CardContext = createContext<{ variant: "default" | "outlined" } | null>(null);
+export type DialogContentProps = ComponentProps<typeof DialogPrimitive.Content> & {
+  size?: "sm" | "md" | "lg" | "xl" | "full";
+};
 
-export function Card({ variant = "default", children }: { variant?: "default" | "outlined"; children: ReactNode }) {
+export function DialogContent({ className, size = "md", children, ...props }: DialogContentProps) {
   return (
-    <CardContext.Provider value={{ variant }}>
-      <div className={cn("rounded-lg", variantStyles[variant])}>{children}</div>
-    </CardContext.Provider>
+    <DialogPrimitive.Content className={cn(sizeStyles[size], className)} {...props}>
+      {children}
+    </DialogPrimitive.Content>
   );
 }
+```
 
-Card.Header = ({ children }: { children: ReactNode }) => <div className="border-b p-4">{children}</div>;
-Card.Body = ({ children }: { children: ReactNode }) => <div className="p-4">{children}</div>;
+### Storybook (`{name}.stories.tsx`)
+
+```tsx
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { ComponentName } from "./component-name";
+
+const meta = {
+  title: "UI/ComponentName",
+  component: ComponentName,
+  parameters: { layout: "centered" },
+  tags: ["autodocs"],
+} satisfies Meta<typeof ComponentName>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = { args: { variant: "default" } };
+```
+
+### Vitest (`{name}.test.tsx`)
+
+非自明なロジック（state / a11y / イベント）がある UI のみ追加。
+
+```tsx
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import { ComponentName } from "./component-name";
+
+describe("ComponentName", () => {
+  it("renders children", () => {
+    render(<ComponentName>Test</ComponentName>);
+    expect(screen.getByText("Test")).toBeInTheDocument();
+  });
+});
 ```

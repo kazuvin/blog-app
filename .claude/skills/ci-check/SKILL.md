@@ -55,10 +55,4 @@ pnpm format     # Biome formatter を上書き実行
 
 それ以外は **必ず** 上記3コマンドを走らせる。
 
-## 参考: package.json の関連スクリプト
-
-- `pnpm lint` → `biome check`
-- `pnpm lint:fix` → `biome check --write`
-- `pnpm format` → `biome format --write`
-- `pnpm test:run` → `vitest run`
-- `pnpm test:coverage` → `vitest run --coverage`（カバレッジ閾値90%）
+スクリプトの詳細（`lint:fix` / `format` / `test:coverage` など）は `package.json` の `scripts` を直接参照。

@@ -30,7 +30,7 @@ Semantic token families — light/dark は `.dark` セレクタで自動切替:
 
 ## Components
 
-既存 UI: `src/components/ui/*`（Button / Card / Badge / Input / Label / Dialog / DropdownMenu / TabNav）。新規コンポーネント作成前に既存 variant で表現できないか必ず確認し、作る場合は `.claude/skills/component-creator/SKILL.md` の Decision Guide に従う。
+既存 UI: `src/components/ui/*`。新規コンポーネント作成前に既存 variant で表現できないか必ず確認し、作る場合は `.claude/skills/component-creator/SKILL.md` の Decision Guide に従う。
 
 ## Interaction states
 
