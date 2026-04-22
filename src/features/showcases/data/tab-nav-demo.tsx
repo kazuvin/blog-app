@@ -73,7 +73,7 @@ export function TabNavFullDemo() {
           The TabNav component supports three variants: primary (default), secondary, and ghost.
           Each variant has distinct indicator styling.
         </p>
-        <div className="space-y-4 rounded-lg border border-stone-200 p-4">
+        <div className="space-y-4 rounded-lg border border-border p-4">
           <div className="flex flex-col gap-1">
             <span className="text-foreground/60 text-xs">Primary</span>
             <TabNav value={primaryValue} onValueChange={setPrimaryValue} variant="primary">
@@ -112,7 +112,7 @@ export function TabNavFullDemo() {
         <p className="mb-4 text-foreground/70 text-sm">
           Three sizes are available: small, medium (default), and large.
         </p>
-        <div className="space-y-4 rounded-lg border border-stone-200 p-4">
+        <div className="space-y-4 rounded-lg border border-border p-4">
           <div className="flex flex-col gap-1">
             <span className="text-foreground/60 text-xs">Small</span>
             <TabNav value={smValue} onValueChange={setSmValue} size="sm">
@@ -152,7 +152,7 @@ export function TabNavFullDemo() {
           Click the tabs below to see the animated sliding indicator transition smoothly between
           selections.
         </p>
-        <div className="space-y-4 rounded-lg border border-stone-200 p-4">
+        <div className="space-y-4 rounded-lg border border-border p-4">
           <TabNav value={interactiveValue} onValueChange={setInteractiveValue}>
             {interactiveItems.map((item) => (
               <TabNavItem key={item.value} value={item.value}>

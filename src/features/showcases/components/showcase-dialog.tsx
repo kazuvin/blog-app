@@ -16,7 +16,7 @@ export type ShowcaseDialogProps = {
 export function ShowcaseDialog({ item, open, onOpenChange }: ShowcaseDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent size="lg" className="!p-0 flex max-h-[80vh] flex-col">
+      <DialogContent size="lg" className="!p-0 flex max-h-viewport-80 flex-col">
         <DialogHeader className="border-foreground/10 border-b p-6">
           <DialogTitle>{item?.name}</DialogTitle>
           <DialogDescription>{item?.description}</DialogDescription>

@@ -7,11 +7,17 @@
     // Lint/Format 対象: アプリコードとMarkdownコンテンツ
     "includes": ["src/**", "contents/**"]
   },
-  // GritQL プラグイン: useEffect アンチパターン検出
-  // Ref: https://github.com/NickvanDyke/eslint-plugin-react-you-might-not-need-an-effect
-  // 空のEffect / 状態初期化目的のEffect / 派生stateをEffectで書く / Effect内でfetch /
-  // 親子間のstate連動 / イベントハンドラ的なEffect などを検出する
-  "plugins": ["./node_modules/@jacobwolf/biome-unnecessary-effect/grit/react-effects.grit"],
+  // GritQL プラグイン
+  //   1) useEffect アンチパターン検出
+  //      Ref: https://github.com/NickvanDyke/eslint-plugin-react-you-might-not-need-an-effect
+  //      空のEffect / 状態初期化目的のEffect / 派生stateをEffectで書く / Effect内でfetch /
+  //      親子間のstate連動 / イベントハンドラ的なEffect などを検出する
+  //   2) Tailwind v4 の @theme 以外のスタイル利用を禁止
+  //      arbitrary value (`bg-[#fff]` 等) を className で書いた場合に警告する
+  "plugins": [
+    "./node_modules/@jacobwolf/biome-unnecessary-effect/grit/react-effects.grit",
+    "./grit/tailwind-theme-only.grit"
+  ],
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,

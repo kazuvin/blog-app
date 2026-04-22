@@ -9,7 +9,7 @@ export type PlaygroundCardProps = {
 export function PlaygroundCard({ item }: PlaygroundCardProps) {
   return (
     <Link href={`/playgrounds/${item.slug}`} className="block">
-      <Card className="ease h-full overflow-hidden transition-colors duration-200 hover:bg-stone-100">
+      <Card className="ease h-full overflow-hidden transition-colors duration-200 hover:bg-surface-hover">
         <CardHeader>
           <h2 className="font-semibold text-lg">{item.name}</h2>
           <p className="text-foreground/60 text-sm">{item.description}</p>

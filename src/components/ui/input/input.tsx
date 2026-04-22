@@ -22,9 +22,9 @@ export function Input({ variant = "default", size = "md", className, ...props }:
 
 const variantStyles = {
   default:
-    "bg-stone-100 rounded-2xl placeholder:text-foreground/50 outline-transparent focus:outline-indigo-300 outline-2",
+    "bg-surface-hover rounded-2xl placeholder:text-foreground/50 outline-transparent focus:outline-primary/30 outline-2",
   error:
-    "border-red-500 text-foreground placeholder:text-foreground/50 focus:border-red-500 focus:ring-red-500",
+    "border-error text-foreground placeholder:text-foreground/50 focus:border-error focus:ring-error",
 } as const;
 
 const sizeStyles = {

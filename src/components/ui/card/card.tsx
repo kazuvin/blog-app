@@ -42,6 +42,6 @@ export function CardFooter({ className, children, ...props }: CardFooterProps) {
 }
 
 const variantStyles = {
-  default: "bg-stone-50",
+  default: "bg-surface-elevated",
   outline: "bg-transparent",
 } as const;

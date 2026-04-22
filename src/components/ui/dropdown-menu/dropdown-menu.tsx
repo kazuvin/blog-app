@@ -61,7 +61,7 @@ export function DropdownMenuSubContent({ className, ...props }: DropdownMenuSubC
   return (
     <DropdownMenuPrimitive.SubContent
       className={cn(
-        "z-50 min-w-[8rem] overflow-hidden rounded-2xl bg-background p-1 text-foreground shadow-lg hover:bg-stone-200",
+        "z-50 min-w-32 overflow-hidden rounded-2xl bg-background p-1 text-foreground shadow-lg hover:bg-surface-pressed",
         "data-[state=closed]:animate-out data-[state=open]:animate-in",
         "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
         "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
@@ -89,7 +89,7 @@ export function DropdownMenuContent({
       <DropdownMenuPrimitive.Content
         sideOffset={sideOffset}
         className={cn(
-          "z-50 min-w-[8rem] overflow-hidden rounded-lg border border-foreground/10 bg-background p-2 text-foreground shadow-md",
+          "z-50 min-w-32 overflow-hidden rounded-lg border border-foreground/10 bg-background p-2 text-foreground shadow-md",
           "data-[state=closed]:animate-out data-[state=open]:animate-in",
           "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
           "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",

@@ -246,7 +246,7 @@ export const WithForm: Story = {
             <Label htmlFor="bio">Bio</Label>
             <textarea
               id="bio"
-              className="min-h-[100px] w-full rounded-md border border-foreground/20 bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
+              className="min-h-100 w-full rounded-md border border-foreground/20 bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
               placeholder="Tell us about yourself"
             />
           </div>

@@ -1,0 +1,16 @@
+// Enforce Tailwind v4 `@theme` tokens as the single source of truth.
+//
+// Ban: Tailwind arbitrary values in className (e.g. `bg-[#fff]`, `p-[13px]`).
+//      If you need a new color/spacing/etc., add it to `@theme` in
+//      `src/app/globals.css` and use the generated utility.
+
+language js
+
+JsxAttribute(name = $name, value = $val) as $attr where {
+  $name <: `className`,
+  $val <: r".*[a-zA-Z]-\[[^\]]+\].*",
+  register_diagnostic(
+    span=$attr,
+    message="Tailwind arbitrary values ([...]) are forbidden. Add the token to @theme (src/app/globals.css) and use the generated utility."
+  )
+}

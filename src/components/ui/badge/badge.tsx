@@ -29,13 +29,12 @@ export function Badge({
 }
 
 const variantStyles = {
-  default: "bg-stone-200 text-foreground",
-  success: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
-  warning: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
-  error: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
-  info: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
-  accent:
-    "bg-gradient-to-r from-violet-100 to-fuchsia-100 text-violet-700 dark:from-violet-900/40 dark:to-fuchsia-900/40 dark:text-violet-300",
+  default: "bg-surface-pressed text-foreground",
+  success: "bg-success-soft text-success-soft-fg",
+  warning: "bg-warning-soft text-warning-soft-fg",
+  error: "bg-error-soft text-error-soft-fg",
+  info: "bg-info-soft text-info-soft-fg",
+  accent: "bg-gradient-to-r from-accent-soft to-brand-accent-soft text-accent-soft-fg",
 } as const;
 
 const sizeStyles = {

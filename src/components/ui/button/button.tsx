@@ -67,10 +67,10 @@ const loadingStyles = {
 
 /** Styles for success state */
 const successStyles =
-  "bg-green-600 text-white hover:bg-green-600 focus:ring-green-600 border-transparent";
+  "bg-success text-white hover:bg-success focus:ring-success border-transparent";
 
 /** Styles for error state */
-const errorStyles = "bg-red-600 text-white hover:bg-red-600 focus:ring-red-600 border-transparent";
+const errorStyles = "bg-error text-white hover:bg-error focus:ring-error border-transparent";
 
 /** Styles for each button size */
 const sizeStyles = {
@@ -206,7 +206,7 @@ type TextContainerProps = {
 function TextContainer({ state, texts, textRefs, width }: TextContainerProps) {
   return (
     <span
-      className="relative inline-flex items-center justify-center transition-[width] duration-300"
+      className="relative inline-flex items-center justify-center transition-width duration-300"
       style={{ width }}
     >
       {BUTTON_STATES.map((s) => (

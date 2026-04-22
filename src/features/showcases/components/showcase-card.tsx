@@ -36,7 +36,7 @@ export function ShowcaseCard({ name, description, preview, onClick }: ShowcaseCa
       onKeyDown={handleKeyDown}
       className="cursor-pointer text-left"
     >
-      <Card className="ease h-full overflow-hidden transition-colors duration-200 hover:bg-stone-100">
+      <Card className="ease h-full overflow-hidden transition-colors duration-200 hover:bg-surface-hover">
         <CardHeader>
           <h2 className="font-semibold text-lg">{name}</h2>
           <p className="text-foreground/60 text-sm">{description}</p>
@@ -44,7 +44,7 @@ export function ShowcaseCard({ name, description, preview, onClick }: ShowcaseCa
         <CardContent>
           <div
             className={cn(
-              "pointer-events-none flex min-h-56 items-center justify-center rounded-3xl bg-gradient-to-br from-indigo-100 via-violet-100 to-purple-100 p-4",
+              "pointer-events-none flex min-h-56 items-center justify-center rounded-3xl bg-gradient-to-br from-brand-from-soft via-brand-via-soft to-brand-to-soft p-4",
               inView ? "animate-fade-in-up" : "opacity-0"
             )}
           >

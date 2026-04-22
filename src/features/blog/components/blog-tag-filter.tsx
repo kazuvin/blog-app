@@ -38,9 +38,7 @@ export function BlogTagFilter({ tags, selectedTags, onTagSelect }: BlogTagFilter
           data-selected={isAllSelected}
           className={cn(
             "cursor-pointer transition-colors",
-            isAllSelected
-              ? "animate-pop ring-violet-400/50 dark:ring-violet-500/50"
-              : "hover:bg-foreground/20"
+            isAllSelected ? "animate-pop ring-accent/50" : "hover:bg-foreground/20"
           )}
         >
           All
@@ -57,9 +55,7 @@ export function BlogTagFilter({ tags, selectedTags, onTagSelect }: BlogTagFilter
               data-selected={isSelected}
               className={cn(
                 "cursor-pointer transition-colors",
-                isSelected
-                  ? "animate-pop ring-violet-400/50 dark:ring-violet-500/50"
-                  : "hover:bg-foreground/20"
+                isSelected ? "animate-pop ring-accent/50" : "hover:bg-foreground/20"
               )}
             >
               {tag}

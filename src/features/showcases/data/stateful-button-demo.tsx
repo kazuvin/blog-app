@@ -85,7 +85,7 @@ export function ButtonFullDemo() {
           The Button component supports four states: idle, loading, success, and error. Each state
           has distinct styling and icons.
         </p>
-        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-stone-200 p-4">
+        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border p-4">
           <Button state="idle" idleText="Idle" />
           <Button state="loading" loadingText="Loading..." />
           <Button state="success" successText="Success!" />
@@ -99,7 +99,7 @@ export function ButtonFullDemo() {
           Click the buttons below to see state transitions. Each button starts in idle state,
           transitions to loading for 1.5 seconds, then reaches its final state.
         </p>
-        <div className="space-y-4 rounded-lg border border-stone-200 p-4">
+        <div className="space-y-4 rounded-lg border border-border p-4">
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex flex-col items-start gap-2">
               <span className="text-foreground/60 text-xs">Success Flow</span>
@@ -125,7 +125,7 @@ export function ButtonFullDemo() {
           <button
             type="button"
             onClick={handleReset}
-            className="rounded-md border border-stone-200 px-3 py-1.5 text-sm transition-colors hover:bg-stone-100"
+            className="rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-surface-hover"
           >
             Reset
           </button>
@@ -137,7 +137,7 @@ export function ButtonFullDemo() {
         <p className="mb-4 text-foreground/70 text-sm">
           The component supports three variants: primary (default), secondary, and ghost.
         </p>
-        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-stone-200 p-4">
+        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border p-4">
           <Button variant="primary" idleText="Primary" />
           <Button variant="secondary" idleText="Secondary" />
           <Button variant="ghost" idleText="Ghost" />
@@ -149,7 +149,7 @@ export function ButtonFullDemo() {
         <p className="mb-4 text-foreground/70 text-sm">
           Three sizes are available: small, medium (default), and large.
         </p>
-        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-stone-200 p-4">
+        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border p-4">
           <Button size="sm" idleText="Small" />
           <Button size="md" idleText="Medium" />
           <Button size="lg" idleText="Large" />

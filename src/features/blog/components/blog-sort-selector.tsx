@@ -39,7 +39,7 @@ export function BlogSortSelector({ currentSort, onSortChange }: BlogSortSelector
       {/* biome-ignore lint/a11y/noStaticElementInteractions: wrapper for hover interaction */}
       <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <DropdownMenuTrigger
-          className="inline-flex cursor-pointer items-center gap-2 rounded-2xl border border-stone-200 bg-transparent px-3 py-2 text-sm outline-none transition-colors hover:bg-stone-100"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-2xl border border-border bg-transparent px-3 py-2 text-sm outline-none transition-colors hover:bg-surface-hover"
           aria-haspopup="true"
           aria-expanded={isOpen}
         >
