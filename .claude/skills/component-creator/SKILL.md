@@ -1,13 +1,13 @@
 ---
 name: component-creator
-description: Create React components following project conventions. Use when asked to create, add, or build components, UI elements, or features. Handles both presentation components (src/components/) and container/feature components (src/features/ with Jotai). For container components, also use jotai-patterns skill for atom design. For styling, also use project-design skill for design tokens.
+description: Create React components following project conventions. Use when asked to create, add, or build components, UI elements, or features. Handles both presentation components (src/components/) and container/feature components (src/features/ with Jotai). For container components, also use jotai-patterns skill for atom design. Styling tokens / forbidden patterns are governed by the path-scoped rule `.claude/rules/tsx-design.md`, which auto-loads for every .tsx edit.
 ---
 
 # Component Creator
 
-Related skills:
-- **jotai-patterns**: Atom design for containers
-- **project-design**: Styling (tokens, patterns)
+Related:
+- **jotai-patterns** skill: Atom design for containers
+- **`.claude/rules/tsx-design.md`**: Styling tokens / forbidden patterns (auto-loaded on any `.tsx` edit — do NOT duplicate its rules here)
 
 ## Decision Guide
 
@@ -74,4 +74,4 @@ export function LoginForm() {
 - [ ] kebab-case files, PascalCase components
 - [ ] `index.ts` exports
 - [ ] `"use client"` for hooks
-- [ ] Design tokens from **project-design**
+- [ ] Design tokens per `.claude/rules/tsx-design.md` (auto-loaded)
