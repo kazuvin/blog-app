@@ -1,26 +1,116 @@
 {
   "compilerOptions": {
+    // ==========================
+    // 出力ターゲット / モジュール
+    // ==========================
+    // ES2024 相当へトランスパイル（Node.js 20+ / モダンブラウザ前提）
     "target": "es2024",
+    // 利用可能な型定義（DOM + ESNext）
     "lib": ["dom", "dom.iterable", "esnext"],
+    // .js ファイルも型解析対象に含める（段階的移行の保険）
     "allowJs": true,
+    // node_modules の型チェックはスキップ（ビルド高速化）
     "skipLibCheck": true,
-    "strict": true,
+    // Next.js は自前でバンドルするため emit しない
     "noEmit": true,
+    // CommonJS / ES Modules 相互運用（default import を許容）
     "esModuleInterop": true,
+    // ES Modules を使用
     "module": "esnext",
+    // bundler 解決（Next.js / Turbopack が解釈）
     "moduleResolution": "bundler",
+    // JSON を import 可能にする
     "resolveJsonModule": true,
+    // 各ファイルを独立してトランスパイル可能にする（Turbopack/SWC 要件）
     "isolatedModules": true,
+    // JSX は Next.js/SWC に任せる
     "jsx": "preserve",
+    // tsc キャッシュを有効化（型チェック高速化）
     "incremental": true,
+
+    // ==========================
+    // 厳格型チェック (Strict Family)
+    // ==========================
+    // 主要な strict* 系フラグを一括有効化
+    // 内訳: noImplicitAny / strictNullChecks / strictFunctionTypes /
+    //       strictBindCallApply / strictPropertyInitialization /
+    //       noImplicitThis / alwaysStrict
+    "strict": true,
+    // override キーワードの付け忘れを検出（継承関係の取り違え防止）
+    "noImplicitOverride": true,
+    // catch 節の変数を unknown 型として扱う（安易な any 化を防止、strict の既定だが明示）
+    "useUnknownInCatchVariables": true,
+
+    // ==========================
+    // 制御フロー / 到達性
+    // ==========================
+    // 関数の全分岐で return を必須化（戻り値の取りこぼし防止）
+    "noImplicitReturns": true,
+    // switch 節の暗黙フォールスルーを禁止（意図しない挙動の混入防止）
+    "noFallthroughCasesInSwitch": true,
+    // 到達不能コードをエラー化（デッドコード混入を防止）
+    "allowUnreachableCode": false,
+    // 未使用のラベルをエラー化
+    "allowUnusedLabels": false,
+
+    // ==========================
+    // 未使用コード検出（Biome と二重の防御線）
+    // ==========================
+    // 未使用ローカル変数を検出
+    "noUnusedLocals": true,
+    // 未使用関数引数を検出（`_` プレフィックスで例外扱い可）
+    "noUnusedParameters": true,
+
+    // ==========================
+    // モジュール / インポートの厳密化
+    // ==========================
+    // 型のみのimport/exportを構文上も明示必須化（`import type` / `export type`）
+    // Biome の useImportType / useExportType と協調し、バンドル副作用を排除
+    "verbatimModuleSyntax": true,
+    // ファイル名の大文字小文字差異をエラー化（macOS/Linux 間の差異による事故防止）
+    "forceConsistentCasingInFileNames": true,
+    // 全ファイルを ESM 扱いに強制（ambient script 扱いの誤検出を防ぐ）
+    "moduleDetection": "force",
+    // `import "./foo.css"` のような副作用目的 import を型チェック対象に（TS 5.6+）
+    "noUncheckedSideEffectImports": true,
+    // ランタイムで「消せない」TS構文を禁止。enum / namespace / parameter properties /
+    // import =/export = 等をコンパイラレベルで禁止し、素のESM互換性を担保（TS 5.8+）
+    "erasableSyntaxOnly": true,
+
+    // ==========================
+    // 追加の厳格フラグ
+    // ==========================
+    // 配列/オブジェクトの index アクセスを `T | undefined` として扱う。
+    // 範囲外アクセスによるランタイムエラーを型レベルで防止する。
+    "noUncheckedIndexedAccess": true,
+    // index signature 由来のプロパティはブラケット記法必須（`obj["key"]`）。
+    // 明示宣言されたプロパティとの見分けを強制し、タイポ事故を防ぐ。
+    "noPropertyAccessFromIndexSignature": true,
+
+    // ==========================
+    // 将来導入候補（現状は採用見送り）
+    // ==========================
+    // `x?: T` と `x: T | undefined` を区別する。
+    // React の props スプレッド / Radix UI 等で「undefined を明示的に渡す」
+    // パターンと頻繁に衝突するため現時点では無効。
+    // "exactOptionalPropertyTypes": true,
+    // ライブラリ公開向け。すべての export に明示的な型注釈を要求（TS 5.5+）。
+    // アプリケーションコードでは冗長すぎるため無効。
+    // "isolatedDeclarations": true,
+
+    // ==========================
+    // Next.js プラグイン / パス / 型
+    // ==========================
     "plugins": [
       {
         "name": "next"
       }
     ],
+    // `@/*` エイリアスを `src/*` にマッピング
     "paths": {
       "@/*": ["./src/*"]
     },
+    // Cloudflare Workers / Node / Vitest のグローバル型を読み込む
     "types": ["./cloudflare-env.d.ts", "node", "vitest/globals"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

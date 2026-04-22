@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { getDefined } from "@/test/assert";
 
 // Mock blog-data.json
 vi.mock("../data/blog-data.json", () => ({
@@ -78,21 +79,21 @@ describe("Blog Utilities", () => {
         const posts = getSortedPostsData();
 
         expect(posts).toHaveLength(3);
-        expect(posts[0].date).toBe("2024-01-20"); // newest first
-        expect(posts[1].date).toBe("2024-01-15");
-        expect(posts[2].date).toBe("2024-01-10"); // oldest last
+        expect(getDefined(posts[0]).date).toBe("2024-01-20"); // newest first
+        expect(getDefined(posts[1]).date).toBe("2024-01-15");
+        expect(getDefined(posts[2]).date).toBe("2024-01-10"); // oldest last
       });
 
       it("should include tags in PostMeta when present", () => {
         const posts = getSortedPostsData();
 
-        expect(posts[0].tags).toEqual(["nextjs", "react"]);
+        expect(getDefined(posts[0]).tags).toEqual(["nextjs", "react"]);
       });
 
       it("should return correct post metadata", () => {
         const posts = getSortedPostsData();
 
-        expect(posts[0]).toEqual({
+        expect(getDefined(posts[0])).toEqual({
           slug: "post-2",
           title: "Post 2",
           date: "2024-01-20",
@@ -251,7 +252,7 @@ describe("Blog Utilities", () => {
         const filtered = getPostsByTags(samplePosts, ["react", "tips"]);
 
         expect(filtered).toHaveLength(1);
-        expect(filtered[0].slug).toBe("post-3"); // Only post with both "react" and "tips"
+        expect(getDefined(filtered[0]).slug).toBe("post-3"); // Only post with both "react" and "tips"
       });
 
       it("should return all posts when tags array is empty", () => {
@@ -303,33 +304,33 @@ describe("Blog Utilities", () => {
       it("should sort by date descending (newest first)", () => {
         const sorted = sortPosts(samplePosts, "date-desc");
 
-        expect(sorted[0].slug).toBe("post-a"); // 2024-01-20
-        expect(sorted[1].slug).toBe("post-b"); // 2024-01-15
-        expect(sorted[2].slug).toBe("post-c"); // 2024-01-10
+        expect(getDefined(sorted[0]).slug).toBe("post-a"); // 2024-01-20
+        expect(getDefined(sorted[1]).slug).toBe("post-b"); // 2024-01-15
+        expect(getDefined(sorted[2]).slug).toBe("post-c"); // 2024-01-10
       });
 
       it("should sort by date ascending (oldest first)", () => {
         const sorted = sortPosts(samplePosts, "date-asc");
 
-        expect(sorted[0].slug).toBe("post-c"); // 2024-01-10
-        expect(sorted[1].slug).toBe("post-b"); // 2024-01-15
-        expect(sorted[2].slug).toBe("post-a"); // 2024-01-20
+        expect(getDefined(sorted[0]).slug).toBe("post-c"); // 2024-01-10
+        expect(getDefined(sorted[1]).slug).toBe("post-b"); // 2024-01-15
+        expect(getDefined(sorted[2]).slug).toBe("post-a"); // 2024-01-20
       });
 
       it("should sort by title ascending (A-Z)", () => {
         const sorted = sortPosts(samplePosts, "title-asc");
 
-        expect(sorted[0].title).toBe("Alpha Post");
-        expect(sorted[1].title).toBe("Beta Post");
-        expect(sorted[2].title).toBe("Charlie Post");
+        expect(getDefined(sorted[0]).title).toBe("Alpha Post");
+        expect(getDefined(sorted[1]).title).toBe("Beta Post");
+        expect(getDefined(sorted[2]).title).toBe("Charlie Post");
       });
 
       it("should sort by title descending (Z-A)", () => {
         const sorted = sortPosts(samplePosts, "title-desc");
 
-        expect(sorted[0].title).toBe("Charlie Post");
-        expect(sorted[1].title).toBe("Beta Post");
-        expect(sorted[2].title).toBe("Alpha Post");
+        expect(getDefined(sorted[0]).title).toBe("Charlie Post");
+        expect(getDefined(sorted[1]).title).toBe("Beta Post");
+        expect(getDefined(sorted[2]).title).toBe("Alpha Post");
       });
 
       it("should not mutate the original array", () => {
@@ -342,7 +343,7 @@ describe("Blog Utilities", () => {
       it("should default to date-desc when invalid option provided", () => {
         const sorted = sortPosts(samplePosts, "invalid" as SortOption);
 
-        expect(sorted[0].slug).toBe("post-a"); // newest first
+        expect(getDefined(sorted[0]).slug).toBe("post-a"); // newest first
       });
     });
   });
@@ -389,21 +390,21 @@ describe("Blog Utilities", () => {
         const results = searchPosts(samplePosts, "typescript");
 
         expect(results).toHaveLength(1);
-        expect(results[0].slug).toBe("typescript-guide");
+        expect(getDefined(results[0]).slug).toBe("typescript-guide");
       });
 
       it("should search by title with different case", () => {
         const results = searchPosts(samplePosts, "TYPESCRIPT");
 
         expect(results).toHaveLength(1);
-        expect(results[0].slug).toBe("typescript-guide");
+        expect(getDefined(results[0]).slug).toBe("typescript-guide");
       });
 
       it("should search by description", () => {
         const results = searchPosts(samplePosts, "practical examples");
 
         expect(results).toHaveLength(1);
-        expect(results[0].slug).toBe("typescript-guide");
+        expect(getDefined(results[0]).slug).toBe("typescript-guide");
       });
 
       it("should search by tags", () => {
@@ -418,7 +419,7 @@ describe("Blog Utilities", () => {
         const results = searchPosts(samplePosts, "performance");
 
         expect(results).toHaveLength(1);
-        expect(results[0].slug).toBe("react-tips");
+        expect(getDefined(results[0]).slug).toBe("react-tips");
       });
 
       it("should return empty array when no posts match", () => {
@@ -431,7 +432,7 @@ describe("Blog Utilities", () => {
         const results = searchPosts(samplePosts, "Type");
 
         expect(results).toHaveLength(1);
-        expect(results[0].slug).toBe("typescript-guide");
+        expect(getDefined(results[0]).slug).toBe("typescript-guide");
       });
 
       it("should not mutate the original array", () => {

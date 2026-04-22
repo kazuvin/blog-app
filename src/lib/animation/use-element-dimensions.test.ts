@@ -363,11 +363,11 @@ describe("useElementDimensions", () => {
     });
 
     it("should handle very large dimensions", () => {
-      const element = createMockElement(10000, 10000);
+      const element = createMockElement(10_000, 10_000);
       const { result } = renderDimensionsHook(element);
 
-      expect(result.current.width).toBe(10000);
-      expect(result.current.height).toBe(10000);
+      expect(result.current.width).toBe(10_000);
+      expect(result.current.height).toBe(10_000);
     });
 
     it("should handle rapid resize events", () => {

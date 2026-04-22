@@ -2,6 +2,15 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ⚠️ タスク完了前の必須チェック
+
+コードまたは設定を変更するタスクを完了したと報告する前に、**必ず `ci-check` skill を起動し、その手順に従ってローカル CI を完走させてください**。
+
+- 起動方法: Skill ツールで `ci-check` を呼び出す（`/ci-check` でも可）
+- 内容: `pnpm lint` → `pnpm tsc --noEmit` → `pnpm test:run`
+- 1 つでも失敗している間はタスクは「完了」ではありません
+- 例外（ドキュメントのみ変更など）はスキップ可ですが、その旨をユーザーに明示してください
+
 ## Project Overview
 
 Next.js 15 blog application with TypeScript, designed for Cloudflare Workers deployment using OpenNext adapter. Uses pnpm as package manager.
@@ -79,7 +88,7 @@ contents/                   # Markdown blog posts with frontmatter
 
 ### Key Configuration Files
 
-- `biome.json` - Biome linter/formatter configuration (includes Tailwind class sorting)
+- `biome.jsonc` - Biome linter/formatter configuration (JSONC, Tailwind class sorting, strict React/TS rules)
 - `wrangler.jsonc` - Cloudflare Workers configuration
 - `open-next.config.ts` - OpenNext adapter settings
 - `.dev.vars` - Development environment variables for Wrangler

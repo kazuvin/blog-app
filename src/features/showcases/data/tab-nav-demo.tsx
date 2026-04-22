@@ -20,8 +20,10 @@ export function TabNavPreview() {
     return () => clearInterval(timer);
   }, []);
 
+  const selectedValue = PREVIEW_OPTIONS[selectedIndex] ?? PREVIEW_OPTIONS[0] ?? "";
+
   return (
-    <TabNav value={PREVIEW_OPTIONS[selectedIndex]} onValueChange={() => {}} size="md">
+    <TabNav value={selectedValue} onValueChange={() => {}} size="md">
       {PREVIEW_OPTIONS.map((option) => (
         <TabNavItem key={option} value={option}>
           {option}

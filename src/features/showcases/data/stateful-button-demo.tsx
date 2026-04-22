@@ -44,22 +44,20 @@ export function ButtonFullDemo() {
 
   // Handle success flow: idle -> loading (1.5s) -> success
   useEffect(() => {
-    if (successState === "loading") {
-      const timer = setTimeout(() => {
-        setSuccessState("success");
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
+    if (successState !== "loading") return;
+    const timer = setTimeout(() => {
+      setSuccessState("success");
+    }, 1500);
+    return () => clearTimeout(timer);
   }, [successState]);
 
   // Handle error flow: idle -> loading (1.5s) -> error
   useEffect(() => {
-    if (errorState === "loading") {
-      const timer = setTimeout(() => {
-        setErrorState("error");
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
+    if (errorState !== "loading") return;
+    const timer = setTimeout(() => {
+      setErrorState("error");
+    }, 1500);
+    return () => clearTimeout(timer);
   }, [errorState]);
 
   const handleSuccessClick = () => {

@@ -16,7 +16,7 @@ let mockIntersectionObserverCallCount = 0;
 class MockIntersectionObserver implements IntersectionObserver {
   readonly root: Element | Document | null;
   readonly rootMargin: string;
-  readonly thresholds: ReadonlyArray<number>;
+  readonly thresholds: readonly number[];
 
   constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
     mockIntersectionObserverCallCount++;

@@ -1,6 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
+import { getDefined } from "@/test/assert";
 import { useShowcasesStore } from "../stores";
 import type { ShowcaseItem } from "../types";
 import { ShowcasesContainer } from "./showcases-container";
@@ -100,7 +101,7 @@ describe("ShowcasesContainer", () => {
       render(<ShowcasesContainer items={mockItems} />);
 
       const buttons = screen.getAllByRole("button");
-      await user.click(buttons[0]); // 最初のカード（Button）をクリック
+      await user.click(getDefined(buttons[0])); // 最初のカード（Button）をクリック
 
       expect(useShowcasesStore.getState().displayItem).toEqual(mockItems[0]);
       expect(useShowcasesStore.getState().isDialogOpen).toBe(true);
@@ -115,7 +116,7 @@ describe("ShowcasesContainer", () => {
 
       // カードをクリック
       const buttons = screen.getAllByRole("button");
-      await user.click(buttons[0]);
+      await user.click(getDefined(buttons[0]));
 
       // ダイアログが開く
       expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -128,7 +129,7 @@ describe("ShowcasesContainer", () => {
 
       // 最初のカード（Button）をクリック
       const buttons = screen.getAllByRole("button");
-      await user.click(buttons[0]);
+      await user.click(getDefined(buttons[0]));
 
       // ダイアログ内のコンテンツを確認
       const dialog = screen.getByRole("dialog");
@@ -144,7 +145,7 @@ describe("ShowcasesContainer", () => {
 
       // カードをクリックしてダイアログを開く
       const cardButtons = screen.getAllByRole("button");
-      await user.click(cardButtons[0]);
+      await user.click(getDefined(cardButtons[0]));
 
       expect(screen.getByRole("dialog")).toBeInTheDocument();
 
@@ -163,7 +164,7 @@ describe("ShowcasesContainer", () => {
 
       // カードをクリックしてダイアログを開く
       const buttons = screen.getAllByRole("button");
-      await user.click(buttons[0]);
+      await user.click(getDefined(buttons[0]));
 
       expect(screen.getByRole("dialog")).toBeInTheDocument();
 
@@ -181,7 +182,7 @@ describe("ShowcasesContainer", () => {
 
       // カードをクリック
       const cardButtons = screen.getAllByRole("button");
-      await user.click(cardButtons[0]);
+      await user.click(getDefined(cardButtons[0]));
 
       expect(useShowcasesStore.getState().displayItem).toEqual(mockItems[0]);
 
@@ -203,7 +204,7 @@ describe("ShowcasesContainer", () => {
 
       // 2番目のカード（Input）をクリック
       const buttons = screen.getAllByRole("button");
-      await user.click(buttons[1]);
+      await user.click(getDefined(buttons[1]));
 
       // ダイアログ内のコンテンツを確認
       expect(screen.getByTestId("input-demo")).toBeInTheDocument();
@@ -217,7 +218,7 @@ describe("ShowcasesContainer", () => {
 
       // 3番目のカード（Card）をクリック
       const buttons = screen.getAllByRole("button");
-      await user.click(buttons[2]);
+      await user.click(getDefined(buttons[2]));
 
       // ダイアログ内のコンテンツを確認
       expect(screen.getByTestId("card-demo")).toBeInTheDocument();
@@ -234,14 +235,14 @@ describe("ShowcasesContainer", () => {
       const cardButtons = screen.getAllByRole("button");
 
       // 1回目: 開く→閉じる
-      await user.click(cardButtons[0]);
+      await user.click(getDefined(cardButtons[0]));
       expect(screen.getByRole("dialog")).toBeInTheDocument();
 
       await user.click(screen.getByRole("button", { name: /close/i }));
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
       // 2回目: 別のカードで開く→閉じる
-      await user.click(cardButtons[1]);
+      await user.click(getDefined(cardButtons[1]));
       expect(screen.getByRole("dialog")).toBeInTheDocument();
       expect(screen.getByTestId("input-demo")).toBeInTheDocument();
 
@@ -249,7 +250,7 @@ describe("ShowcasesContainer", () => {
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
       // 3回目: また別のカードで開く
-      await user.click(cardButtons[2]);
+      await user.click(getDefined(cardButtons[2]));
       expect(screen.getByRole("dialog")).toBeInTheDocument();
       expect(screen.getByTestId("card-demo")).toBeInTheDocument();
     });

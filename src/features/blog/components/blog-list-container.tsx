@@ -32,7 +32,7 @@ export function BlogListContainer({ posts }: BlogListContainerProps) {
   // Track the last value we synced to URL to detect external changes
   const lastSyncedToUrlRef = useRef(searchQuery);
 
-  // Sync debounced value to URL params
+  // biome-ignore lint/plugin: URL(外部ストア)との同期のためuseEffectが正当。debounce後のURL反映。
   useEffect(() => {
     if (debouncedSearchQuery !== searchQuery) {
       lastSyncedToUrlRef.current = debouncedSearchQuery;
@@ -40,9 +40,8 @@ export function BlogListContainer({ posts }: BlogListContainerProps) {
     }
   }, [debouncedSearchQuery, searchQuery, setSearchQuery]);
 
-  // Sync URL params to input value (e.g., browser back/forward)
+  // biome-ignore lint/plugin: ブラウザ戻る/進む等の外部起因URL変更をinputへ反映する同期用途。
   useEffect(() => {
-    // Only sync back if URL changed from an external source (not from our debounced sync)
     if (searchQuery !== lastSyncedToUrlRef.current) {
       lastSyncedToUrlRef.current = searchQuery;
       setInputValue(searchQuery);

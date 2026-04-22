@@ -23,6 +23,8 @@ export type Easing = EasingName | EasingFunction;
 export interface KeyframeStyle {
   opacity?: number;
   scale?: number;
+  scaleX?: number;
+  scaleY?: number;
   translateX?: number;
   translateY?: number;
   translateZ?: number;
@@ -295,13 +297,14 @@ export function useScrollKeyframes(options: UseScrollKeyframesOptions): UseScrol
     (currentScrollY: number): number => {
       if (adjustedKeyframes.length < 2) return 0;
 
-      const firstAt = adjustedKeyframes[0].at;
-      const lastAt = adjustedKeyframes[adjustedKeyframes.length - 1].at;
-      const range = lastAt - firstAt;
+      const first = adjustedKeyframes[0];
+      const last = adjustedKeyframes[adjustedKeyframes.length - 1];
+      if (!(first && last)) return 0;
 
+      const range = last.at - first.at;
       if (range === 0) return 0;
 
-      const progress = (currentScrollY - firstAt) / range;
+      const progress = (currentScrollY - first.at) / range;
       return Math.max(0, Math.min(1, progress));
     },
     [adjustedKeyframes]
@@ -311,49 +314,58 @@ export function useScrollKeyframes(options: UseScrollKeyframesOptions): UseScrol
   const interpolateStyle = useCallback(
     (currentScrollY: number): KeyframeStyle => {
       if (adjustedKeyframes.length === 0) return {};
-      if (adjustedKeyframes.length === 1) return adjustedKeyframes[0].style;
+
+      const first = adjustedKeyframes[0];
+      if (!first) return {};
+      if (adjustedKeyframes.length === 1) return first.style;
+
+      const last = adjustedKeyframes[adjustedKeyframes.length - 1];
+      if (!last) return first.style;
 
       // Handle before first keyframe
-      if (currentScrollY < adjustedKeyframes[0].at) {
-        return adjustedKeyframes[0].style;
+      if (currentScrollY < first.at) {
+        return first.style;
       }
 
       // Handle after last keyframe
-      if (currentScrollY >= adjustedKeyframes[adjustedKeyframes.length - 1].at) {
-        const lastAt = adjustedKeyframes[adjustedKeyframes.length - 1].at;
+      if (currentScrollY >= last.at) {
         for (let i = adjustedKeyframes.length - 1; i >= 0; i--) {
-          if (adjustedKeyframes[i].at === lastAt) {
-            return adjustedKeyframes[i].style;
+          const candidate = adjustedKeyframes[i];
+          if (candidate && candidate.at === last.at) {
+            return candidate.style;
           }
         }
-        return adjustedKeyframes[adjustedKeyframes.length - 1].style;
+        return last.style;
       }
 
       // Check if we're exactly at a keyframe position
       for (let i = 0; i < adjustedKeyframes.length; i++) {
-        if (currentScrollY === adjustedKeyframes[i].at) {
+        const candidate = adjustedKeyframes[i];
+        if (candidate && currentScrollY === candidate.at) {
           let lastAtPosition = i;
+          let nextAtPosition = adjustedKeyframes[lastAtPosition + 1];
           while (
             lastAtPosition < adjustedKeyframes.length - 1 &&
-            adjustedKeyframes[lastAtPosition + 1].at === currentScrollY
+            nextAtPosition &&
+            nextAtPosition.at === currentScrollY
           ) {
             lastAtPosition++;
+            nextAtPosition = adjustedKeyframes[lastAtPosition + 1];
           }
-          return adjustedKeyframes[lastAtPosition].style;
+          return adjustedKeyframes[lastAtPosition]?.style ?? candidate.style;
         }
       }
 
       // Find the two keyframes we're between
-      let prevKeyframe = adjustedKeyframes[0];
-      let nextKeyframe = adjustedKeyframes[adjustedKeyframes.length - 1];
+      let prevKeyframe = first;
+      let nextKeyframe = last;
 
       for (let i = 0; i < adjustedKeyframes.length - 1; i++) {
-        if (
-          currentScrollY > adjustedKeyframes[i].at &&
-          currentScrollY < adjustedKeyframes[i + 1].at
-        ) {
-          prevKeyframe = adjustedKeyframes[i];
-          nextKeyframe = adjustedKeyframes[i + 1];
+        const current = adjustedKeyframes[i];
+        const next = adjustedKeyframes[i + 1];
+        if (current && next && currentScrollY > current.at && currentScrollY < next.at) {
+          prevKeyframe = current;
+          nextKeyframe = next;
           break;
         }
       }

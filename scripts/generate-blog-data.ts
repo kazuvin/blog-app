@@ -41,6 +41,7 @@ function rehypeRemoveFirstH1() {
         removed = true;
         return index;
       }
+      return undefined;
     });
   };
 }
@@ -76,10 +77,10 @@ async function generateBlogData(): Promise<void> {
 
     const postMeta: PostMeta = {
       slug,
-      title: data.title as string,
-      date: data.date as string,
-      description: data.description as string,
-      tags: Array.isArray(data.tags) ? (data.tags as string[]) : [],
+      title: data["title"] as string,
+      date: data["date"] as string,
+      description: data["description"] as string,
+      tags: Array.isArray(data["tags"]) ? (data["tags"] as string[]) : [],
     };
 
     posts.push(postMeta);

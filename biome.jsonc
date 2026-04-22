@@ -1,0 +1,498 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.11/schema.json",
+  // VCS連携: .gitignore を尊重し、無視対象はLint/Formatから除外
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "ignoreUnknown": false,
+    // Lint/Format 対象: アプリコードとMarkdownコンテンツ
+    "includes": ["src/**", "contents/**"]
+  },
+  // GritQL プラグイン: useEffect アンチパターン検出
+  // Ref: https://github.com/NickvanDyke/eslint-plugin-react-you-might-not-need-an-effect
+  // 空のEffect / 状態初期化目的のEffect / 派生stateをEffectで書く / Effect内でfetch /
+  // 親子間のstate連動 / イベントハンドラ的なEffect などを検出する
+  "plugins": ["./node_modules/@jacobwolf/biome-unnecessary-effect/grit/react-effects.grit"],
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 100,
+    "attributePosition": "auto",
+    "bracketSameLine": false,
+    "bracketSpacing": true,
+    "expand": "auto",
+    "useEditorconfig": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      // Biome推奨ルールをベースラインとして有効化
+      "recommended": true,
+      "suspicious": {
+        // any型の明示使用を禁止（型安全性を担保）
+        "noExplicitAny": "error",
+        // console.log を禁止（console.info/warn/error はデバッグ/運用用途で許可）
+        "noConsole": {
+          "level": "error",
+          "options": { "allow": ["warn", "error", "info"] }
+        },
+        // var による変数宣言を禁止（let/const を使用）
+        "noVar": "error",
+        // 配列indexをReactのkeyに使うのを禁止（並び替えバグ防止）
+        "noArrayIndexKey": "error",
+        // == / != を禁止し === / !== を強制（型強制による意図しない挙動防止）
+        "noDoubleEquals": "error",
+        // 型注釈無しの let 宣言を禁止（暗黙のany防止）
+        "noImplicitAnyLet": "error",
+        // JSXの重複した属性を禁止（後勝ちによるバグ防止）
+        "noDuplicateJsxProps": "error",
+        // async関数にawaitが無い場合を警告（Next.jsのgenerateStaticParams等は慣例的にasyncのためwarnに留める）
+        "useAwait": "warn",
+        // switch の default 節を末尾に配置
+        "useDefaultSwitchClauseLast": "error",
+        // 自分自身との比較を禁止（常にtrue/falseになるバグ検出）
+        "noSelfCompare": "error",
+        // テストの .skip の残り（一時無効化）を本番混入防止のため禁止
+        "noSkippedTests": "error",
+        // テストの .only の残り（デバッグ用フォーカス）を禁止
+        "noFocusedTests": "error",
+        // debugger 文の残存を禁止（本番混入防止）
+        "noDebugger": "error",
+        // if (x = 5) のような条件式内代入を禁止（== の書き損じ事故を検出）
+        "noAssignInExpressions": "error",
+        // new Promise(async ...) のアンチパターンを禁止
+        "noAsyncPromiseExecutor": "error",
+        // interface との紛らわしいコンストラクタ宣言を禁止
+        "noMisleadingInstantiator": "error",
+        // a+=b を a=+b と誤タイプしたケースを検出
+        "noMisrefactoredShorthandAssign": "error",
+        // [1,,3] のようなスパース配列を禁止（undefined穴の混入防止）
+        "noSparseArray": "error",
+        // オブジェクトに then プロパティを定義するのを禁止（誤Thenableとなる）
+        "noThenProperty": "error",
+        // 型merge + 値mergeの同名宣言を禁止（予期せぬ挙動の原因）
+        "noUnsafeDeclarationMerging": "error",
+        // !a in b / !a instanceof b の優先順位ミスを検出
+        "noUnsafeNegation": "error",
+        // テストファイルからの export を禁止（テスト汚染の防止）
+        "noExportsInTest": "error",
+        // 段階的にanyへ拡大する型変数を検出（evolving any防止）
+        "noEvolvingTypes": "error",
+        // Math.PI 等に近い数値リテラル直書きを検出（定数を使え）
+        "noApproximativeNumericConstant": "error",
+        // catch 節変数への再代入を禁止
+        "noCatchAssign": "error",
+        // クラス名への再代入を禁止
+        "noClassAssign": "error",
+        // 関数宣言名への再代入を禁止
+        "noFunctionAssign": "error",
+        // import バインディングへの再代入を禁止
+        "noImportAssign": "error",
+        // NaN / Infinity / undefined 等の予約語シャドウを禁止
+        "noShadowRestrictedNames": "error",
+        // 同名の再宣言を禁止（let/class/var等）
+        "noRedeclare": "error",
+        // describe外への assert 記述等、配置ミスを検出
+        "noMisplacedAssertion": "error",
+        // @ts-ignore を禁止（理由必須の @ts-expect-error を使う）
+        "noTsIgnore": "error",
+        // for-in には Object.prototype 汚染を防ぐガード節を必須化
+        "useGuardForIn": "error",
+        // pages router 用: pages/ 配下で next/document をimportしない
+        "noDocumentImportInPage": "error",
+        // _document.tsx 以外で next/head をimportしない（重複回避）
+        "noHeadImportInDocument": "error",
+        // Google Fonts に display 属性を必須（CLS対策）
+        "useGoogleFontDisplay": "error",
+        // TS オーバーロード宣言は隣接配置を強制
+        "useAdjacentOverloadSignatures": "error"
+      },
+      "style": {
+        // 再代入のない変数は const を使用
+        "useConst": "error",
+        // 文字列結合よりテンプレートリテラルを使用
+        "useTemplate": "error",
+        // 配列型は T[] 形式に統一（可読性向上）
+        "useConsistentArrayType": {
+          "level": "error",
+          "options": { "syntax": "shorthand" }
+        },
+        // 型のみの import は `import type` を使用（Tree Shaking / バンドルサイズ最適化）
+        "useImportType": "error",
+        // 型のみの export は `export type` を使用
+        "useExportType": "error",
+        // 非nullアサーション(!) を禁止（型安全性・Null安全性を担保）
+        "noNonNullAssertion": "error",
+        // 推論可能な型注釈を禁止（冗長さを排除）
+        "noInferrableTypes": "error",
+        // 関数パラメータの再代入を禁止（予測可能性向上）
+        "noParameterAssign": "error",
+        // 自己閉じタグを強制（<div></div> → <div />）
+        "useSelfClosingElements": "error",
+        // リテラル値のアサーションには as const を使用（型の厳密化）
+        "useAsConstAssertion": "error",
+        // isNaN/parseInt 等は Number 名前空間経由で呼ぶ
+        "useNumberNamespace": "error",
+        // 補間のないテンプレートリテラルを禁止（通常の文字列に戻す）
+        "noUnusedTemplateLiteral": "error",
+        // 関数型は `(x: T) => U` のショートハンドを使う
+        "useShorthandFunctionType": "error",
+        // enum の値を明示的に初期化
+        "useEnumInitializers": "error",
+        // Node.js 組み込みモジュールは `node:` プレフィックスを強制
+        "useNodejsImportProtocol": "error",
+        // Errorオブジェクトのみを throw（文字列throwを禁止）
+        "useThrowOnlyError": "error",
+        // throw 時は new で生成（関数呼び出し形式でも new を付ける）
+        "useThrowNewError": "error",
+        // x = x + 1 ではなく x += 1 のような短縮代入を使用
+        "useShorthandAssign": "error",
+        // 複数変数宣言は1宣言ずつに分割（可読性）
+        "useSingleVarDeclarator": "error",
+        // if の入れ子を1階層にまとめる（&&条件で結合）
+        "useCollapsedIf": "error",
+        // ファイル名を kebab-case に強制（プロジェクト規約）
+        "useFilenamingConvention": {
+          "level": "error",
+          "options": {
+            "filenameCases": ["kebab-case"],
+            "requireAscii": true,
+            "strictCase": false
+          }
+        },
+        // if (!a) {...} else {...} のような否定先行のelseを禁止（可読性）
+        "noNegationElse": "error",
+        // new Array()/new Number() 等のビルトイン new 呼びを禁止（リテラル使用）
+        "useConsistentBuiltinInstantiation": "error",
+        // デフォルト引数は末尾に配置
+        "useDefaultParameterLast": "error",
+        // <Fragment></Fragment> より <></> を使用
+        "useFragmentSyntax": "error",
+        // for (let i = 0; ...) より for...of を使用（意図が明確）
+        "useForOf": "error",
+        // arr.length ではなく arr.length > 0 のように明示的に比較する
+        "useExplicitLengthCheck": "error",
+        // Math.pow(a, b) より a ** b を使用
+        "useExponentiationOperator": "error",
+        // Yoda記法（5 === x）を禁止（x === 5 と書く）
+        "noYodaExpression": "error",
+        // TypeScript namespace を禁止（ES Modules を使う）
+        "noNamespace": "error",
+        // require()/module.exports を禁止（プロジェクトはESM）
+        "noCommonJs": "error",
+        // 1000000 ではなく 1_000_000 のような数値区切りを使用（可読性）
+        "useNumericSeparators": "error",
+        // useAtIndex は noUncheckedIndexedAccess と組み合わせないと `.at(-1)` が `T | undefined`
+        // を返す分 TypeScript エラーが噴出する（既存 use-scroll-keyframes の補間ロジックが該当）。
+        // 将来 noUncheckedIndexedAccess を導入した段階で有効化する。
+        // Object.assign({}, ...) より スプレッド {...} を使用
+        "useObjectSpread": "error",
+        // process.env の直接参照を禁止（検証/ラッパー経由を推奨）
+        "noProcessEnv": "error",
+        // App Router で <head> 直書きを禁止（metadata API を使う）
+        "noHeadElement": "error"
+        // useExportsLast は Storybook CSF3 の `export default meta` → `type Story = ...` →
+        // story exports というパターン、および「公開APIを上部に置く」慣例と強く衝突するため無効。
+      },
+      "complexity": {
+        // 不要な <></> Fragment を禁止
+        "noUselessFragments": "error",
+        // && / ?? より Optional Chaining (?.) を使用
+        "useOptionalChain": "error",
+        // 不要な型制約（extends unknown 等）を禁止
+        "noUselessTypeConstraint": "error",
+        // 不要な Boolean キャスト（!! 等）を禁止
+        "noExtraBooleanCast": "error",
+        // obj["key"] より obj.key のドットアクセスを使用
+        "useLiteralKeys": "error",
+        // 意味のない rename (import { a as a }) を禁止
+        "noUselessRename": "error",
+        // `cond ? true : false` のような冗長な三項演算子を禁止
+        "noUselessTernary": "error",
+        // arr.map(...).flat() より arr.flatMap(...) を使用
+        "useFlatMap": "error",
+        // {} / Function / Object 等の曖昧な型を禁止
+        "noBannedTypes": "error",
+        // void演算子の使用を禁止（undefinedを使う）
+        "noVoid": "error",
+        // 単に throw する catch（意味なしcatch）を禁止
+        "noUselessCatch": "error",
+        // 空/冗長なコンストラクタを禁止
+        "noUselessConstructor": "error",
+        // 使われていないラベルを禁止
+        "noUselessLabel": "error",
+        // 孤立した { ... } ブロック文を禁止
+        "noUselessLoneBlockStatements": "error",
+        // "a"+"b" のような冗長文字列結合を禁止
+        "noUselessStringConcat": "error",
+        // 条件のない switch case を禁止
+        "noUselessSwitchCase": "error",
+        // const self = this のような this退避を禁止（アロー関数を使う）
+        "noUselessThisAlias": "error",
+        // let x: number = undefined のような初期化を禁止
+        "noUselessUndefinedInitialization": "error",
+        // static メンバのみのクラスを禁止（module化する）
+        "noStaticOnlyClass": "error",
+        // new Date().getTime() より Date.now() を使用
+        "useDateNow": "error",
+        // new RegExp("a") より /a/ リテラルを使用
+        "useRegexLiterals": "error",
+        // a && b || c のような冗長論理式の簡略化
+        "useSimplifiedLogicExpression": "error",
+        // カンマ演算子の使用を禁止（意図不明瞭）
+        "noCommaOperator": "error",
+        // 空の型パラメータ <> を禁止
+        "noEmptyTypeParameters": "error",
+        // export {} だけのファイルを禁止（意味なし）
+        "noUselessEmptyExport": "error",
+        // arr.flatMap(x => x) のような意味なしflatMapを禁止
+        "noFlatMapIdentity": "error",
+        // parseInt("0b1010", 2) より 0b1010 / 0o / 0x リテラルを使用
+        "useNumericLiterals": "error",
+        // 不要な正規表現エスケープを禁止
+        "noUselessEscapeInRegex": "error",
+        // 認知的複雑度の上限（関数が複雑になりすぎた場合に警告）
+        "noExcessiveCognitiveComplexity": {
+          "level": "warn",
+          "options": { "maxAllowedComplexity": 20 }
+        }
+      },
+      "correctness": {
+        // React Hooks の依存配列に漏れ/過不足を許さない
+        "useExhaustiveDependencies": "error",
+        // 未使用変数を禁止（残存コードによる混乱を防ぐ）
+        "noUnusedVariables": "error",
+        // 未使用のimportを禁止（バンドルサイズ・可読性）
+        "noUnusedImports": "error",
+        // 未使用の関数引数を禁止（_接頭辞を付ければ許容）
+        "noUnusedFunctionParameters": "error",
+        // 未使用のprivateクラスメンバを禁止
+        "noUnusedPrivateClassMembers": "error",
+        // React Hookはトップレベルのみで呼ぶ（Rules of Hooks）
+        "useHookAtTopLevel": "error",
+        // iterable のJSX出力には key を必須化
+        "useJsxKeyInIterable": "error",
+        // children を prop として渡すのを禁止（JSX子要素として書く）
+        "noChildrenProp": "error",
+        // 宣言前の変数・関数使用を禁止
+        "noInvalidUseBeforeDeclaration": "error",
+        // ビルトインの誤ったインスタンス化（new Symbol() 等）を禁止
+        "noInvalidBuiltinInstantiation": "error",
+        // 精度が失われる数値リテラルを禁止
+        "noPrecisionLoss": "error",
+        // 大文字小文字変換の比較（toLowerCase等）の不一致を検出
+        "noStringCaseMismatch": "error",
+        // try/finally での return/throw を禁止（制御フロー破壊）
+        "noUnsafeFinally": "error",
+        // optional chaining の結果への不正な演算適用を禁止
+        "noUnsafeOptionalChaining": "error",
+        // void 戻り型関数での return value を禁止
+        "noVoidTypeReturn": "error",
+        // 常にtrue/falseになる条件式を検出
+        "noConstantCondition": "error",
+        // isNaN(x) より Number.isNaN(x) を使用（既に useNumberNamespace と重複するが明示）
+        "useIsNan": "error",
+        // コンポーネント関数の中でコンポーネントを定義するのを禁止（再マウント事故防止）
+        "noNestedComponentDefinitions": "error",
+        // React の props への直接代入を禁止（不変性の担保）
+        "noReactPropAssignments": "error",
+        // parseInt は必ず radix を指定（8進数誤解釈の事故防止）
+        "useParseIntRadix": "error"
+      },
+      "a11y": {
+        // img/area/input などに alt を必須
+        "useAltText": "error",
+        // onClick を持つ要素にキーボードイベントも必須（キーボード操作対応）
+        "useKeyWithClickEvents": "error",
+        // onMouse系と同等のキーボードイベントを必須
+        "useKeyWithMouseEvents": "error",
+        // 有効な aria-* 属性を使用
+        "useValidAriaProps": "error",
+        // 有効な aria-* の値を使用
+        "useValidAriaValues": "error",
+        // 存在するARIAロールのみ許可
+        "useValidAriaRole": "error",
+        // button に type 属性を必須化（暗黙の submit 事故防止）
+        "useButtonType": "error",
+        // <a> は有効な href を必須
+        "useValidAnchor": "error",
+        // <iframe> に title を必須（スクリーンリーダー対応）
+        "useIframeTitle": "error",
+        // 非インタラクティブ要素への tabIndex を禁止
+        "noNoninteractiveTabindex": "error",
+        // 正の値のtabIndexを禁止（フォーカス順序の破壊防止）
+        "noPositiveTabindex": "error",
+        // label と control の紐付けを必須
+        "noLabelWithoutControl": "error",
+        // 冗長なaltテキスト（"image of ..." 等）を禁止
+        "noRedundantAlt": "error",
+        // accessKey を禁止（スクリーンリーダーとの競合を防止）
+        "noAccessKey": "error",
+        // autoFocus を禁止（アクセシビリティ上望ましくない）
+        "noAutofocus": "error",
+        // heading要素に子要素/コンテンツを必須
+        "useHeadingContent": "error"
+      },
+      "performance": {
+        // reduce 内での累積スプレッド(O(n²))を禁止
+        "noAccumulatingSpread": "error",
+        // delete演算子の使用を禁止（V8の最適化を阻害）
+        "noDelete": "error",
+        // <img> を禁止（next/image を推奨 / LCP/帯域最適化）
+        "noImgElement": "error"
+      },
+      "security": {
+        // dangerouslySetInnerHTML の使用を禁止（XSSリスク）
+        "noDangerouslySetInnerHtml": "error",
+        // dangerouslySetInnerHTML と children の併用を禁止
+        "noDangerouslySetInnerHtmlWithChildren": "error",
+        // グローバル eval を禁止
+        "noGlobalEval": "error"
+        // noSecrets はエントロピー判定が過敏で誤検知が多い（描述的な識別子や日本語説明文を
+        // シークレット扱いしてしまう）ため本プロジェクトでは無効。
+      },
+      "nursery": {
+        // Tailwindクラスを事前定義の順序で自動整列（Biomeが安全にfix）
+        "useSortedClasses": {
+          "level": "error",
+          "fix": "safe",
+          "options": {
+            "attributes": ["className", "class"],
+            "functions": ["cn", "clsx", "twMerge"]
+          }
+        },
+        // 循環依存のimportを検出（密結合・初期化順トラブル防止）
+        "noImportCycles": "error",
+        // discriminated union の switch 網羅性を型から検証
+        "useExhaustiveSwitchCases": "error",
+        // 未処理（.catch無し）のPromise / awaitし忘れを検出（要TS型情報）
+        "noFloatingPromises": "error",
+        // Promise を誤用している箇所（if(promise) 等）を検出
+        "noMisusedPromises": "error",
+        // 冗長な undefined（`foo = undefined` / `type X = Y | undefined`）を禁止
+        "noUselessUndefined": "error"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "es5",
+      "semicolons": "always",
+      "arrowParentheses": "always",
+      "bracketSameLine": false,
+      "quoteStyle": "double",
+      "attributePosition": "auto",
+      "bracketSpacing": true
+    }
+  },
+  "css": {
+    "parser": {
+      "cssModules": true,
+      "tailwindDirectives": true
+    }
+  },
+  "html": {
+    "formatter": {
+      "indentScriptAndStyle": false,
+      "selfCloseVoidElements": "always"
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": { "source": { "organizeImports": "on" } }
+  },
+  "overrides": [
+    {
+      // Next.js App Router のルーティング関連ファイルは default export が必須
+      // (現時点では noDefaultExport は有効化していないため実害はないが、将来導入時の備え)
+      "includes": [
+        "src/app/**/page.tsx",
+        "src/app/**/layout.tsx",
+        "src/app/**/loading.tsx",
+        "src/app/**/error.tsx",
+        "src/app/**/not-found.tsx",
+        "src/app/**/template.tsx",
+        "src/app/**/default.tsx",
+        "src/app/**/route.ts",
+        "src/app/**/global-error.tsx",
+        "src/app/**/*opengraph-image*",
+        "src/app/**/*twitter-image*",
+        "src/app/**/icon.tsx",
+        "src/app/**/apple-icon.tsx",
+        "src/app/**/sitemap.ts",
+        "src/app/**/robots.ts",
+        "src/app/**/manifest.ts"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            // ルートファイルは Next.js の慣習に従いファイル名固定（kebab-case判定対象外）
+            "useFilenamingConvention": "off"
+          }
+        }
+      }
+    },
+    {
+      // テスト用ユーティリティ: 画像要素やコンソール出力を許容
+      "includes": ["src/test/**"],
+      "linter": {
+        "rules": {
+          "performance": {
+            "noImgElement": "off"
+          },
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
+    },
+    {
+      // テストファイル: モック用途でany等を許可し、書きやすさを優先
+      "includes": ["src/**/*.test.ts", "src/**/*.test.tsx"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off",
+            "noExplicitAny": "off"
+          },
+          "style": {
+            "noNonNullAssertion": "off"
+          },
+          "complexity": {
+            "noExcessiveCognitiveComplexity": "off"
+          }
+        }
+      }
+    },
+    {
+      // Storybook: CSF の都合で default export を持ちラベル制御も緩める
+      "includes": ["**/*.stories.tsx"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noLabelWithoutControl": "off",
+            "useKeyWithClickEvents": "off"
+          },
+          "style": {
+            "noNonNullAssertion": "off"
+          }
+        }
+      }
+    },
+    {
+      // ラベルコンポーネント本体: プリミティブ実装のため label/control 紐付け規則を緩和
+      "includes": ["src/components/ui/label/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noLabelWithoutControl": "off"
+          }
+        }
+      }
+    }
+  ]
+}

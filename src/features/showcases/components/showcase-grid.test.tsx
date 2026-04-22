@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { getDefined } from "@/test/assert";
 import type { ShowcaseItem } from "../types";
 import { ShowcaseGrid } from "./showcase-grid";
 
@@ -94,7 +95,7 @@ describe("ShowcaseGrid", () => {
       render(<ShowcaseGrid items={mockItems} onItemClick={handleItemClick} />);
 
       const buttons = screen.getAllByRole("button");
-      await user.click(buttons[0]);
+      await user.click(getDefined(buttons[0]));
 
       expect(handleItemClick).toHaveBeenCalledTimes(1);
       expect(handleItemClick).toHaveBeenCalledWith(mockItems[0]);
@@ -107,7 +108,7 @@ describe("ShowcaseGrid", () => {
       render(<ShowcaseGrid items={mockItems} onItemClick={handleItemClick} />);
 
       const buttons = screen.getAllByRole("button");
-      await user.click(buttons[1]);
+      await user.click(getDefined(buttons[1]));
 
       expect(handleItemClick).toHaveBeenCalledTimes(1);
       expect(handleItemClick).toHaveBeenCalledWith(mockItems[1]);
@@ -120,7 +121,7 @@ describe("ShowcaseGrid", () => {
       render(<ShowcaseGrid items={mockItems} onItemClick={handleItemClick} />);
 
       const buttons = screen.getAllByRole("button");
-      await user.click(buttons[2]);
+      await user.click(getDefined(buttons[2]));
 
       expect(handleItemClick).toHaveBeenCalledTimes(1);
       expect(handleItemClick).toHaveBeenCalledWith(mockItems[2]);
@@ -133,9 +134,9 @@ describe("ShowcaseGrid", () => {
       render(<ShowcaseGrid items={mockItems} onItemClick={handleItemClick} />);
 
       const buttons = screen.getAllByRole("button");
-      await user.click(buttons[0]);
-      await user.click(buttons[1]);
-      await user.click(buttons[2]);
+      await user.click(getDefined(buttons[0]));
+      await user.click(getDefined(buttons[1]));
+      await user.click(getDefined(buttons[2]));
 
       expect(handleItemClick).toHaveBeenCalledTimes(3);
       expect(handleItemClick).toHaveBeenNthCalledWith(1, mockItems[0]);
@@ -147,7 +148,7 @@ describe("ShowcaseGrid", () => {
   describe("単一アイテム", () => {
     it("単一アイテムでも正しくレンダリングされること", () => {
       const handleItemClick = vi.fn();
-      const singleItem = [mockItems[0]];
+      const singleItem = [getDefined(mockItems[0])];
 
       render(<ShowcaseGrid items={singleItem} onItemClick={handleItemClick} />);
 

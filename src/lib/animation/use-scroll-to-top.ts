@@ -17,13 +17,14 @@ export function useScrollToTop(options: UseScrollToTopOptions = {}) {
   const pathname = usePathname();
   const previousPathRef = useRef(pathname);
 
-  // Disable browser's automatic scroll restoration on back/forward navigation
+  // biome-ignore lint/plugin: 外部システム(ブラウザ history API)への設定はuseEffectが正しい用途。
   useEffect(() => {
     if ("scrollRestoration" in history) {
       history.scrollRestoration = "manual";
     }
   }, []);
 
+  // biome-ignore lint/plugin: ルート変更(外部イベント)への副作用(window.scrollTo)のためuseEffectが正当。
   useEffect(() => {
     if (previousPathRef.current !== pathname) {
       previousPathRef.current = pathname;
