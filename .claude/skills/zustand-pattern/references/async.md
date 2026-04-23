@@ -69,12 +69,11 @@ export const useSearchStore = create<SearchState>((set, get) => ({
 
 ## persist middleware（永続化）
 
-`persist` middleware で state を AsyncStorage（React Native）や localStorage に自動保存する。
+`persist` middleware で state を localStorage（デフォルト）に自動保存する。
 
 ```tsx
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { persist } from "zustand/middleware";
 
 type AuthState = {
   token: string | null;
@@ -92,14 +91,15 @@ export const useAuthStore = create<AuthState>()(
       clearAuth: () => set({ token: null, user: null }),
     }),
     {
-      name: "auth-storage",
-      storage: createJSONStorage(() => AsyncStorage),
+      name: "auth-storage", // localStorage の key
       // 永続化する state を限定（Actions は自動除外）
       partialize: (state) => ({ token: state.token, user: state.user }),
-    }
-  )
+    },
+  ),
 );
 ```
+
+Next.js の Server Components では `window` / `localStorage` が無い。persist Store を subscribe する箇所は `"use client"` Container に限定する（SSR 時の hydration mismatch 回避も兼ねる）。
 
 ### partialize で保存対象を制御
 

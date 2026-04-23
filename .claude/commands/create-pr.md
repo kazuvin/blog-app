@@ -1,6 +1,6 @@
 # Create PR Command
 
-Create PR with quality verification and attribution.
+Create PR following repo conventions (no AI attribution anywhere).
 
 ## Flow
 
@@ -12,29 +12,25 @@ git status
 git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo "No upstream"
 ```
 
-### Phase 2: Quality Check
+### Phase 2: CI Verification
 
-```bash
-pnpm lint && pnpm build
-```
-
-Fix issues if failed, re-run until pass.
+Run `ci-check` skill（`pnpm lint` → `pnpm tsc --noEmit` → `pnpm test:run`）。すべて成功するまで次に進まない。
 
 ### Phase 3: Commit (if needed)
 
 ```bash
-git add -A
+git add <files>
 git commit -m "$(cat <<'EOF'
 <type>: <description>
 
 <optional body>
-
-Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
 EOF
 )"
 ```
 
-Types: `feat:`, `fix:`, `refactor:`, `docs:`, `chore:`
+Conventional Commits prefixes（`feat:` / `fix:` / `refactor:` / `docs:` / `chore:` など）を使用。
+
+**No trailers**: `Co-Authored-By`, `Signed-off-by` 等の AI attribution トレイラーは付けない（リポジトリ方針）。
 
 ### Phase 4: Push & Create PR
 
@@ -45,14 +41,12 @@ gh pr create --title "<type>: <description>" --body "$(cat <<'EOF'
 - <main change>
 
 ## Test plan
-- [ ] Lint passes
-- [ ] Build succeeds
-
----
-Generated with [Claude Code](https://claude.ai/code)
+- [ ] `ci-check` passes locally
 EOF
 )"
 ```
+
+PR body にも AI attribution（"Generated with …" など）は入れない。
 
 ### Phase 5: Report
 
@@ -62,10 +56,10 @@ gh pr view --json url,changedFiles,commits
 
 ## Error Handling
 
-| Scenario              | Action                        |
-| --------------------- | ----------------------------- |
-| On main/master        | Abort                         |
-| Lint/Build fails      | Fix and re-run                |
-| No remote             | Use `-u` flag                 |
-| PR exists             | Report existing PR URL        |
-| gh not authenticated  | Prompt `gh auth login`        |
+| Scenario             | Action                        |
+| -------------------- | ----------------------------- |
+| On main/master       | Abort                         |
+| `ci-check` fails     | Fix and re-run                |
+| No remote            | Use `-u` flag                 |
+| PR exists            | Report existing PR URL        |
+| gh not authenticated | Prompt `gh auth login`        |

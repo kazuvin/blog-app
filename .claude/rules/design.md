@@ -4,44 +4,28 @@ paths: "**/*.tsx"
 
 # Design system
 
-Single source of truth: `src/app/globals.css` の `@theme` ブロック。トークンの具体値・dark 対応値はこの CSS を直接参照する（本文書では値を重複記載しない）。
+**SSoT**: `src/app/globals.css` の `@theme` ブロックが全 token（色・typography・radius・shadow・animation）の唯一の真。使える token を知りたい時は常にそこを grep する。`.dark` セレクタで dark 値が自動切替される。
 
-## Colors
+このドキュメントでは drift しない命名・使用ルールのみ扱う（値や token 名の列挙は置かない）。
 
-Semantic token families — light/dark は `.dark` セレクタで自動切替:
+## 命名・使用ルール
 
-- **Surface**: `surface` / `-elevated` / `-hover` / `-pressed`
-- **Content**: `foreground` / `muted`
-- **Border**: `border`
-- **Primary**: `primary` / `-hover` / `-active`
-- **Status**: `success` / `warning` / `error` / `info`（soft chip は `{name}-soft` + `{name}-soft-fg`）
-- **Accent**: `accent` / `accent-soft` / `accent-soft-fg`
-- **Brand gradient**: `brand-{from,via,to}`（淡色版 `-soft`）
-
-明度/透過バリエーションは opacity modifier で作る（例: `bg-primary/10`, `text-foreground/60`）。
-
-## Typography
-
-`--font-sans`（Geist Sans）と `--font-mono`（Geist Mono）。サイズ/ウェイトは Tailwind デフォルト utility (`text-sm`, `font-semibold` 等) をそのまま使う。
-
-## Radius / Shadow / Animation
-
-`--radius-{sm,md,lg}` / `--shadow-{sm,md}` / `--animate-*`（fade-in, pop, shake, draw 等）。詳細は `globals.css`。
-
-## Components
-
-既存 UI: `src/components/ui/*`。新規コンポーネント作成前に既存 variant で表現できないか必ず確認し、作る場合は `.claude/skills/component-creator/SKILL.md` の Decision Guide に従う。
+- **light/dark 切替は自動**: `.dark` セレクタで再定義されるので **`dark:` prefix は書かない**
+- **淡色は opacity modifier**: `bg-primary/10`, `text-foreground/60`（新規トークン追加より先に検討）
+- **Interaction state suffix**: 単色トークンは `-hover` / `-active` サフィックス（例: `bg-primary-active`）。surface 系は hover 用に `surface-hover` / `surface-pressed` を使う
+- **Status の soft chip**: `{name}-soft`（背景）+ `{name}-soft-fg`（前景）のペアで使う
+- **Typography**: サイズ・ウェイトは Tailwind 標準 utility (`text-sm`, `font-semibold` 等) を使う。カスタム font-family は globals.css の `--font-*` を参照
 
 ## Interaction states
 
 - Hover: `hover:bg-surface-hover` / `hover:opacity-90`
 - Focus: `focus:ring-primary` / `outline-primary/30`
-- Active: 単色トークンなら `{token}-active`（例: `bg-primary-active`）
+- Active: 単色トークンは `{token}-active`（例: `bg-primary-active`）
 - Disabled: `disabled:opacity-50 disabled:cursor-not-allowed`
 
-## Dark mode
+## Components
 
-`.dark` セレクタで `--color-*` が自動切替される。**`dark:` prefix は書かない**。
+既存 UI: `src/components/ui/*`。新規コンポーネント作成前に既存 variant で表現できないか必ず確認し、作る場合は `.claude/skills/component-creator/SKILL.md` の Decision Guide に従う。
 
 ## Don'ts
 

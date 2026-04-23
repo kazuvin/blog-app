@@ -1,6 +1,6 @@
 ---
 name: zustand-pattern
-description: パフォーマンスを重視した Zustand 状態管理パターン。Store 設計、セレクタによる最小限の re-render、非同期アクション、コードレビュー時に使用。利用側は必要な state のみ subscribe する。React Native / Expo 対応。
+description: パフォーマンスを重視した Zustand 状態管理パターン。Store 設計、セレクタによる最小限の re-render、非同期アクション、コードレビュー時に使用。利用側は必要な state のみ subscribe する。
 ---
 
 # Zustand パターン

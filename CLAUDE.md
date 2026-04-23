@@ -51,40 +51,28 @@ pnpm cf-typegen       # Generate Cloudflare bindings types
 - **Framework**: Next.js 15 with App Router
 - **Styling**: Tailwind CSS v4 with CSS variables for theming
 - **Linting/Formatting**: Biome (with Tailwind CSS class sorting)
-- **Testing**: Vitest + Testing Library (90% coverage threshold)
+- **Testing**: Vitest + Testing Library（coverage 閾値は `vitest.config.ts` が SSoT）
 - **Component Dev**: Storybook
 - **Deployment**: Cloudflare Workers via @opennextjs/cloudflare
 - **Path Alias**: `@/*` maps to `./src/*`
 
-### Project Structure
+### Project Structure（SSoT: 実ディレクトリ）
 
-```
-src/
-├── app/                    # Next.js App Router pages
-│   ├── blog/              # Blog feature routes
-│   │   ├── page.tsx       # Blog listing
-│   │   └── [slug]/page.tsx # Individual blog post
-│   └── layout.tsx         # Root layout
-├── components/
-│   ├── ui/                # Reusable UI components (Button, Card, Badge, Input, Label)
-│   └── index.ts           # Barrel export
-└── lib/
-    ├── blog.ts            # Blog content utilities (markdown parsing)
-    └── utils.ts           # Shared utilities (cn, debounce, etc.)
-contents/                   # Markdown blog posts with frontmatter
-```
+- `src/app/` — Next.js App Router（route / layout）
+- `src/components/ui/` — 共通 UI primitive（各 `{name}/` に component + stories + barrel を colocate）
+- `src/components/layout/` — レイアウトパーツ
+- `src/features/{feature}/` — Feature colocation（components / stores / hooks / data / lib / types + `index.ts` public API）
+- `src/lib/` — グローバル共通ユーティリティ（`cn`, debounce 等）
+- `contents/` — Markdown blog posts（gray-matter frontmatter）
+
+UI primitive 一覧・feature ラインナップは実ディレクトリを grep する（drift 防止のため本ドキュメントでは列挙しない）。
 
 ### Key Patterns
 
-**UI Components**: Located in `src/components/ui/`, each component has its own directory with:
-
-- `component.tsx` - Component implementation with variant/size props
-- `component.stories.tsx` - Storybook stories
-- `index.ts` - Barrel export
-
-**Blog System**: Markdown files in `contents/` directory with gray-matter frontmatter (title, date, description). Rendered via remark/remark-html.
-
-**Styling**: Uses `cn()` utility from `@/lib/utils` for merging Tailwind classes with proper precedence (clsx + tailwind-merge).
+- **UI primitive**: `src/components/ui/{name}/` に colocate（component + stories + test + barrel）。規約は `component-creator` skill
+- **Feature store**: Zustand、`src/features/{feature}/stores/` に配置。規約は `zustand-pattern` skill
+- **Blog**: `contents/*.md` を gray-matter + remark/rehype でパース（実装: `src/features/blog/lib/blog.ts`）
+- **Styling**: `cn()`（`@/lib/utils`）で Tailwind classes をマージ（clsx + tailwind-merge）。token は `src/app/globals.css` の `@theme`、ルールは `.claude/rules/design.md`
 
 ### Key Configuration Files
 
