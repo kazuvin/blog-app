@@ -19,9 +19,11 @@ description: タスク完了前に必ず実行するCIチェック一式。Biome
 
 ## 判定ルール
 
-- すべて exit code 0 → タスク完了可
+- すべて exit code 0 → `touch .claude/.ci-check-passed` して marker を作成 → タスク完了可
 - 1つでも exit code ≠ 0 → **タスク未完了**。ユーザーに完了報告してはいけない
 - warning は許容（ただし新規に追加した warning は極力解消する）
+
+marker (`.claude/.ci-check-passed`) は Stop hook が ci-check 未実行を検出するために使う。PostToolUse の auto-format が走るたびに自動で消える（`.claude/hooks/post-edit-format.sh`）。
 
 ## 典型的な失敗パターンと対処
 

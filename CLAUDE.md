@@ -1,83 +1,81 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Next.js 15 (App Router) + React 19 + TypeScript + Tailwind v4 + Biome + Vitest。Cloudflare Workers に OpenNext 経由でデプロイ。パッケージマネージャは pnpm。
 
-## ⚠️ タスク完了前の必須チェック
+## Harness layout
 
-コードまたは設定を変更するタスクを完了したと報告する前に、**必ず `ci-check` skill を起動し、その手順に従ってローカル CI を完走させてください**。
+指示は意図的に分割されている。用途に応じて必要なものだけロードする方針。重複させないこと。
 
-- 起動方法: Skill ツールで `ci-check` を呼び出す（`/ci-check` でも可）
-- 内容: `pnpm lint` → `pnpm tsc --noEmit` → `pnpm test:run`
-- 1 つでも失敗している間はタスクは「完了」ではありません
-- 例外（ドキュメントのみ変更など）はスキップ可ですが、その旨をユーザーに明示してください
+- `CLAUDE.md`（本ファイル） — プロジェクト横断のファクト。全 session でロード
+- `.claude/rules/design.md` — `**/*.tsx` で自動ロード。Tailwind token / 禁則
+- `.claude/skills/` — invoke で全文ロードされる手順書
+  - `ci-check` — lint / tsc / test の完了チェック
+  - `component-creator` — Presentation vs Container、実装テンプレ
+  - `zustand-pattern` — feature store 設計、selector 粒度
+  - `tdd-patterns` — Vitest 先行の Red-Green-Refactor
+  - `design-grader` — UI を rubric 採点（reviewer）
+- `.claude/agents/react-component-builder.md` — 上記 skills が frontmatter で preload 済の subagent
+- `.claude/commands/` — `/task`（worktree で commander パターン）/ `/spec`（feature 着手前の仕様化）/ `/create-pr`
+- `.claude/settings.json` — hooks + shared permissions
+- `.claude/hooks/` — PostToolUse（biome auto-fix）/ Stop（ci-check reminder）
+- `.mcp.json` — Playwright MCP（ブラウザ検証）/ Context7 MCP（live docs）
 
-## Project Overview
+## Quality gate（hooks が enforcement）
 
-Next.js 15 blog application with TypeScript, designed for Cloudflare Workers deployment using OpenNext adapter. Uses pnpm as package manager.
+コード変更は次の 2 つの hook で自動的に protect される:
+
+- **PostToolUse** Edit/Write/MultiEdit → 編集ファイルに `biome check --write`（safe fix）を当てる + `.claude/.ci-check-passed` marker を削除
+- **Stop** → `*.ts(x)` / `*.js(x)` / `*.css` に差分があって marker が無ければ exit 2 で reminder
+
+完了前に **`ci-check` skill** を起動し、`pnpm lint` → `pnpm tsc --noEmit` → `pnpm test:run` が全て exit 0 になったら skill が marker を `touch` する。例外（docs のみ等）は skill の判定ルール参照。
 
 ## Commands
 
+よく使うもの。完全一覧は `package.json` の `scripts` を参照。
+
 ```bash
-# Development
-pnpm dev              # Start dev server with Turbopack (http://localhost:3000)
-pnpm lint             # Run Biome linting and formatting check
-pnpm lint:fix         # Run Biome with auto-fix
-pnpm format           # Format code with Biome
-pnpm format:check     # Check formatting without writing
-
-# Testing
-pnpm test             # Run Vitest in watch mode
-pnpm test:run         # Run tests once
-pnpm test:coverage    # Run tests with coverage report
-pnpm test:ui          # Run tests with Vitest UI
-
-# Storybook
-pnpm storybook        # Start Storybook dev server (http://localhost:6006)
-pnpm build-storybook  # Build static Storybook
-
-# Building & Deployment
-pnpm build            # Production build
-pnpm preview          # Preview on local Cloudflare runtime
-pnpm deploy           # Deploy to Cloudflare Workers
-
-# Cloudflare
-pnpm cf-typegen       # Generate Cloudflare bindings types
+pnpm dev              # Next.js dev server (Turbopack, :3000)
+pnpm lint             # Biome check（= pnpm lint）/ pnpm lint:fix で safe fix
+pnpm tsc --noEmit     # 型チェック
+pnpm test:run         # Vitest 1 回実行 / pnpm test:coverage / pnpm test:ui
+pnpm storybook        # Storybook dev (:6006)
+pnpm build            # generate-blog-data → next build
+pnpm preview          # ローカル Cloudflare runtime で preview
+pnpm deploy           # Cloudflare Workers デプロイ
+pnpm cf-typegen       # Cloudflare bindings の型生成
 ```
 
-## Architecture
+## Project structure（SSoT: 実ディレクトリ）
 
-### Tech Stack
+- `src/app/` — App Router（route / layout / globals.css）
+- `src/components/ui/{name}/` — UI primitive。component + stories + test + barrel を colocate
+- `src/components/layout/` — Header / Main / Sidebar 等
+- `src/components/icons/` — アイコン
+- `src/features/{feature}/` — feature colocation（components / stores / hooks / data / lib / types + `index.ts` public API）
+- `src/lib/` — グローバル utility（`cn` 等）
+- `src/hooks/` — 共有 hook
+- `src/test/` — Vitest setup / test helper
+- `src/types/` — グローバル型宣言（`css.d.ts` 等）
+- `contents/*.md` — blog posts（gray-matter frontmatter）
+- `scripts/generate-blog-data.ts` — build 前に実行される blog index 生成
+- `docs/specs/` — `/spec` が生成する feature spec
 
-- **Framework**: Next.js 15 with App Router
-- **Styling**: Tailwind CSS v4 with CSS variables for theming
-- **Linting/Formatting**: Biome (with Tailwind CSS class sorting)
-- **Testing**: Vitest + Testing Library（coverage 閾値は `vitest.config.ts` が SSoT）
-- **Component Dev**: Storybook
-- **Deployment**: Cloudflare Workers via @opennextjs/cloudflare
-- **Path Alias**: `@/*` maps to `./src/*`
+UI primitive 一覧・feature ラインナップは enumerate しない（drift 防止）。`src/components/ui/` / `src/features/` を grep するのが真。
 
-### Project Structure（SSoT: 実ディレクトリ）
+## Key patterns
 
-- `src/app/` — Next.js App Router（route / layout）
-- `src/components/ui/` — 共通 UI primitive（各 `{name}/` に component + stories + barrel を colocate）
-- `src/components/layout/` — レイアウトパーツ
-- `src/features/{feature}/` — Feature colocation（components / stores / hooks / data / lib / types + `index.ts` public API）
-- `src/lib/` — グローバル共通ユーティリティ（`cn`, debounce 等）
-- `contents/` — Markdown blog posts（gray-matter frontmatter）
+- **Styling**: `src/app/globals.css` の `@theme` が全 token の SSoT。`.dark` セレクタで自動切替 — **`dark:` prefix は書かない**。arbitrary value（`bg-[#fff]`）は biome GritQL plugin で lint error。詳細は `.claude/rules/design.md`（`.tsx` で自動ロード）
+- **cn()**: `@/lib/utils` の `cn()` で Tailwind classes をマージ（clsx + tailwind-merge）。user `className` は **last** に merge
+- **Components**: Presentation (`src/components/`) vs Container (`src/features/`) の判断は `component-creator` skill の Decision Guide。Server Component 既定、`"use client"` は hooks / browser API / Zustand を使う時だけ
+- **Feature stores**: Zustand + 細粒度 selector（1 slice per `useStore`）。ルールは `zustand-pattern` skill
+- **Tests**: Vitest + Testing Library + jsdom。coverage 閾値の SSoT は `vitest.config.ts`。新機能は `tdd-patterns` skill に従い spec 先行
+- **Blog**: `src/features/blog/lib/blog.ts` が `contents/*.md` を gray-matter + remark/rehype でパース。build 時に `scripts/generate-blog-data.ts` が index を生成
+- **Path alias**: `@/*` → `./src/*`
 
-UI primitive 一覧・feature ラインナップは実ディレクトリを grep する（drift 防止のため本ドキュメントでは列挙しない）。
+## Config files
 
-### Key Patterns
-
-- **UI primitive**: `src/components/ui/{name}/` に colocate（component + stories + test + barrel）。規約は `component-creator` skill
-- **Feature store**: Zustand、`src/features/{feature}/stores/` に配置。規約は `zustand-pattern` skill
-- **Blog**: `contents/*.md` を gray-matter + remark/rehype でパース（実装: `src/features/blog/lib/blog.ts`）
-- **Styling**: `cn()`（`@/lib/utils`）で Tailwind classes をマージ（clsx + tailwind-merge）。token は `src/app/globals.css` の `@theme`、ルールは `.claude/rules/design.md`
-
-### Key Configuration Files
-
-- `biome.jsonc` - Biome linter/formatter configuration (JSONC, Tailwind class sorting, strict React/TS rules)
-- `wrangler.jsonc` - Cloudflare Workers configuration
-- `open-next.config.ts` - OpenNext adapter settings
-- `.dev.vars` - Development environment variables for Wrangler
-- `vitest.config.ts` - Test configuration with jsdom environment
+- `biome.jsonc` — linter/formatter（Tailwind class sort + arbitrary value 禁止 GritQL plugin + strict React/TS ルール）
+- `vitest.config.ts` — jsdom + coverage 閾値（threshold SSoT）
+- `tsconfig.json` — TS 設定（strict ルールは違反時に hint）
+- `wrangler.jsonc` / `open-next.config.ts` — Cloudflare deployment
+- `.dev.vars` — Wrangler dev env（gitignored）

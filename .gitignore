@@ -56,3 +56,6 @@ storybook-static
 
 # worktrees
 .worktrees/
+
+# claude code local state
+.claude/.ci-check-passed
