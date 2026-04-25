@@ -1,16 +1,16 @@
 import { useCallback, useRef, useState } from "react";
 
-export interface UseHoverDropdownOptions {
+export type UseHoverDropdownOptions = {
   closeDelay?: number;
-}
+};
 
-export interface UseHoverDropdownReturn {
+export type UseHoverDropdownReturn = {
   isOpen: boolean;
   handleMouseEnter: () => void;
   handleMouseLeave: () => void;
   handleOpenChange: (open: boolean) => void;
   close: () => void;
-}
+};
 
 /**
  * Custom hook for managing dropdown open/close state with hover behavior

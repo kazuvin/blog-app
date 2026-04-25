@@ -4,11 +4,11 @@ import { SearchIcon } from "@/components/icons";
 import { Input } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
-export interface BlogSearchInputProps {
+export type BlogSearchInputProps = {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   className?: string;
-}
+};
 
 export function BlogSearchInput({ searchQuery, onSearchChange, className }: BlogSearchInputProps) {
   return (

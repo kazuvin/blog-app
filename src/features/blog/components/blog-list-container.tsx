@@ -17,9 +17,9 @@ import { BlogTagFilter } from "./blog-tag-filter";
 
 const SEARCH_DEBOUNCE_MS = 300;
 
-export interface BlogListContainerProps {
+export type BlogListContainerProps = {
   posts: PostMeta[];
-}
+};
 
 export function BlogListContainer({ posts }: BlogListContainerProps) {
   const { searchQuery, selectedTags, sortOption, setSearchQuery, setSelectedTags, setSortOption } =

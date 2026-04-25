@@ -3,12 +3,12 @@ import { Badge, Card, CardContent, CardHeader } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import type { PostMeta } from "../lib/blog-utils";
 
-export interface BlogCardProps {
+export type BlogCardProps = {
   post: PostMeta;
   showNewBadge?: boolean;
   showTags?: boolean;
   className?: string;
-}
+};
 
 export function BlogCard({
   post,

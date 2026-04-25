@@ -3,9 +3,9 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
-interface UseScrollToTopOptions {
+type UseScrollToTopOptions = {
   onRouteChange?: () => void;
-}
+};
 
 /**
  * Custom hook that scrolls to top on route changes.

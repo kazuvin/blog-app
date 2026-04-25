@@ -20,7 +20,7 @@ export type Easing = EasingName | EasingFunction;
 /**
  * Style properties that can be animated
  */
-export interface KeyframeStyle {
+export type KeyframeStyle = {
   opacity?: number;
   scale?: number;
   scaleX?: number;
@@ -35,31 +35,31 @@ export interface KeyframeStyle {
   skewX?: number;
   skewY?: number;
   [key: string]: number | undefined;
-}
+};
 
 /**
  * A keyframe definition
  */
-export interface Keyframe {
+export type Keyframe = {
   /** Scroll position (in pixels) where this keyframe applies */
   at: number;
   /** Style values at this keyframe */
   style: KeyframeStyle;
   /** Easing function to use when transitioning TO this keyframe */
   easing?: Easing;
-}
+};
 
 /**
  * Offset configuration for adjusting keyframe positions
  */
-export interface ScrollOffset {
+export type ScrollOffset = {
   /** Offset to add to the start of the animation range */
   start?: number;
   /** Offset to add to the end of the animation range */
   end?: number;
-}
+};
 
-export interface UseScrollKeyframesOptions {
+export type UseScrollKeyframesOptions = {
   /** Array of keyframes defining the animation */
   keyframes: Keyframe[];
   /** Whether to calculate scroll position relative to the element */
@@ -68,9 +68,9 @@ export interface UseScrollKeyframesOptions {
   offset?: ScrollOffset;
   /** Disable the hook (useful for conditional animations) */
   disabled?: boolean;
-}
+};
 
-export interface UseScrollKeyframesResult {
+export type UseScrollKeyframesResult = {
   /** Ref callback to attach to the target element */
   ref: (node: HTMLElement | null) => void;
   /** Initial style for SSR/first render (subsequent updates go directly to DOM) */
@@ -79,7 +79,7 @@ export interface UseScrollKeyframesResult {
   getScrollY: () => number;
   /** Get current progress (reads from ref, does not cause re-render) */
   getProgress: () => number;
-}
+};
 
 // Built-in easing functions
 const easingFunctions: Record<EasingName, EasingFunction> = {

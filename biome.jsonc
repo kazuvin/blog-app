@@ -125,6 +125,13 @@
           "level": "error",
           "options": { "syntax": "shorthand" }
         },
+        // 型定義は type に統一（schema-first 推論 / union / utility 型と一貫した記法）
+        // declaration merging が必要な module augmentation は src/types に集約し、
+        // 必要になった時点で override で off にする
+        "useConsistentTypeDefinitions": {
+          "level": "error",
+          "options": { "style": "type" }
+        },
         // 型のみの import は `import type` を使用（Tree Shaking / バンドルサイズ最適化）
         "useImportType": "error",
         // 型のみの export は `export type` を使用

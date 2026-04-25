@@ -3,11 +3,11 @@
 import { Badge } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
-export interface BlogTagFilterProps {
+export type BlogTagFilterProps = {
   tags: string[];
   selectedTags: string[];
   onTagSelect: (tags: string[]) => void;
-}
+};
 
 export function BlogTagFilter({ tags, selectedTags, onTagSelect }: BlogTagFilterProps) {
   if (tags.length === 0) {

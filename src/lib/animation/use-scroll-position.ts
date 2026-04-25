@@ -92,15 +92,15 @@ export function useIsScrolled(threshold = 0): boolean {
 }
 
 // Legacy types for backward compatibility
-export interface UseScrollPositionOptions {
+export type UseScrollPositionOptions = {
   /**
    * Threshold value for isScrolled calculation
    * @default 0
    */
   threshold?: number;
-}
+};
 
-export interface UseScrollPositionResult {
+export type UseScrollPositionResult = {
   /**
    * Current vertical scroll position (window.scrollY)
    */
@@ -110,7 +110,7 @@ export interface UseScrollPositionResult {
    * Whether the page has been scrolled past the threshold
    */
   isScrolled: boolean;
-}
+};
 
 /**
  * @deprecated Use `useScrollY` or `useIsScrolled` instead for better performance.

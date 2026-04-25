@@ -13,9 +13,9 @@ export type DimensionType = "width" | "height" | "both";
 /**
  * Options for useElementDimensions hook
  */
-export interface UseElementDimensionsOptions<T extends DimensionType = "both"> {
+export type UseElementDimensionsOptions<T extends DimensionType = "both"> = {
   type?: T;
-}
+};
 
 /**
  * Result type based on the dimension type option

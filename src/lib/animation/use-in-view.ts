@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export interface UseInViewOptions {
+export type UseInViewOptions = {
   /**
    * Visibility percentage to trigger (0-1 or array of thresholds)
    * @default 0
@@ -29,9 +29,9 @@ export interface UseInViewOptions {
    * @default null
    */
   root?: Element | null;
-}
+};
 
-export interface UseInViewResult {
+export type UseInViewResult = {
   /**
    * Ref callback to attach to the target element
    */
@@ -46,7 +46,7 @@ export interface UseInViewResult {
    * The latest IntersectionObserverEntry, undefined until first observation
    */
   entry: IntersectionObserverEntry | undefined;
-}
+};
 
 /**
  * Custom hook that detects when an element enters the viewport using Intersection Observer API.

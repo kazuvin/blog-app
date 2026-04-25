@@ -11,10 +11,10 @@ import { useHoverDropdown } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { SortOption } from "../lib/blog-utils";
 
-export interface BlogSortSelectorProps {
+export type BlogSortSelectorProps = {
   currentSort: SortOption;
   onSortChange: (sort: SortOption) => void;
-}
+};
 
 const sortLabels: Record<SortOption, string> = {
   "date-desc": "新しい順",

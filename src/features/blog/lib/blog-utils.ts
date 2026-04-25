@@ -1,12 +1,12 @@
 export type SortOption = "date-desc" | "date-asc" | "title-asc" | "title-desc";
 
-export interface PostMeta {
+export type PostMeta = {
   slug: string;
   title: string;
   date: string;
   description: string;
   tags: string[];
-}
+};
 
 export function getAllTags(posts: PostMeta[]): string[] {
   const tagSet = new Set<string>();

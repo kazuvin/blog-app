@@ -12,14 +12,14 @@ export {
 import blogData from "../data/blog-data.json";
 import type { PostMeta } from "./blog-utils";
 
-export interface Post extends PostMeta {
+export type Post = PostMeta & {
   content: string;
-}
+};
 
-interface BlogDataType {
+type BlogDataType = {
   posts: PostMeta[];
   postContents: Record<string, Post>;
-}
+};
 
 const data = blogData as BlogDataType;
 
