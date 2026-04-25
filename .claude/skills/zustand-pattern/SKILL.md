@@ -5,6 +5,20 @@ description: パフォーマンスを重視した Zustand 状態管理パター�
 
 # Zustand パターン
 
+## まず Zustand を使うか判定する
+
+state を全部 store に上げると再 render が広がるだけ。**最も狭いスコープで済む道具**を選ぶ:
+
+| state の性質                                          | 道具                              |
+| ----------------------------------------------------- | --------------------------------- |
+| URL に反映したい / 共有したい                          | `searchParams` / `pathname`       |
+| Form 入力                                             | `useActionState` / 非制御 form    |
+| 1 component 内のみで完結                              | `useState`                        |
+| 親子 1-2 段で共有                                     | props / lift state                |
+| 複数 component で共有 + URL/form でない               | **Zustand**                       |
+
+`useState` で済むものを container store に押し込まない。
+
 **コアルール**: 利用側は必要な state のみ subscribe する。Store 全体の subscribe は禁止。
 
 ```tsx

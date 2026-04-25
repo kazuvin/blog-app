@@ -22,7 +22,7 @@ paths: "**/*.tsx"
 2. `.claude/rules/design.md` — 禁則（arbitrary value / 標準パレット / `dark:` prefix / inline style / semantic token の命名規約）
 3. `biome.jsonc` の GritQL plugin — arbitrary value は既に lint error
 
-## Rubric（各 0–3、合計 30 点満点）
+## Rubric（各 0–3、合計 33 点満点）
 
 | # | 項目 | 0 (Fail) | 1 (Weak) | 2 (OK) | 3 (Strong) |
 |---|------|----------|----------|--------|------------|
@@ -36,6 +36,7 @@ paths: "**/*.tsx"
 | 8 | **Responsive** | fixed width / overflow | 1 breakpoint のみ | sm/md/lg で major layout 変化 | content-aware（`max-w-prose` 等）+ intrinsic sizing |
 | 9 | **Motion** | 0 transition | `transition-all`（曖昧） | 個別 property / duration 指定、`reduce-motion` 尊重 | 状態遷移ごとに意味ある easing curve |
 | 10 | **Distinctiveness** | generic AI 見た目（Inter + 紫 gradient 等） | 既存 UI kit 模写 | プロジェクト独自の個性（token 体系の活用） | 明確な aesthetic direction（editorial / playful 等） |
+| 11 | **Story coverage** | story 無し | default story のみ | 主要 variant / size を story 化 | state matrix（empty / loading / error / populated）+ interaction を全カバー |
 
 ## 出力フォーマット
 
@@ -58,10 +59,10 @@ paths: "**/*.tsx"
 ```
 
 **Band 基準:**
-- 26–30: ship as-is
-- 20–25: minor polish
-- 13–19: needs work（Top 3 fixes を実装）
-- ≤ 12: rebuild 推奨
+- 28–33: ship as-is
+- 22–27: minor polish
+- 14–21: needs work（Top 3 fixes を実装）
+- ≤ 13: rebuild 推奨
 
 ## 判定ルール
 

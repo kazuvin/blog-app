@@ -47,6 +47,19 @@ pnpm format     # Biome formatter を上書き実行
 
 その後 `pnpm lint` を再実行して残存 error が無いことを確認する。
 
+## リリース前の追加チェック
+
+通常タスクでは `pnpm tsc --noEmit` で十分だが、**static export 起因のエラー**（`generateStaticParams` 漏れ / image optimization / dynamic import の bundle 失敗）は型チェックでは検出できない。以下の編集時は `pnpm build` で実 SSG ビルドを通す:
+
+- `app/` 配下の route 追加・削除
+- `generateStaticParams` を持つ動的 route の編集
+- `next.config.ts` / `wrangler.jsonc` の変更
+- 大規模な依存追加（`pnpm add`）
+
+```bash
+pnpm build && pnpm preview  # out/ を Wrangler 経由で配信確認
+```
+
 ## 省略可能なケース
 
 以下の場合のみスキップしてよい（ユーザーに明示）:

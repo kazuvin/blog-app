@@ -68,6 +68,23 @@ Other React 19 primitives when they fit: `useTransition` (non-urgent updates), `
 - **Variant union** over boolean flags: `variant: "primary" | "ghost"` beats `isPrimary + isGhost`.
 - **Extend the native element**: `ComponentProps<"button">` / `ComponentProps<typeof RadixThing>`.
 - **No `defaultProps`** on function components — use default parameters (React 19 removed them).
+- **Composition over prop bloat**: props が 5+ になったら `children` / slot に押し込むサイン。state（form / async / selected）まで全部 props で受けているなら、それは container を作るべき箇所。
+
+> 以下は **架空の `Notice` コンポーネント** によるパターン例。実際の compound 構造（`Card` 等）は `src/components/ui/{name}/` を SSoT として参照すること（skill に列挙しない）。
+
+```tsx
+// ❌ Prop bloat — 構造が props 経由でしか見えない
+<Notice title={...} body={...} icon={...} actionLabel={...} onAction={...} dismissable={...} />
+
+// ✅ Slot composition — 構造が JSX で見える
+<Notice>
+  <NoticeIcon name="info" />
+  <NoticeBody>{description}</NoticeBody>
+  <NoticeAction onClick={onAction}>{label}</NoticeAction>
+</Notice>
+```
+
+- **Group related props** when composition は overkill: `user={{ name, avatar, role }}` のように関連 props を 1 object に畳む。
 
 ## className merge order
 
@@ -105,3 +122,4 @@ Listed items are **not** lint-caught (or are easy to miss). Lint-caught ones are
 | Boolean flag explosion (`isPrimary`, …)      | `variant` union                                |
 | `cn(className, "px-4")` (user loses)         | `cn("px-4", className)` (user wins)            |
 | `ref.current` read during render             | read in effect / handler                       |
+| 5+ props で構造が JSX で見えない             | `children` / slot で composition               |

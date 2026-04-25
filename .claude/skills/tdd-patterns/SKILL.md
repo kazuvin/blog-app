@@ -17,6 +17,20 @@ Red → Green → Refactor
 を書く
 ```
 
+## テスト対象の選定（presentation.md と整合）
+
+「テスト = 仕様書」は **仕様が非自明なもの** に適用する。構造的に明らかな UI primitive は Storybook で十分。
+
+| 対象                                              | 戦略                                    |
+| ------------------------------------------------- | --------------------------------------- |
+| Pure presentation primitive（Button / Card 等）   | **Storybook で網羅**。`.test.tsx` は不要 |
+| 状態 / イベント / a11y を持つ UI                  | **TDD で `.test.tsx`**                  |
+| Hook / async / business logic                     | **TDD 必須**                            |
+| Zustand store action                              | **TDD 必須**                            |
+| 純粋関数 / formatter / parser                     | **TDD 必須**                            |
+
+`<Button variant="primary">` のように構造的に明らかなものは story が仕様で十分。`useFilter` hook や `loginAction` のような **振る舞い** は TDD で先に仕様を固める。
+
 ## テスト構造（仕様書形式）
 
 ```typescript
