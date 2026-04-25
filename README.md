@@ -1,68 +1,36 @@
 # Kazuvin Blog
 
-Next.js 15 application with TypeScript, designed for Cloudflare Workers deployment using OpenNext adapter.
+Next.js 15 製の個人ブログ。`output: 'export'` で全ページを SSG ビルドし、`out/` を Cloudflare Pages に静的配信する。
 
-## Tech Stack
+## Stack
 
-- **Framework**: Next.js 15 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS v4
-- **Testing**: Vitest + Testing Library
-- **Deployment**: Cloudflare Workers via @opennextjs/cloudflare
-- **Package Manager**: pnpm
+- Next.js 15 (App Router) / React 19 / TypeScript
+- Tailwind CSS v4
+- Biome (lint + format)
+- Vitest + Testing Library
+- Cloudflare Pages (Wrangler)
+- Package manager: pnpm
 
 ## Getting Started
 
-### Prerequisites
-
-- Node.js 18+
-- pnpm
-
-### Installation
-
 ```bash
 pnpm install
-```
-
-### Development
-
-Start the development server with Turbopack:
-
-```bash
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser.
+[http://localhost:3000](http://localhost:3000) で開発サーバが立ち上がる。
 
-## Commands
+## Build & Deploy
 
-| Command              | Description                         |
-| -------------------- | ----------------------------------- |
-| `pnpm dev`           | Start dev server with Turbopack     |
-| `pnpm build`         | Production build                    |
-| `pnpm lint`          | Run ESLint                          |
-| `pnpm format`        | Format code with Prettier           |
-| `pnpm format:check`  | Check code formatting               |
-| `pnpm test`          | Run tests in watch mode             |
-| `pnpm test:run`      | Run tests once                      |
-| `pnpm test:coverage` | Run tests with coverage             |
-| `pnpm preview`       | Preview on local Cloudflare runtime |
-| `pnpm deploy`        | Deploy to Cloudflare Workers        |
+`out/` ディレクトリへ Next.js の static export を吐き、それを Cloudflare Pages にデプロイする。`.dev.vars` がローカル環境変数（gitignored）。
 
-## Project Structure
+具体的な script は [`package.json`](./package.json) の `scripts`、Pages 設定は [`wrangler.jsonc`](./wrangler.jsonc) を参照。
 
-```
-src/
-├── app/           # Next.js App Router pages
-├── lib/           # Utility functions
-└── test/          # Test configuration
-```
+## More
 
-## Cloudflare Configuration
-
-- `wrangler.jsonc` - Cloudflare Workers configuration
-- `open-next.config.ts` - OpenNext adapter settings
-- `.dev.vars` - Development environment variables
+- 開発フロー・ディレクトリ構成・規約: [`CLAUDE.md`](./CLAUDE.md)
+- UI primitive: `src/components/ui/`
+- Feature 実装: `src/features/`
 
 ## License
 

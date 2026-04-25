@@ -39,9 +39,9 @@ pnpm lint             # Biome check（= pnpm lint）/ pnpm lint:fix で safe fix
 pnpm tsc --noEmit     # 型チェック
 pnpm test:run         # Vitest 1 回実行 / pnpm test:coverage / pnpm test:ui
 pnpm storybook        # Storybook dev (:6006)
-pnpm build            # generate-blog-data → next build（output: export → out/）
-pnpm preview          # build → wrangler pages dev out（ローカル静的配信）
-pnpm deploy           # build → wrangler pages deploy out
+pnpm build            # SSG ビルド（出力先は out/）
+pnpm preview          # out/ をローカルで Cloudflare Pages 配信
+pnpm deploy           # Cloudflare Pages へデプロイ
 ```
 
 ## Project structure（SSoT: 実ディレクトリ）
@@ -76,5 +76,5 @@ UI primitive 一覧・feature ラインナップは enumerate しない（drift 
 - `biome.jsonc` — linter/formatter（Tailwind class sort + arbitrary value 禁止 GritQL plugin + strict React/TS ルール）
 - `vitest.config.ts` — jsdom + coverage 閾値（threshold SSoT）
 - `tsconfig.json` — TS 設定（strict ルールは違反時に hint）
-- `wrangler.jsonc` — Cloudflare Pages 設定（`pages_build_output_dir: ./out`）
+- `wrangler.jsonc` — Cloudflare Pages 配信設定（出力先 / compatibility date 等）
 - `.dev.vars` — Wrangler dev env（gitignored）
