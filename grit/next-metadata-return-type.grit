@@ -1,0 +1,26 @@
+// Enforce explicit return type on Next.js App Router `generateMetadata` exports.
+//
+// Next.js の TypeScript plugin は generateMetadata の戻り値型を明示しろと
+// IDE 上で警告するが（diagnostic code 71008）、`tsc --noEmit` には乗らないため
+// CI では検知できない。本ルールで lint error に昇格させて CI で落ちるようにする。
+//
+// Bad:
+//   export async function generateMetadata({ params }: Props) { ... }
+//   export function generateMetadata({ params }: Props) { ... }
+//
+// Good:
+//   import type { Metadata } from "next";
+//   export async function generateMetadata({ params }: Props): Promise<Metadata> { ... }
+//   export function generateMetadata({ params }: Props): Metadata { ... }
+
+language js
+
+or {
+  `export async function generateMetadata($params) { $body }`,
+  `export function generateMetadata($params) { $body }`,
+} as $func where {
+  register_diagnostic(
+    span=$func,
+    message="generateMetadata must declare an explicit return type (Promise<Metadata> for async, Metadata for sync). Required by Next.js TS plugin [71008]."
+  )
+}

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { playgroundItems } from "@/features/playgrounds";
 
@@ -14,7 +15,7 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const item = playgroundItems.find((i) => i.slug === slug);
   if (!item) return {};

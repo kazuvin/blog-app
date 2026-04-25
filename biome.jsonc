@@ -14,9 +14,12 @@
   //      親子間のstate連動 / イベントハンドラ的なEffect などを検出する
   //   2) Tailwind v4 の @theme 以外のスタイル利用を禁止
   //      arbitrary value (`bg-[#fff]` 等) を className で書いた場合に警告する
+  //   3) Next.js generateMetadata の戻り値型注釈を必須化（IDE 限定の Next TS plugin
+  //      警告 [71008] を CI で落ちる lint error に昇格させる）
   "plugins": [
     "./node_modules/@jacobwolf/biome-unnecessary-effect/grit/react-effects.grit",
-    "./grit/tailwind-theme-only.grit"
+    "./grit/tailwind-theme-only.grit",
+    "./grit/next-metadata-return-type.grit"
   ],
   "formatter": {
     "enabled": true,
