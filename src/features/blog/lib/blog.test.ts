@@ -116,8 +116,8 @@ describe("Blog Utilities", () => {
   });
 
   describe("getPostBySlug", () => {
-    it("should return post with content for valid slug", async () => {
-      const post = await getPostBySlug("post-1");
+    it("should return post with content for valid slug", () => {
+      const post = getPostBySlug("post-1");
 
       expect(post).not.toBeNull();
       expect(post?.slug).toBe("post-1");
@@ -125,8 +125,8 @@ describe("Blog Utilities", () => {
       expect(post?.content).toBe("<p>Content 1</p>");
     });
 
-    it("should return null for invalid slug", async () => {
-      const post = await getPostBySlug("nonexistent");
+    it("should return null for invalid slug", () => {
+      const post = getPostBySlug("nonexistent");
 
       expect(post).toBeNull();
     });

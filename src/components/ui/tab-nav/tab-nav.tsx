@@ -273,7 +273,7 @@ function TabNavRoot({
         {...props}
       >
         {/* Animated indicator */}
-        {indicatorStyle && (
+        {indicatorStyle ? (
           <span
             className={cn(indicatorBaseStyles, indicatorVariantStyles[variant])}
             style={{
@@ -285,7 +285,7 @@ function TabNavRoot({
             }}
             aria-hidden="true"
           />
-        )}
+        ) : null}
         {children}
       </div>
     </TabNavContext.Provider>

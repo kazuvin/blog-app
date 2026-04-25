@@ -9,7 +9,7 @@ export function Label({ required = false, className, children, ...props }: Label
   return (
     <label className={cn("font-medium text-foreground text-sm", className)} {...props}>
       {children}
-      {required && <span className="ml-1 text-error">*</span>}
+      {required ? <span className="ml-1 text-error">*</span> : null}
     </label>
   );
 }

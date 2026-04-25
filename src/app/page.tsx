@@ -20,6 +20,7 @@ export default function Home() {
       </section>
 
       {/* Recent Posts Section */}
+      {/* biome-ignore lint/correctness/useUniqueElementIds: 静的なフラグメントアンカー（#recent）として固定 id を意図 */}
       <section id="recent" className="mb-16">
         <div className="mb-8 flex items-center justify-between">
           <h2 className="font-bold text-3xl">Recent Posts</h2>

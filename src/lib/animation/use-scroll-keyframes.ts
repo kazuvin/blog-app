@@ -312,6 +312,7 @@ export function useScrollKeyframes(options: UseScrollKeyframesOptions): UseScrol
 
   // Interpolate style based on scroll position
   const interpolateStyle = useCallback(
+    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: 補間の境界処理（先頭/末尾外）・同位置キーフレームの解決・前後ペア検索・lerp+easing が線形に並ぶ動線。helper に切り出すとフロー追跡がむしろ困難になるため一塊で保持する。
     (currentScrollY: number): KeyframeStyle => {
       if (adjustedKeyframes.length === 0) return {};
 

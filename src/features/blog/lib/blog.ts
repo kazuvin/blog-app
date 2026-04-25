@@ -31,7 +31,7 @@ export function getAllPostSlugs(): string[] {
   return data.posts.map((post) => post.slug);
 }
 
-export async function getPostBySlug(slug: string): Promise<Post | null> {
+export function getPostBySlug(slug: string): Post | null {
   const post = data.postContents[slug];
   return post ?? null;
 }

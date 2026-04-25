@@ -54,8 +54,10 @@
         "noImplicitAnyLet": "error",
         // JSXの重複した属性を禁止（後勝ちによるバグ防止）
         "noDuplicateJsxProps": "error",
-        // async関数にawaitが無い場合を警告（Next.jsのgenerateStaticParams等は慣例的にasyncのためwarnに留める）
-        "useAwait": "warn",
+        // async 関数に await が無い＝Promise を返すと宣言しつつ実体は sync という型の嘘を禁止。
+        // Next.js の generateStaticParams / generateMetadata 等も async は必須ではないため、
+        // 中で await を使わないなら sync で書く。
+        "useAwait": "error",
         // switch の default 節を末尾に配置
         "useDefaultSwitchClauseLast": "error",
         // 自分自身との比較を禁止（常にtrue/falseになるバグ検出）
@@ -84,6 +86,10 @@
         "noUnsafeNegation": "error",
         // テストファイルからの export を禁止（テスト汚染の防止）
         "noExportsInTest": "error",
+        // document.cookie の直接読み書きを禁止（Static Export 環境では SSR/SSG で吐き出した
+        // HTML に cookie 値が焼き込まれない / Server Component 側からは触れないため、
+        // 用途が曖昧になりがち。client 専用ユーティリティ経由を推奨）
+        "noDocumentCookie": "error",
         // 段階的にanyへ拡大する型変数を検出（evolving any防止）
         "noEvolvingTypes": "error",
         // Math.PI 等に近い数値リテラル直書きを検出（定数を使え）
@@ -312,7 +318,10 @@
         // React の props への直接代入を禁止（不変性の担保）
         "noReactPropAssignments": "error",
         // parseInt は必ず radix を指定（8進数誤解釈の事故防止）
-        "useParseIntRadix": "error"
+        "useParseIntRadix": "error",
+        // SSG/SSR 出力では同一 id がページ内で衝突しうる。再利用される primitive で
+        // ハードコードされた id="..." を禁止し、必要なら useId() を使う
+        "useUniqueElementIds": "error"
       },
       "a11y": {
         // img/area/input などに alt を必須
@@ -354,7 +363,13 @@
         // delete演算子の使用を禁止（V8の最適化を阻害）
         "noDelete": "error",
         // <img> を禁止（next/image を推奨 / LCP/帯域最適化）
-        "noImgElement": "error"
+        "noImgElement": "error",
+        // polyfill.io / 不要な polyfill (es6-shim 等) のロードを禁止
+        // Next.js は modern build を出すので二重 polyfill は純粋な無駄
+        "noUnwantedPolyfillio": "error",
+        // next/font 使用時の <link rel="preconnect"> 必須化
+        // 既存の useGoogleFontDisplay と対で CLS / Web Vitals を担保
+        "useGoogleFontPreconnect": "error"
       },
       "security": {
         // dangerouslySetInnerHTML の使用を禁止（XSSリスク）
@@ -385,7 +400,14 @@
         // Promise を誤用している箇所（if(promise) 等）を検出
         "noMisusedPromises": "error",
         // 冗長な undefined（`foo = undefined` / `type X = Y | undefined`）を禁止
-        "noUselessUndefined": "error"
+        "noUselessUndefined": "error",
+        // RSC: "use client" 指定ファイル内で async function コンポーネントを定義するのを禁止
+        // （async コンポーネントは Server Component でのみ許される。Client にすると
+        //  Promise が JSX として render され実行時例外になる）
+        "noNextAsyncClientComponent": "error",
+        // JSX で `count && <X />` のように 0 / "" / NaN を漏らす条件 render を禁止
+        // RSC は string として直接 HTML 化されるため "0" がそのまま表示される事故が起きやすい
+        "noLeakedRender": "error"
       }
     }
   },
@@ -492,6 +514,10 @@
           },
           "style": {
             "noNonNullAssertion": "off"
+          },
+          "correctness": {
+            // story はデモ用の static id を使う前提（複数インスタンス化されない）
+            "useUniqueElementIds": "off"
           }
         }
       }

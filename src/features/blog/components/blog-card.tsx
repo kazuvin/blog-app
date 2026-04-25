@@ -22,7 +22,7 @@ export function BlogCard({
         <CardHeader>
           <h2 className="font-semibold text-xl">{post.title}</h2>
           <div className="flex items-center gap-3">
-            {showNewBadge && <Badge>New</Badge>}
+            {showNewBadge ? <Badge>New</Badge> : null}
             <time className="text-foreground/60 text-sm">{post.date}</time>
             {showTags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-1">
