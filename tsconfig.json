@@ -110,8 +110,8 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    // Cloudflare Workers / Node / Vitest のグローバル型を読み込む
-    "types": ["./cloudflare-env.d.ts", "node", "vitest/globals"]
+    // Node / Vitest のグローバル型を読み込む
+    "types": ["node", "vitest/globals"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { playgroundItems } from "@/features/playgrounds";
 
 export const dynamic = "force-static";
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return playgroundItems.map((item) => ({
