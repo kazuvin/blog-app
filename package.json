@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "pnpm generate-blog-data && next build",
+    "postbuild": "npx tsx scripts/check-release-artifact.ts",
     "generate-blog-data": "npx tsx scripts/generate-blog-data.ts",
     "lint": "biome check",
     "lint:fix": "biome check --write",

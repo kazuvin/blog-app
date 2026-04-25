@@ -1,12 +1,15 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { BlogListContainer, BlogListSkeleton, getSortedPostsData } from "@/features/blog";
+import { pageMetadata } from "@/lib/site";
 
 export const dynamic = "force-static";
 
-export const metadata = {
+export const metadata: Metadata = pageMetadata({
+  pathname: "/blog",
   title: "Blog",
   description: "ブログ記事一覧",
-};
+});
 
 export default function BlogPage() {
   const posts = getSortedPostsData();

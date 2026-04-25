@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Card, CardContent } from "@/components";
 import { BlogCard, getSortedPostsData } from "@/features/blog";
+import { pageMetadata, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
 
 export const dynamic = "force-static";
+
+export const metadata: Metadata = pageMetadata({
+  pathname: "/",
+  title: SITE_NAME,
+  description: SITE_DESCRIPTION,
+});
 
 export default function Home() {
   const recentPosts = getSortedPostsData().slice(0, 3);

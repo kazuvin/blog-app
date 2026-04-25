@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { playgroundItems } from "@/features/playgrounds";
+import { pageMetadata } from "@/lib/site";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -18,8 +19,14 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const item = playgroundItems.find((i) => i.slug === slug);
-  if (!item) return {};
-  return { title: item.name };
+  if (!item) {
+    return { title: "Not Found", description: "The requested playground was not found." };
+  }
+  return pageMetadata({
+    pathname: `/playgrounds/${slug}`,
+    title: item.name,
+    description: item.description,
+  });
 }
 
 export default async function PlaygroundPage({ params }: Props) {

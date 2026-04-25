@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui";
 import { getAllPostSlugs, getPostBySlug } from "@/features/blog";
+import { pageMetadata } from "@/lib/site";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -23,13 +24,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) {
     return {
       title: "Not Found",
+      description: "The requested post was not found.",
     };
   }
 
-  return {
+  return pageMetadata({
+    pathname: `/blog/${slug}`,
     title: post.title,
     description: post.description,
-  };
+    type: "article",
+  });
 }
 
 export default async function BlogPostPage({ params }: Props) {

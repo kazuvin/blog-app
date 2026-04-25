@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
@@ -109,6 +110,10 @@ async function generateBlogData(): Promise<void> {
   }
 
   fs.writeFileSync(outputPath, JSON.stringify(blogData, null, 2));
+  // Post-format through Biome so the committed file matches the formatter
+  // contract — `JSON.stringify` always expands arrays, Biome collapses short
+  // ones, and the drift would otherwise fail `pnpm lint` after every build.
+  execFileSync("npx", ["biome", "format", "--write", outputPath], { stdio: "inherit" });
   console.log(`Blog data generated: ${outputPath}`);
 }
 

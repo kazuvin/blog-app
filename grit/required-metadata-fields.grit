@@ -1,0 +1,33 @@
+// Enforce that any static `export const metadata = {...}` declares both
+// `title` and `description`.
+//
+// These two fields are the SEO floor — every public page should have them.
+// The remaining fields (openGraph.{title,description,url,image}, twitter.card,
+// alternates.canonical) are enforced at build time by
+// `scripts/check-release-artifact.ts`, which inspects each rendered .html in
+// `out/` and therefore covers `generateMetadata` returns as well — those are
+// hard to lint statically because they branch on runtime data (notFound, etc).
+//
+// Bad:
+//   export const metadata = { title: "X" };           // missing description
+//   export const metadata = { description: "X" };     // missing title
+//   export const metadata: Metadata = {};             // missing both
+//
+// Good:
+//   export const metadata: Metadata = {
+//     title: "X",
+//     description: "Y",
+//   };
+
+language js
+
+`export const metadata = $obj` as $expr where {
+  or {
+    not $obj <: contains `title: $_`,
+    not $obj <: contains `description: $_`,
+  },
+  register_diagnostic(
+    span=$expr,
+    message="`metadata` export must declare both `title` and `description`. (openGraph / twitter / canonical are verified by scripts/check-release-artifact.ts at build time.)"
+  )
+}

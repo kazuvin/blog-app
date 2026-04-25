@@ -16,10 +16,13 @@
   //      arbitrary value (`bg-[#fff]` 等) を className で書いた場合に警告する
   //   3) Next.js generateMetadata の戻り値型注釈を必須化（IDE 限定の Next TS plugin
   //      警告 [71008] を CI で落ちる lint error に昇格させる）
+  //   4) `export const metadata = {...}` に title / description を必須化（SEO 最低限）。
+  //      動的 generateMetadata は postbuild の HTML artifact チェック側でカバー。
   "plugins": [
     "./node_modules/@jacobwolf/biome-unnecessary-effect/grit/react-effects.grit",
     "./grit/tailwind-theme-only.grit",
-    "./grit/next-metadata-return-type.grit"
+    "./grit/next-metadata-return-type.grit",
+    "./grit/required-metadata-fields.grit"
   ],
   "formatter": {
     "enabled": true,
