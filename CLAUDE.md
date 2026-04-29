@@ -13,6 +13,7 @@ Next.js 15 (App Router, `output: 'export'` で全ページ SSG) + React 19 + Typ
   - `component-creator` — Presentation vs Container、実装テンプレ
   - `zustand-pattern` — feature store 設計、selector 粒度
   - `tdd-patterns` — Vitest 先行の Red-Green-Refactor
+  - `motion-svg` — Motion + SVG path / mask / clipPath / scroll-linked の演出パターン
   - `design-grader` — UI を rubric 採点（reviewer）
 - `.claude/agents/react-component-builder.md` — 上記 skills が frontmatter で preload 済の subagent
 - `.claude/commands/` — `/task`（worktree で commander パターン）/ `/spec`（feature 着手前の仕様化）/ `/create-pr`
