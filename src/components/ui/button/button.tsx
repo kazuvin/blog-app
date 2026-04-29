@@ -1,9 +1,27 @@
 "use client";
 
-import { type ComponentProps, type RefObject, useRef } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import type { ComponentProps } from "react";
 import { LoadingSpinnerIcon } from "@/components/icons";
-import { useElementDimensions } from "@/lib/animation";
+import { EASE_DEFAULT } from "@/lib/animation";
 import { cn } from "@/lib/utils";
+
+/**
+ * Native button event names whose React types collide with motion's drag /
+ * animation handler types when spread onto `motion.button`. Buttons rarely
+ * expose these handlers, so we omit them from the public API.
+ */
+type ConflictingMotionEventNames =
+  | "onDrag"
+  | "onDragStart"
+  | "onDragEnd"
+  | "onDragEnter"
+  | "onDragLeave"
+  | "onDragOver"
+  | "onDragExit"
+  | "onAnimationStart"
+  | "onAnimationEnd"
+  | "onAnimationIteration";
 
 // ============================================================================
 // Types
@@ -13,7 +31,10 @@ import { cn } from "@/lib/utils";
 export type ButtonState = "idle" | "loading" | "success" | "error";
 
 /** Props for the Button component */
-export type ButtonProps = Omit<ComponentProps<"button">, "children"> & {
+export type ButtonProps = Omit<
+  ComponentProps<"button">,
+  "children" | ConflictingMotionEventNames
+> & {
   /** Current state of the button */
   state?: ButtonState;
   /** Visual variant of the button */
@@ -39,13 +60,10 @@ type IconProps = {
 // Constants
 // ============================================================================
 
-/** All possible button states in order */
-const BUTTON_STATES: readonly ButtonState[] = ["idle", "loading", "success", "error"] as const;
-
 /** Base styles applied to all button variants */
 const baseStyles = [
-  "inline-flex items-center justify-center rounded-full font-medium",
-  "transition-all duration-300 ease-default",
+  "inline-flex items-center justify-center font-medium",
+  "transition-colors duration-300 ease-default",
   "focus:outline-none focus:ring-2 focus:ring-offset-2",
   "disabled:cursor-not-allowed disabled:opacity-50",
 ] as const;
@@ -65,12 +83,19 @@ const loadingStyles = {
   ghost: "bg-foreground/5 text-foreground focus:ring-foreground",
 } as const;
 
-/** Styles for success state */
+/**
+ * Styles for success state.
+ *
+ * `transition-none` で baseStyles の `transition-colors` を打ち消す。
+ * loading の `bg-foreground/80`（暗色 + 80% alpha）から success の vivid green への
+ * OKLCH 補間は途中で低明度の中間点を通り、一瞬黒く見えるため snap させる。
+ */
 const successStyles =
-  "bg-success text-white hover:bg-success focus:ring-success border-transparent";
+  "bg-success text-white hover:bg-success focus:ring-success border-transparent transition-none";
 
-/** Styles for error state */
-const errorStyles = "bg-error text-white hover:bg-error focus:ring-error border-transparent";
+/** Styles for error state — see successStyles for the snap rationale. */
+const errorStyles =
+  "bg-error text-white hover:bg-error focus:ring-error border-transparent transition-none";
 
 /** Styles for each button size */
 const sizeStyles = {
@@ -84,7 +109,7 @@ const sizeStyles = {
 // ============================================================================
 
 /** Check icon for success state with optional draw animation */
-function CheckIcon({ className, isAnimated }: IconProps & { isAnimated?: boolean }) {
+function CheckIcon({ className }: IconProps) {
   return (
     <svg
       className={className}
@@ -99,15 +124,11 @@ function CheckIcon({ className, isAnimated }: IconProps & { isAnimated?: boolean
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M5 13l4 4L19 7"
-        style={
-          isAnimated
-            ? {
-                strokeDasharray: 24,
-                strokeDashoffset: 24,
-                animation: "draw 0.3s ease forwards 0.45s",
-              }
-            : undefined
-        }
+        style={{
+          strokeDasharray: 24,
+          strokeDashoffset: 24,
+          animation: "draw 0.3s ease forwards 0.15s",
+        }}
       />
     </svg>
   );
@@ -131,105 +152,33 @@ function XIcon({ className }: IconProps) {
 }
 
 // ============================================================================
-// Icon State Configuration
+// Icon Resolver
 // ============================================================================
 
-/** Configuration for each state's icon */
-type IconConfig = {
-  state: ButtonState;
-  animationClass?: string;
-  render: (isActive: boolean) => React.ReactNode;
-};
-
-const iconConfigs: IconConfig[] = [
-  {
-    state: "loading",
-    render: () => <LoadingSpinnerIcon className="h-4 w-4" />,
-  },
-  {
-    state: "success",
-    animationClass: "animate-check-bounce",
-    render: (isActive) => <CheckIcon className="h-4 w-4" isAnimated={isActive} />,
-  },
-  {
-    state: "error",
-    animationClass: "animate-shake",
-    render: () => <XIcon className="h-4 w-4" />,
-  },
-];
-
-// ============================================================================
-// Helper Components
-// ============================================================================
-
-type IconContainerProps = {
-  state: ButtonState;
-};
-
-/** Container for state icons with fade animations */
-function IconContainer({ state }: IconContainerProps) {
-  const hasIcon = state !== "idle";
-
-  return (
-    <span
-      className={cn(
-        "inline-grid transition-all duration-300",
-        hasIcon ? "w-4 opacity-100" : "w-0 opacity-0"
-      )}
-    >
-      {iconConfigs.map(({ state: iconState, animationClass, render }) => {
-        const isActive = state === iconState;
-        return (
-          <span
-            key={iconState}
-            className={cn(
-              "col-start-1 row-start-1 transition-opacity duration-300",
-              isActive ? cn("opacity-100", animationClass) : "opacity-0"
-            )}
-          >
-            {render(isActive)}
-          </span>
-        );
-      })}
-    </span>
-  );
-}
-
-type TextContainerProps = {
-  state: ButtonState;
-  texts: Record<ButtonState, string>;
-  textRefs: Record<ButtonState, RefObject<HTMLSpanElement | null>>;
-  width: number | undefined;
-};
-
-/** Container for state text with width animation */
-function TextContainer({ state, texts, textRefs, width }: TextContainerProps) {
-  return (
-    <span
-      className="relative inline-flex items-center justify-center transition-width duration-300"
-      style={{ width }}
-    >
-      {BUTTON_STATES.map((s) => (
-        <span
-          key={s}
-          ref={textRefs[s]}
-          className={cn(
-            "whitespace-nowrap transition-opacity duration-300",
-            s === state
-              ? "relative opacity-100"
-              : "absolute inset-0 flex items-center justify-center opacity-0"
-          )}
-        >
-          {texts[s]}
-        </span>
-      ))}
-    </span>
-  );
+function renderStateIcon(state: ButtonState) {
+  switch (state) {
+    case "loading":
+      return <LoadingSpinnerIcon className="h-4 w-4" />;
+    case "success":
+      return <CheckIcon className="h-4 w-4 animate-check-bounce" />;
+    case "error":
+      return <XIcon className="h-4 w-4 animate-shake" />;
+    default:
+      return null;
+  }
 }
 
 // ============================================================================
 // Main Component
 // ============================================================================
+
+const TRANSITION_DURATION = 0.3;
+/**
+ * `motion` の layout animation は親要素の transform: scale で width 補間するため、
+ * `rounded-full`（class）だけだと scale 中に楕円化する。
+ * inline style に数値で渡すと motion が scale 補正をかけて常に円形を保つ。
+ */
+const PILL_RADIUS = 9999;
 
 /**
  * A button component that displays different states with smooth animations.
@@ -247,6 +196,7 @@ export function Button({
   disabled,
   ...props
 }: ButtonProps) {
+  const reduce = useReducedMotion();
   const isDisabled = disabled || state === "loading";
   const hasIcon = state !== "idle";
 
@@ -257,22 +207,15 @@ export function Button({
     error: errorText,
   };
 
-  const idleRef = useRef<HTMLSpanElement>(null);
-  const loadingRef = useRef<HTMLSpanElement>(null);
-  const successRef = useRef<HTMLSpanElement>(null);
-  const errorRef = useRef<HTMLSpanElement>(null);
-
-  const textRefs: Record<ButtonState, RefObject<HTMLSpanElement | null>> = {
-    idle: idleRef,
-    loading: loadingRef,
-    success: successRef,
-    error: errorRef,
-  };
-
-  const { width: textWidth } = useElementDimensions(textRefs[state], { type: "width" });
+  const transition = reduce
+    ? { duration: 0 }
+    : { duration: TRANSITION_DURATION, ease: EASE_DEFAULT };
 
   return (
-    <button
+    <motion.button
+      layout
+      transition={transition}
+      style={{ borderRadius: PILL_RADIUS }}
       className={cn(
         baseStyles,
         hasIcon ? "gap-2" : "gap-0",
@@ -286,8 +229,34 @@ export function Button({
       disabled={isDisabled}
       {...props}
     >
-      <IconContainer state={state} />
-      <TextContainer state={state} texts={texts} textRefs={textRefs} width={textWidth} />
-    </button>
+      <AnimatePresence initial={false} mode="popLayout">
+        {hasIcon ? (
+          <motion.span
+            key={state}
+            layout
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={transition}
+            className="inline-flex items-center justify-center"
+          >
+            {renderStateIcon(state)}
+          </motion.span>
+        ) : null}
+      </AnimatePresence>
+      <AnimatePresence initial={false} mode="popLayout">
+        <motion.span
+          key={state}
+          layout
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={transition}
+          className="whitespace-nowrap"
+        >
+          {texts[state]}
+        </motion.span>
+      </AnimatePresence>
+    </motion.button>
   );
 }

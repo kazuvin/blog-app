@@ -464,10 +464,6 @@ body {
 }
 
 /* Tokenized replacements for former arbitrary values */
-@utility transition-width {
-  transition-property: width;
-}
-
 @utility min-h-100 {
   min-height: 6.25rem; /* 100px */
 }

@@ -1,11 +1,8 @@
+// Animation tokens (mirrors of CSS `--ease-*` for use with motion/react)
+export { EASE_DEFAULT, EASE_SPRING } from "./easings";
+
 // Animation Hooks
 
-export {
-  type DimensionType,
-  type UseElementDimensionsOptions,
-  type UseElementDimensionsResult,
-  useElementDimensions,
-} from "./use-element-dimensions";
 export {
   type UseInViewOptions,
   type UseInViewResult,

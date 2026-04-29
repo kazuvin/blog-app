@@ -1,16 +1,15 @@
 "use client";
 
+import { motion, useReducedMotion } from "motion/react";
 import {
   type ComponentProps,
   createContext,
   type ReactNode,
-  useCallback,
   useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
+  useId,
+  useMemo,
 } from "react";
+import { EASE_SPRING } from "@/lib/animation";
 import { cn } from "@/lib/utils";
 
 // ============================================================================
@@ -51,8 +50,9 @@ type TabNavContextValue = {
   onSelect: (value: string) => void;
   variant: TabNavVariant;
   size: TabNavSize;
-  registerItem: (value: string, element: HTMLButtonElement) => void;
-  unregisterItem: (value: string) => void;
+  /** Stable id used as motion layoutId so multiple TabNav instances do not clash */
+  indicatorLayoutId: string;
+  reduceMotion: boolean;
 };
 
 // ============================================================================
@@ -65,12 +65,6 @@ const containerBaseStyles = [
   "bg-foreground/5",
 ] as const;
 
-/** Base styles for the indicator */
-const indicatorBaseStyles = [
-  "absolute rounded-full",
-  "transition-all duration-300 ease-spring",
-] as const;
-
 /** Indicator styles for each variant */
 const indicatorVariantStyles = {
   primary: "bg-foreground",
@@ -80,7 +74,7 @@ const indicatorVariantStyles = {
 
 /** Base styles for button items */
 const itemBaseStyles = [
-  "relative z-10 inline-flex items-center justify-center rounded-full font-medium",
+  "relative inline-flex items-center justify-center rounded-full font-medium",
   "transition-colors duration-200 ease-default",
   "focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
   "disabled:cursor-not-allowed disabled:opacity-50",
@@ -107,6 +101,8 @@ const itemSizeStyles = {
   lg: "px-5 py-2 text-base",
 } as const;
 
+const INDICATOR_DURATION = 0.3;
+
 // ============================================================================
 // Context
 // ============================================================================
@@ -122,30 +118,13 @@ function useTabNavContext() {
 }
 
 // ============================================================================
-// Hook for safe layout effect
-// ============================================================================
-
-const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
-
-// ============================================================================
 // TabNavItem Component
 // ============================================================================
 
 export function TabNavItem({ value, children, className, disabled, ...props }: TabNavItemProps) {
-  const { selectedValue, onSelect, variant, size, registerItem, unregisterItem } =
+  const { selectedValue, onSelect, variant, size, indicatorLayoutId, reduceMotion } =
     useTabNavContext();
-  const ref = useRef<HTMLButtonElement>(null);
   const isSelected = selectedValue === value;
-
-  useIsomorphicLayoutEffect(() => {
-    const element = ref.current;
-    if (element) {
-      registerItem(value, element);
-    }
-    return () => {
-      unregisterItem(value);
-    };
-  }, [value, registerItem, unregisterItem]);
 
   const handleClick = () => {
     if (!disabled) {
@@ -155,7 +134,6 @@ export function TabNavItem({ value, children, className, disabled, ...props }: T
 
   return (
     <button
-      ref={ref}
       type="button"
       role="tab"
       aria-selected={isSelected}
@@ -169,7 +147,17 @@ export function TabNavItem({ value, children, className, disabled, ...props }: T
       )}
       {...props}
     >
-      {children}
+      {isSelected ? (
+        <motion.span
+          layoutId={indicatorLayoutId}
+          transition={
+            reduceMotion ? { duration: 0 } : { duration: INDICATOR_DURATION, ease: EASE_SPRING }
+          }
+          aria-hidden="true"
+          className={cn("absolute inset-0 -z-10 rounded-full", indicatorVariantStyles[variant])}
+        />
+      ) : null}
+      <span className="relative">{children}</span>
     </button>
   );
 }
@@ -200,92 +188,24 @@ function TabNavRoot({
   className,
   ...props
 }: TabNavProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const itemsRef = useRef<Map<string, HTMLButtonElement>>(new Map());
-  const [indicatorStyle, setIndicatorStyle] = useState<{
-    left: number;
-    width: number;
-    height: number;
-  } | null>(null);
+  const indicatorLayoutId = useId();
+  const reduceMotion = useReducedMotion() ?? false;
 
-  const registerItem = useCallback((itemValue: string, element: HTMLButtonElement) => {
-    itemsRef.current.set(itemValue, element);
-  }, []);
-
-  const unregisterItem = useCallback((itemValue: string) => {
-    itemsRef.current.delete(itemValue);
-  }, []);
-
-  const updateIndicator = useCallback(() => {
-    const container = containerRef.current;
-    const selectedElement = itemsRef.current.get(value);
-
-    if (container && selectedElement) {
-      const containerRect = container.getBoundingClientRect();
-      const selectedRect = selectedElement.getBoundingClientRect();
-
-      setIndicatorStyle({
-        left: selectedRect.left - containerRect.left,
-        width: selectedRect.width,
-        height: selectedRect.height,
-      });
-    }
-  }, [value]);
-
-  // Update indicator position when value changes or on mount
-  useIsomorphicLayoutEffect(() => {
-    updateIndicator();
-  }, [updateIndicator]);
-
-  // Also update on resize
-  useEffect(() => {
-    const handleResize = () => {
-      updateIndicator();
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [updateIndicator]);
-
-  // Update indicator after a short delay to ensure items are rendered
-  useEffect(() => {
-    const timeoutId = setTimeout(updateIndicator, 0);
-    return () => clearTimeout(timeoutId);
-  }, [updateIndicator]);
-
-  const contextValue: TabNavContextValue = {
-    selectedValue: value,
-    onSelect: onValueChange,
-    variant,
-    size,
-    registerItem,
-    unregisterItem,
-  };
+  const contextValue = useMemo<TabNavContextValue>(
+    () => ({
+      selectedValue: value,
+      onSelect: onValueChange,
+      variant,
+      size,
+      indicatorLayoutId,
+      reduceMotion,
+    }),
+    [value, onValueChange, variant, size, indicatorLayoutId, reduceMotion]
+  );
 
   return (
     <TabNavContext.Provider value={contextValue}>
-      <div
-        ref={containerRef}
-        role="tablist"
-        className={cn(containerBaseStyles, className)}
-        {...props}
-      >
-        {/* Animated indicator */}
-        {indicatorStyle ? (
-          <span
-            className={cn(indicatorBaseStyles, indicatorVariantStyles[variant])}
-            style={{
-              left: indicatorStyle.left,
-              width: indicatorStyle.width,
-              height: indicatorStyle.height,
-              top: "50%",
-              transform: "translateY(-50%)",
-            }}
-            aria-hidden="true"
-          />
-        ) : null}
+      <div role="tablist" className={cn(containerBaseStyles, className)} {...props}>
         {children}
       </div>
     </TabNavContext.Provider>
