@@ -1,5 +1,7 @@
 packages: []
+
 onlyBuiltDependencies:
+  - '@jacobwolf/biome-unnecessary-effect'
   - esbuild
   - sharp
   - unrs-resolver
