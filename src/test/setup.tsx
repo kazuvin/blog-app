@@ -10,6 +10,18 @@ class MockResizeObserver {
 }
 global.ResizeObserver = MockResizeObserver;
 
+// Mock IntersectionObserver for motion's whileInView
+class MockIntersectionObserver {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+  takeRecords = vi.fn(() => []);
+  root = null;
+  rootMargin = "";
+  thresholds = [];
+}
+global.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
+
 // Cleanup after each test
 afterEach(() => {
   cleanup();
