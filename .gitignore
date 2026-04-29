@@ -56,3 +56,8 @@ storybook-static
 
 # claude code local state
 .claude/.ci-check-passed
+
+# playwright MCP
+.playwright-mcp/
+/page-*.png
+/page-*.jpeg
